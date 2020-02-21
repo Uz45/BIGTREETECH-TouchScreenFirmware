@@ -17,7 +17,7 @@
 
   #define LCD_WR_REG(regval) do{ LCD->LCD_REG = regval; }while(0)
   #define LCD_WR_DATA(data)  do{ LCD->LCD_RAM = data; }while(0)
-#elif defined(MKS_32_V1_4)
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_1) || defined(MKS_32_V1_3)
 /*
 #define LCD_WR PB14
 #define LCD_RS PD13

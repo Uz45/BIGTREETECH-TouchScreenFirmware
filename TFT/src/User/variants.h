@@ -35,7 +35,7 @@
   #define F_CPUM 120
   #define STM32F2XX
   #include "stm32f2xx.h"
-#elif defined(MKS_32_V1_4)
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_1) || defined(MKS_32_V1_3)
 
   #define HSE_VALUE ((uint32_t)25000000) //25Mhz XTAL
   #define F_CPUM 48
@@ -60,7 +60,14 @@
   #define ILI9341
   #define LCD_DATA_16BIT 1
 #elif defined(MKS_32_V1_4)
-  #define HX8558
+  #define HX8558          //uncomment for MKS TFT V4.0
+  #define LCD_DATA_16BIT 1
+  //#define RAZRAB 
+#elif defined(MKS_32_V1_1)
+  #define MKSTFTV1
+  #define LCD_DATA_16BIT 1
+#elif defined(MKS_32_V1_3)
+  #define MKSTFTV3
   #define LCD_DATA_16BIT 1
 #endif
 
@@ -69,7 +76,7 @@
   #define LCD_LED_PIN   PA8
 #elif defined(TFT35_V3_0) || defined(TFT28_V3_0)
   #define LCD_LED_PIN   PD12
-#elif defined(MKS_32_V1_4)
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_1) || defined(MKS_32_V1_3)
  #define LCD_LED_PIN    PD14  
 #endif
 
@@ -84,7 +91,7 @@
   #define SERIAL_PORT_2 _USART1
   #define SERIAL_PORT_3 _USART3
   #define SERIAL_PORT_4 _UART4
-#elif defined(MKS_32_V1_4)
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_1) || defined(MKS_32_V1_3)
   #define SERIAL_PORT   _USART2
   #define SERIAL_PORT_2 _USART1
   #define SERIAL_PORT_3 _USART3  
@@ -116,7 +123,7 @@
   #define XPT2046_MISO  PE4
   #define XPT2046_MOSI  PE3
   #define XPT2046_TPEN  PC13
-#elif defined(MKS_32_V1_4)
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_1) || defined(MKS_32_V1_3)
   #define XPT2046_CS    PC9
   #define XPT2046_SCK   PC10
   #define XPT2046_MISO  PC11
@@ -141,7 +148,7 @@
   #define SPI1_CS_PIN   PA4
 #elif defined(TFT35_V2_0)
   #define SD_SDIO_SUPPORT
-#elif defined(MKS_32_V1_4)
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_1) || defined(MKS_32_V1_3)
   #define SD_SPI_SUPPORT
   #define SD_LOW_SPEED  7
   #define SD_HIGH_SPEED 1
@@ -158,7 +165,7 @@
   #define SD_CD_PIN     PC6
 #elif defined(TFT35_V3_0) || defined(TFT28_V3_0)
   #define SD_CD_PIN     PC4
-#elif defined(MKS_32_V1_4)
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_1) || defined(MKS_32_V1_3)
   #define SD_CD_PIN     PB15  
 #endif
 
@@ -175,7 +182,7 @@
   #define W25Qxx_SPEED  1
   #define W25Qxx_SPI    _SPI3
   #define SPI3_CS_PIN   PB6
-#elif defined(MKS_32_V1_4)
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_1) || defined(MKS_32_V1_3)
   #define W25Qxx_SPEED  1
   #define W25Qxx_SPI    _SPI1
   #define W25Qxx_CS     PB9  
@@ -184,7 +191,7 @@
 //ST7920 Simulator SPI pins
 #if defined(TFT24_V1_1) || defined(TFT35_V3_0) || defined(TFT28_V3_0)
   #define ST7920_SPI    _SPI2
-#elif defined(MKS_32_V1_4) 
+#elif defined(MKS_32_V1_4)  || defined(MKS_32_V1_1) || defined(MKS_32_V1_3)
   //#define ST7920_SPI    _SPI1
   //#define SPISIM_CS_PIN    PB4  
 #endif
@@ -196,7 +203,7 @@
   #define BUZZER_PIN    PB2
 #elif defined(TFT35_V3_0) || defined(TFT28_V3_0)
   #define BUZZER_PIN    PD13
-#elif defined(MKS_32_V1_4)
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_1) || defined(MKS_32_V1_3)
   #define BUZZER_PIN    PA2  
 #endif
 
@@ -211,10 +218,10 @@
   #define LCD_ENCA_PIN  PA8
   #define LCD_ENCB_PIN  PC9
   #define LCD_BTN_PIN   PC8
-#elif defined(MKS_32_V1_4)
-  #define LCD_ENCA_PIN  PB0
-  #define LCD_ENCB_PIN  PB1
-  #define LCD_BTN_PIN   PB5  
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_1) || defined(MKS_32_V1_3)
+  //#define LCD_ENCA_PIN  PB0
+  //#define LCD_ENCB_PIN  PB1
+  //#define LCD_BTN_PIN   PB5  
 #endif
 #define LCD_ENCODER_SUPPORT (defined(LCD_ENCA_PIN) && defined(LCD_ENCB_PIN) && defined(LCD_BTN_PIN))
 
@@ -222,7 +229,7 @@
 #if defined(TFT24_V1_1) || defined(TFT35_V3_0) || defined(TFT28_V3_0)
   #define U_DISK_SUPPROT
   #define USE_USB_OTG_FS
-#elif defined(MKS_32_V1_4)
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_1) || defined(MKS_32_V1_3)
   #define U_DISK_SUPPROT
   #define USE_USB_OTG_FS  
 #endif
@@ -234,9 +241,9 @@
 #elif defined(TFT35_V3_0) || defined(TFT28_V3_0)
   #define PS_ON_PIN      PA12
   #define FIL_RUNOUT_PIN PA15
-#elif defined(MKS_32_V1_4)
-  //#define PS_ON_PIN      PB0
-  //#define FIL_RUNOUT_PIN PB1  
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_1) || defined(MKS_32_V1_3)
+  #define PS_ON_PIN      PB0
+  #define FIL_RUNOUT_PIN PB1  
 #endif
     
 //Debug disable, free pins for other function
@@ -294,7 +301,7 @@
   #define SMALLICON_HEIGHT   16
   
   #define selecticonw 70
-#elif defined(MKS_32_V1_4)
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_1) || defined(MKS_32_V1_3)
   #define LCD_WIDTH	  320
   #define LCD_HEIGHT	240
   
@@ -330,8 +337,10 @@
   #define ROOT_DIR "TFT28"
 #elif defined(TFT24_V1_1)
   #define ROOT_DIR "TFT24"
-#elif defined(MKS_32_V1_4)
-  #define ROOT_DIR "MKS"  
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3)
+  #define ROOT_DIR "MKS"
+#elif defined(MKS_32_V1_1) || defined(RAZRAB)
+  #define ROOT_DIR "MKSV1"
 #endif
 
 //hardware version config
@@ -354,6 +363,10 @@
     #define HARDWARE_VERSION "TFT28_V3.0"
   #elif defined(MKS_32_V1_4)
     #define HARDWARE_VERSION "TFT32_V4.0"
+  #elif defined(MKS_32_V1_1)
+    #define HARDWARE_VERSION "TFT32_V1.0"
+  #elif defined(MKS_32_V1_3)
+    #define HARDWARE_VERSION "TFT32_V3.0"
   #endif  
 #endif
 

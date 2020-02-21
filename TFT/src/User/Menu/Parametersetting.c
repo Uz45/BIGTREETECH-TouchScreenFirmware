@@ -328,7 +328,7 @@ void temp_Change(void)
 void show_GlobalInfo(void)
 {
     if(infoHost.connected == false)    return;
-    if(infoMenu.menu[infoMenu.cur] == menuMove || infoMenu.menu[infoMenu.cur] == menuStatus) return;
+    if(infoMenu.menu[infoMenu.cur] == menuMove || infoMenu.menu[infoMenu.cur] == menuStatus || infoMenu.menu[infoMenu.cur] == menuPrinting) return;
     drawGlobalInfo();
 
     return;

@@ -34,8 +34,12 @@ void TS_Get_Coordinates(u16 *x, u16 *y)
 {
   u16 tp_x = XPT2046_Repeated_Compare_AD(CMD_RDX);
   u16 tp_y = XPT2046_Repeated_Compare_AD(CMD_RDY);
-
+  
+ #if defined MKS_32_V1_3
+  *x = LCD_WIDTH-(A*tp_x+B*tp_y+C)/K;
+  #else
   *x = (A*tp_x+B*tp_y+C)/K;
+  #endif
   *y = (D*tp_x+E*tp_y+F)/K;
 }
 
@@ -46,20 +50,20 @@ u8 calibrationEnsure(u16 x,u16 y)
   u16 tp_x,tp_y,x_offset;
   int lcd_x,lcd_y;
   GUI_SetColor(BLACK);
-  GUI_FillCircle(x,y,5);
+  GUI_FillCircle((LCD_WIDTH-x),y,5);
   for(i=0;i<10;i++)
   {
-    GUI_DrawPoint(x+i,y);
-    GUI_DrawPoint(x-i,y);
-    GUI_DrawPoint(x,y+i);
-    GUI_DrawPoint(x,y-i);
+     GUI_DrawPoint(x+i,y);
+     GUI_DrawPoint(x-i,y);
+     GUI_DrawPoint(x,y+i);
+     GUI_DrawPoint(x,y-i);
   }
   while(!isPress());
   tp_x = XPT2046_Repeated_Compare_AD(CMD_RDX);
   tp_y = XPT2046_Repeated_Compare_AD(CMD_RDY);
 
   //	
-  lcd_x = (A*tp_x+B*tp_y+C)/K;
+  lcd_x = ((A*tp_x+B*tp_y+C)/K);
   lcd_y = (D*tp_x+E*tp_y+F)/K;
 
 
@@ -104,6 +108,16 @@ void TSC_Calibration(void)
     GUI_SetColor(RED);
     for(tp_num = 0;tp_num<3;tp_num++)
     {
+#if defined MKS_32_V1_3
+      GUI_FillCircle(LCD_WIDTH-LCD_X[tp_num],LCD_Y[tp_num],3);
+      for(i=0;i<10;i++)
+      {
+        GUI_DrawPoint(LCD_WIDTH-(LCD_X[tp_num]+i),LCD_Y[tp_num]);
+        GUI_DrawPoint(LCD_WIDTH-(LCD_X[tp_num]-i),LCD_Y[tp_num]);
+        GUI_DrawPoint(LCD_WIDTH-LCD_X[tp_num],LCD_Y[tp_num]+i);
+        GUI_DrawPoint(LCD_WIDTH-LCD_X[tp_num],LCD_Y[tp_num]-i);
+      }
+    #else
       GUI_FillCircle(LCD_X[tp_num],LCD_Y[tp_num],3);
       for(i=0;i<10;i++)
       {
@@ -112,6 +126,8 @@ void TSC_Calibration(void)
         GUI_DrawPoint(LCD_X[tp_num],LCD_Y[tp_num]+i);
         GUI_DrawPoint(LCD_X[tp_num],LCD_Y[tp_num]-i);
       }
+    #endif
+
       while(isPress() == false);
       TP_X[tp_num] = XPT2046_Repeated_Compare_AD(CMD_RDX);
       TP_Y[tp_num] = XPT2046_Repeated_Compare_AD(CMD_RDY);

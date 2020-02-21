@@ -5,7 +5,22 @@ const GUI_RECT iconUpdateRect = {(LCD_WIDTH - ICON_WIDTH)/2,              (LCD_H
                                  (LCD_WIDTH - ICON_WIDTH)/2 + ICON_WIDTH, (LCD_HEIGHT - ICON_HEIGHT)/2 + ICON_HEIGHT};
 const GUI_RECT labelUpdateRect = {0,        (LCD_HEIGHT - ICON_HEIGHT)/2 + ICON_HEIGHT, 
                                  LCD_WIDTH, (LCD_HEIGHT - ICON_HEIGHT)/2 + ICON_HEIGHT + BYTE_HEIGHT};
-
+#if defined (MKS_32_V1_1) || defined(RAZRAB)
+const char iconBmpName[][32]={
+"Heat", "Move", "Home", "Print", "Extrude", "Fan", "Settings", "Leveling", "Inc", "Dec",
+"Nozzle", "Hotbed", "Temp_1", "Temp_5", "Temp_10", "Stop", "Back", "Inc_X", "Inc_Y", "Inc_Z",
+"Mmm_01", "Mmm_1", "Mmm_10", "Dec_X", "Dec_Y","Dec_Z", "Home_X", "Home_Y", "Home_Z", "Folder",
+"File", "Page_up", "Page_down", "Pause", "Resume", "Load", "Unload", "Slow", "Normal", "Fast",
+"Emm_1", "Emm_5", "Emm_10", "Full", "Half", "Rotate", "Language", "TP_Adjust", "More", "About",
+"BackGroundColor", "FontColor", "Disconnect", "BaudRate", "Percentage", "BabyStep", "Mmm_001", "OnBoardSD", "OnTFTSD", "U_Disk",
+"Runout", "Point_1", "Point_2", "Point_3", "Point_4", "Gcode", "BLTouch", "BLTouchDeploy",
+"BLTouchStow", "BLTouchTest", "BLTouchRepeat", "TSCSettings", "MachineSettings", "FeatureSettings", "ProbeOffset", "EEPROMSave", "SilentOn", "ShutDown",
+"RGB_Settings", "RGB_Red", "RGB_Green", "RGB_Blue", "RGB_White", "RGB_Off", "Preheat_Both", "Preheat_PLA", "Preheat_PETG", "Preheat_ABS",
+"PowerSupply", "Custom", "Custom0", "Custom1", "Custom2", "Custom3", "Custom4", "Custom5", "Custom6", "Home_Move", "Heat_Fan",
+"ManualLevel", "CoolDown", "SilentOff","StatusNozzle","StatusBed","StatusFan","MainMenu","StatusSpeed","StatusFlow",
+"parametersetting", "ledcolor", "global_nozzle", "global_bed",
+}; 
+#else
 const char iconBmpName[][32]={
 "Heat", "Move", "Home", "Print", "Extrude", "Fan", "Settings", "Leveling", "Inc", "Dec",
 "Nozzle", "Hotbed", "Temp_1", "Temp_5", "Temp_10", "Stop", "Back", "Inc_X", "Inc_Y", "Inc_Z",
@@ -20,6 +35,7 @@ const char iconBmpName[][32]={
 "ManualLevel", "CoolDown", "SilentOff","StatusNozzle","StatusBed","StatusFan","MainMenu","StatusSpeed","StatusFlow",
 "parametersetting", "global_nozzle", "global_bed", "ledcolor",
 }; 
+#endif
 
 u8 scanUpdateFile(void)
 {
@@ -200,14 +216,18 @@ void scanUpdates(void)
     result = scanUpdateFile();
     if (result & FONT)
     {
-      updateFont(FONT_ROOT_DIR"/byte_ascii.fon", BYTE_ASCII_ADDR);
+      updateFont(FONT_ROOT_DIR"/byte_ascii.fon", BYTE_ASCII_ADDR);      
       updateFont(FONT_ROOT_DIR"/word_unicode.fon", WORD_UNICODE);
     }
     if (result & BMP) //bmp
     {
       updateIcon();
     }
-    if (result) f_rename(ROOT_DIR, ROOT_DIR".CUR");
+    #if defined (RAZRAB)
+
+    #else
+    if (result) f_rename(ROOT_DIR, ROOT_DIR".CUR"); //HX8558
+    #endif
     scanResetDir();
   }
 }

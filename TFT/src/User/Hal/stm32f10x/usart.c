@@ -16,7 +16,7 @@ static USART_TypeDef *usart[_USART_CNT] = {
   UART5};  //TX--PC12 RX--PD2
 #endif
 
-#if defined(MKS_32_V1_4)
+#if defined(MKS_32_V1_4) || defined(MKS_32_V1_1) || defined(MKS_32_V1_3)
 static const uint16_t uart_tx[_USART_CNT] = {PA9,  PD5, PD8}; //TX
 static const uint16_t uart_rx[_USART_CNT] = {PA10, PD6, PD9};  //RX
 #else

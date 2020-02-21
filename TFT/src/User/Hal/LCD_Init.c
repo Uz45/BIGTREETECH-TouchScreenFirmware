@@ -297,7 +297,6 @@ void LCD_init_RGB(void)
 	LCD_WR_DATA(0x22);
 	LCD_WR_DATA(0x1f);
 	LCD_WR_REG(0x29); 
-
 }
 
 
@@ -391,10 +390,12 @@ void LCD_init_RGB(void)
   Delay_ms(120);
   LCD_WR_REG(0x29); //Display on
 }
-#elif defined(MKS_32_V1_4)
 
+
+#elif defined(MKS_32_V1_4) || defined(RAZRAB)
 void LCD_init_RGB(void) 
 {
+#if defined(HX8558) //for MKS TFT V4.0
   Delay_ms(50); // delay 50 ms 
   
  LCD_WR_REG(0xFE);                     // 
@@ -494,7 +495,44 @@ LCD_WR_REG(0x11);
 	    Delay_ms(150);
 LCD_WR_REG(0x29);
 LCD_WR_REG(0x2C);
+#endif
 }
+
+
+#elif defined(MKS_32_V1_1)  //for MKS TFT V1.0
+  void LCD_init_RGB(void) 
+{		
+	    uint16_t R01h, R03h, R60h;
+
+//	DisplayOrientation Landscape
+		R01h = (1 << 8) | (0 << 10);// SS = 0, SM = 0,  from S720 to S1 (see also  GS bit (R60h))
+		R03h = (1 << 12) | (0 << 5) | (1 << 4) | (1 << 3);// TRI=0, DFM=0, BGR=1, ORG=0, I/D[1:0]=11, AM=1
+		R60h = (1 << 15) | (0x27 << 8);	// Gate Scan Control (R60h) GS=1(G320) NL[5:0]=0x27 (320 lines)
+      LCD_WR_REG(0x0001);			 // Driver Output Control Register (R01h)	
+      LCD_WR_DATA(R01h);
+      LCD_WR_REG(0x0003);			 // Entry Mode (R03h)
+      LCD_WR_DATA(R03h);
+	    LCD_WR_REG(0x0060);			 // Driver Output Control (R60h) 
+      LCD_WR_DATA(R60h); 
+}   
+
+
+#elif defined (MKSTFTV3)  //for MKS TFT V3.0
+  void LCD_init_RGB(void) 
+{	
+//  DisplayOrientation SwapXY ReverseX  		
+	    uint16_t R01h, R03h, R60h;
+      R01h = (1 << 8) | (0 << 10);// SS = 1, SM = 0,  from S720 to S1 (see also  GS bit (R60h))
+      R03h = (1 << 12) | (1 << 5) | (1 << 4) | (1 << 3);// TRI=0, DFM=0, BGR=1, ORG=0, I/D[1:0]=11, AM=1
+      R60h = (1 << 15) | (0x27 << 8);	// Gate Scan Control (R60h) GS=1(G1) NL[5:0]=0x27 (320 lines)
+      LCD_WR_REG(0x0001);			 // Driver Output Control Register (R01h)	
+      LCD_WR_DATA(R01h);
+      LCD_WR_REG(0x0003);			 // Entry Mode (R03h)
+      LCD_WR_DATA(R03h);
+	    LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
+      LCD_WR_DATA(R60h);
+}   
+
 
 #endif
 
@@ -522,15 +560,29 @@ void LCD_RefreshDirection(void)
       LCD_WR_DATA(0XE8);
     #endif
     #ifdef ILI9341
-	#if defined (TFT28_V3_0)
+	  #if defined (TFT28_V3_0)
         LCD_WR_DATA(0X60);//
       	#else
         LCD_WR_DATA(0XA8);
       	#endif 
     #endif  
     #ifdef HX8558
-     LCD_WR_DATA(0XA4);
+     LCD_WR_DATA(0X64);
     #endif
+    #ifdef MKSTFTV1
+    //	case DisplayOrientation::Landscape:Swap XY Scan Direction invert    Rotate 180 degress
+   	//     uint16_t R01h, R03h, R60h;
+		// R01h = (0 << 8) | (0 << 10);// SS = 0, SM = 0,  from S720 to S1 (see also  GS bit (R60h))
+		// R03h = (1 << 12) | (1 << 5) | (1 << 4) | (1 << 3);// TRI=0, DFM=0, BGR=1, ORG=0, I/D[1:0]=11, AM=1
+		// R60h = (1 << 15) | (0x27 << 8);	// Gate Scan Control (R60h) GS=1(G320) NL[5:0]=0x27 (320 lines)
+
+    //   LCD_WR_REG(0x0001);			 // Driver Output Control Register (R01h)	
+    //   LCD_WR_DATA(R01h);
+    //   LCD_WR_REG(0x0003);			 // Entry Mode (R03h)
+    //   LCD_WR_DATA(R03h);
+	  //   LCD_WR_REG(0x0060);			 // Driver Output Control (R60h) 
+    //   LCD_WR_DATA(R60h); 
+    #endif 
   }
   else
   {
@@ -550,7 +602,33 @@ void LCD_RefreshDirection(void)
     #endif  
     #ifdef HX8558
      LCD_WR_DATA(0xA4);
-    #endif  
+    #endif 
+    #ifdef MKSTFTV3
+      //case DisplayOrientation::SwapXY:ReverseX:   		
+	    uint16_t R01h, R03h, R60h;
+      R01h = (1 << 8) | (0 << 10);// SS = 1, SM = 0,  from S720 to S1 (see also  GS bit (R60h))
+      R03h = (1 << 12) | (1 << 5) | (1 << 4) | (1 << 3);// TRI=0, DFM=0, BGR=1, ORG=0, I/D[1:0]=11, AM=1
+      R60h = (1 << 15) | (0x27 << 8);	// Gate Scan Control (R60h) GS=1(G1) NL[5:0]=0x27 (320 lines)
+      LCD_WR_REG(0x0001);			 // Driver Output Control Register (R01h)	
+      LCD_WR_DATA(R01h);
+      LCD_WR_REG(0x0003);			 // Entry Mode (R03h)
+      LCD_WR_DATA(R03h);
+      LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
+      LCD_WR_DATA(R60h);     
+    #endif
+    #ifdef MKSTFTV1
+      //	case DisplayOrientation::Landscape: Scan Normal
+   	     uint16_t R01h, R03h, R60h;
+		R01h = (1 << 8) | (0 << 10);// SS = 0, SM = 0,  from S720 to S1 (see also  GS bit (R60h))
+		R03h = (1 << 12) | (0 << 5) | (1 << 4) | (1 << 3);// TRI=0, DFM=0, BGR=1, ORG=0, I/D[1:0]=11, AM=1
+		R60h = (1 << 15) | (0x27 << 8);	// Gate Scan Control (R60h) GS=1(G320) NL[5:0]=0x27 (320 lines)
+      LCD_WR_REG(0x0001);			 // Driver Output Control Register (R01h)	
+      LCD_WR_DATA(R01h);
+      LCD_WR_REG(0x0003);			 // Entry Mode (R03h)
+      LCD_WR_DATA(R03h);
+	    LCD_WR_REG(0x0060);			 // Driver Output Control (R60h) 
+      LCD_WR_DATA(R60h);
+    #endif 
   }
 }
 
