@@ -60,9 +60,8 @@
   #define ILI9341
   #define LCD_DATA_16BIT 1
 #elif defined(MKS_32_V1_4)
-  #define HX8558          //uncomment for MKS TFT V4.0
+  #define HX8558 
   #define LCD_DATA_16BIT 1
-  //#define RAZRAB 
 #elif defined(MKS_32_V1_1)
   #define MKSTFTV1
   #define LCD_DATA_16BIT 1
@@ -339,7 +338,7 @@
   #define ROOT_DIR "TFT24"
 #elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3)
   #define ROOT_DIR "MKS"
-#elif defined(MKS_32_V1_1) || defined(RAZRAB)
+#elif defined(MKS_32_V1_1)
   #define ROOT_DIR "MKSV1"
 #endif
 

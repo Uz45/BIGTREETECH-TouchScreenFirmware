@@ -12,7 +12,7 @@ const GUI_RECT rect_of_mode[SELECTMODE]={
 
 u32 select_mode [SELECTMODE]={
 
-#if defined (MKS_32_V1_1) || defined(RAZRAB)
+#if defined (MKS_32_V1_1)
   	ICON_GCODE,
     ICON_TOUCHSCREEN_ADJUST,
 #else	

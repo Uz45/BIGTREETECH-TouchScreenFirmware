@@ -9,7 +9,7 @@
 //address in spiflash W25Qxx
 #define LOGO_ADDR               0x0 
 
-#if defined (MKS_32_V1_1) || defined(RAZRAB)
+#if defined (MKS_32_V1_1)
 #define ICON_ADDR(num)          (((num)*0x4000)+0x4000) 
 
 #define WORD_UNICODE            (0x200000-0x34000) //0x34000 unicode 2MB-208KB
@@ -38,7 +38,7 @@
 #define FONT_ROOT_DIR "0:"ROOT_DIR"/font"
 #define TFT_RESET_FILE "0:reset.txt"
 
- #if defined (MKS_32_V1_1) || defined(RAZRAB)
+ #if defined (MKS_32_V1_1)
 enum
 {
   ICON_HEAT = 0,
