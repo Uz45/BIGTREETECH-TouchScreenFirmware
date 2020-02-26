@@ -22,39 +22,7 @@ void LCD_SetWindow(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey)
 	  LCD_WR_REG(0x21);
     LCD_WR_DATA(sx);
 #else
-#if defined (MKS_32_V1_1_disabled)
 
-  if(infoSettings.rotate_ui)
-  {
-    LCD_WR_REG(0x50);
-    LCD_WR_DATA(sy);
-	  LCD_WR_REG(0x52);
-    LCD_WR_DATA(sx);
-	  LCD_WR_REG(0x51);
-    LCD_WR_DATA(ey);
-	  LCD_WR_REG(0x53);
-    LCD_WR_DATA(ex);
-	  LCD_WR_REG(0x20);
-    LCD_WR_DATA(sy);
-	  LCD_WR_REG(0x21);
-    LCD_WR_DATA(sx);
-  }
-  else
-    LCD_WR_REG(0x50); //HSA
-    LCD_WR_DATA(sy);
-	  LCD_WR_REG(0x52); //VSA
-    LCD_WR_DATA(LCD_WIDTH-ex);
-	  LCD_WR_REG(0x51); //HEA
-    LCD_WR_DATA(ey);
-	  LCD_WR_REG(0x53); //VEA
-    LCD_WR_DATA(LCD_WIDTH-sx);
-	  LCD_WR_REG(0x20);
-    LCD_WR_DATA(sy);
-	  LCD_WR_REG(0x21);
-    LCD_WR_DATA(LCD_WIDTH-ex);
-  }
-    
-#else
     LCD_WR_REG(0x2A); 
     LCD_WR_DATA(sx>>8);LCD_WR_DATA(sx&0xFF);
     LCD_WR_DATA(ex>>8);LCD_WR_DATA(ex&0xFF);
@@ -62,7 +30,6 @@ void LCD_SetWindow(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey)
     LCD_WR_DATA(sy>>8);LCD_WR_DATA(sy&0xFF);
     LCD_WR_DATA(ey>>8);LCD_WR_DATA(ey&0xFF);
 #endif
-#endif 
 }
 
 void GUI_SetColor(uint16_t color)

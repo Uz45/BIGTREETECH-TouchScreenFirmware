@@ -498,7 +498,7 @@ void LCD_init_RGB(void)
 }
 
 
-#elif defined(MKS_32_V1_1)
+#elif defined(MKSTFTV1)
   void LCD_init_RGB(void) 
 {		
 	    uint16_t R01h, R03h, R60h;

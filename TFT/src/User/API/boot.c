@@ -223,7 +223,7 @@ void scanUpdates(void)
     {
       updateIcon();
     }
-    if (result) f_rename(ROOT_DIR, ROOT_DIR".CUR"); //HX8558
+    if (result) f_rename(ROOT_DIR, ROOT_DIR".CUR");
     scanResetDir();
   }
 }
