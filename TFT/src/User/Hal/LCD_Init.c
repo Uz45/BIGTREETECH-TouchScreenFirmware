@@ -395,6 +395,7 @@ void LCD_init_RGB(void)
 #elif defined(MKS_32_V1_4)
 void LCD_init_RGB(void) 
 {
+#if defined(HX8558) //for MKS TFT V4.0
   Delay_ms(50); // delay 50 ms 
   
  LCD_WR_REG(0xFE);                     // 
@@ -494,6 +495,7 @@ LCD_WR_REG(0x11);
 	    Delay_ms(150);
 LCD_WR_REG(0x29);
 LCD_WR_REG(0x2C);
+#endif
 }
 
 
