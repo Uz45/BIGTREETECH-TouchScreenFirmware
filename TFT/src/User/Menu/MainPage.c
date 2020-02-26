@@ -23,6 +23,7 @@ LABEL_READY,
     {ICON_EXTRUDE,              LABEL_EXTRUDE},
     {ICON_SETTINGS,             LABEL_SETTINGS},
     {ICON_BACKGROUND,           LABEL_BACKGROUND},
+    //{ICON_LEVELING,             "Calibrate"},
     {ICON_BACK,                 LABEL_BACK}}
   #endif
 };
@@ -63,6 +64,7 @@ void menuMain(void)
           break;      
         case KEY_ICON_4: infoMenu.menu[++infoMenu.cur] = menuExtrude;   break;
         case KEY_ICON_5: infoMenu.menu[++infoMenu.cur] = menuSettings;  break;
+        //case KEY_ICON_6: storeCmd("G33 \n"); break; //здесь
         case KEY_ICON_7: infoMenu.cur--;        break;
         default:break;
       #endif

@@ -18,7 +18,7 @@ const char iconBmpName[][32]={
 "RGB_Settings", "RGB_Red", "RGB_Green", "RGB_Blue", "RGB_White", "RGB_Off", "Preheat_Both", "Preheat_PLA", "Preheat_PETG", "Preheat_ABS",
 "PowerSupply", "Custom", "Custom0", "Custom1", "Custom2", "Custom3", "Custom4", "Custom5", "Custom6", "Home_Move", "Heat_Fan",
 "ManualLevel", "CoolDown", "SilentOff","StatusNozzle","StatusBed","StatusFan","MainMenu","StatusSpeed","StatusFlow",
-"parametersetting", "ledcolor", "global_nozzle", "global_bed", 
+"parametersetting", "ledcolor", "global_nozzle", "global_bed",
 }; 
 #else
 const char iconBmpName[][32]={
@@ -223,7 +223,7 @@ void scanUpdates(void)
     {
       updateIcon();
     }
-     if (result) f_rename(ROOT_DIR, ROOT_DIR".CUR");
+    if (result) f_rename(ROOT_DIR, ROOT_DIR".CUR"); //HX8558
     scanResetDir();
   }
 }

@@ -146,7 +146,7 @@ u16 LCD_RD_DATA(void)
   LCD_RD_SET;
 	LCD_CS_SET; 
 
- // uint16_t data =(uint16_t)((hi_bytes<<8)+lo_bytes);
+  // uint16_t data =(uint16_t)((hi_bytes<<8)+lo_bytes);
   //vu16 ram = data;
   //return ram;
   return (uint16_t)((hi_bytes<<8)+lo_bytes);

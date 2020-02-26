@@ -59,8 +59,8 @@
 #elif defined(TFT24_V1_1)
   #define ILI9341
   #define LCD_DATA_16BIT 1
-#elif defined(MKS_32_V1_4)
-  #define HX8558 
+#elif defined(MKS_32_V1_4) 
+  #define HX8558
   #define LCD_DATA_16BIT 1
 #elif defined(MKS_32_V1_1)
   #define MKSTFTV1
@@ -365,7 +365,7 @@
   #elif defined(MKS_32_V1_1)
     #define HARDWARE_VERSION "TFT32_V1.0"
   #elif defined(MKS_32_V1_3)
-    #define HARDWARE_VERSION "TFT32_V3.0"
+    #define HARDWARE_VERSION "TFT32_V3.0"    
   #endif  
 #endif
 

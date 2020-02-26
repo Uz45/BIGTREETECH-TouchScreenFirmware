@@ -29,25 +29,13 @@ GPIO_PinRemapConfig(GPIO_Remap_USART2, ENABLE);
   readStoredPara();
   LCD_RefreshDirection();  //refresh display direction after reading settings
   scanUpdates();
-
-  #if defined (MKS_32_V1_4) || defined(MKS_32_V1_1) || defined(MKS_32_V1_3)
-  #else
+  
+#if defined (MKS_32_V1_4) || defined(MKS_32_V1_1) || defined(MKS_32_V1_3)
+#else
   //causes hang if we deinit spi1    
   SD_DeInit();
-  #endif
-   
-  // #ifndef MKS_32_V1_4 
-  // #ifndef MKS_32_V1_1
-  // #ifndef MKS_32_V1_3
-  // #endif
-  // #endif
-  // #else
-  // #ifndef MKS_32_V1_4
-  // //causes hang if we deinit spi1    
-  // SD_DeInit();
-  // #endif  
-  // #endif
-  
+#endif
+
 #if LCD_ENCODER_SUPPORT
   LCD_EncoderInit();
 #endif
