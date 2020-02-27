@@ -327,8 +327,8 @@ void reDrawProgress(u8 progress)
   char buf[5];
     u16 progressX = map(progress, 0, 100, progressRect.x0, progressRect.x1);
   const GUI_RECT percentageRect = {BED_X, TEMP_Y-3*BYTE_HEIGHT, BED_X+5*BYTE_WIDTH, TEMP_Y-2*BYTE_HEIGHT};
-  GUI_FillRectColor(progressRect.x0, progressRect.y0, progressX, progressRect.y1,BLUE);
-  GUI_FillRectColor(progressX, progressRect.y0, progressRect.x1, progressRect.y1,GRAY);
+  //GUI_FillRectColor(progressRect.x0, progressRect.y0, progressX, progressRect.y1,BLUE);
+  //GUI_FillRectColor(progressX, progressRect.y0, progressRect.x1, progressRect.y1,GRAY);
   my_sprintf(buf, "%d%%", progress);
   //GUI_SetTextMode(GUI_TEXTMODE_TRANS);
   GUI_DispStringInPrect(&percentageRect, (u8 *)buf);    
