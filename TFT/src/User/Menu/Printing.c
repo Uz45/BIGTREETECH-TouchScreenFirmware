@@ -299,7 +299,7 @@ const GUI_RECT progressRect = {1*SPACE_X_PER_ICON, 0*ICON_HEIGHT+0*SPACE_Y+ICON_
 #define TIME_Y (TEMP_Y + 1 * BYTE_HEIGHT + 3)
 void reValueNozzle(void)
 {
-  GUI_DispString(BED_X, TEMP_Y-2*BYTE_HEIGHT, (u8* )heatDisplayID[heatGetCurrentToolNozzle()]);
+  GUI_DispString(BED_X-2, TEMP_Y-2*BYTE_HEIGHT, (u8* )heatDisplayID[heatGetCurrentToolNozzle()]);
   GUI_DispDec(BED_X + 2 * BYTE_WIDTH, TEMP_Y-2*BYTE_HEIGHT , heatGetCurrentTemp(heatGetCurrentToolNozzle()), 3, RIGHT);
   GUI_DispDec(BED_X + 6 * BYTE_WIDTH, TEMP_Y-2*BYTE_HEIGHT, heatGetTargetTemp(heatGetCurrentToolNozzle()),  3, LEFT);
 }
