@@ -510,7 +510,7 @@ LCD_WR_REG(0x2C);
 	    LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
       LCD_WR_DATA(R60h);
 }   
-#elif defined (MKSTFTV3M)  //for MKS TFT V3.0 If the image is mirrored
+#elif defined (MKSTFTV3M) || defined(MKSTFTV1)   //for MKS TFT V1.0 or MKS TFT V3.0 If the image is mirrored
   void LCD_init_RGB(void) 
 {	
 //  DisplayOrientation SwapXY mirror X		
@@ -573,7 +573,7 @@ void LCD_RefreshDirection(void)
       LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
       LCD_WR_DATA(R60h);     
     #endif 
-      #ifdef MKSTFTV3M  //for MKS TFT V3.0 If the image is mirrored
+      #if defined (MKSTFTV3M) || defined(MKSTFTV1)  //for MKS TFT V1.0 or MKS TFT V3.0 If the image is mirrored
 //  DisplayOrientation SwapXY mirror X		
 	    uint16_t R01h, R03h, R60h;
       R01h = (0 << 8) | (0 << 10);// SS = 0, SM = 0,  from S720 to S1 (see also  GS bit (R60h))
@@ -619,7 +619,7 @@ void LCD_RefreshDirection(void)
       LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
       LCD_WR_DATA(R60h);     
     #endif
-    #ifdef MKSTFTV3M  //for MKS TFT V3.0 If the image is mirrored
+    #if defined (MKSTFTV3M)  || defined(MKSTFTV1)  //for MKS TFT V1.0 or MKS TFT V3.0 If the image is mirrored
 //  DisplayOrientation SwapXY mirror X		
 	    uint16_t R01h, R03h, R60h;
       R01h = (1 << 8) | (0 << 10);// SS = 1, SM = 0,  from S720 to S1 (see also  GS bit (R60h))

@@ -285,7 +285,7 @@
 //
 //Start Gcode - run this gcode before starting print
 //
-#define PRINT_START_GCODE "G28\nG29\nG1 Z20\n" // home and abl  
+#define PRINT_START_GCODE "G28\n" // home and abl "G28\nG29\nG1 Z20\n" 
 
 //
 //End Gcode - run this gcode after finishing print

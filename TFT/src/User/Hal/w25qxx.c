@@ -8,7 +8,7 @@
 //Ƭѡ
 void W25Qxx_SPI_CS_Set(u8 level)
 {
-  #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3)
+  #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_1) 
   if (level==0)
   GPIO_ResetBits(GPIOB,GPIO_Pin_9);
   else

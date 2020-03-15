@@ -223,6 +223,17 @@ void menuCustom(void)
 MENUITEMS RGBItems = {
 // title
 LABEL_RGB_SETTINGS,
+#if defined (MKS_32_V1_1)
+// icon                       label
+ {{ICON_RGB_SETTINGS,              LABEL_RED},
+  {ICON_RGB_SETTINGS,            LABEL_GREEN},
+  {ICON_RGB_SETTINGS,             LABEL_BLUE},
+  {ICON_RGB_SETTINGS,            LABEL_WHITE},
+  {ICON_RGB_SETTINGS,              LABEL_OFF},
+  {ICON_BACKGROUND,           LABEL_BACKGROUND},
+  {ICON_BACKGROUND,           LABEL_BACKGROUND},
+  {ICON_BACK,                 LABEL_BACK},}
+#else
 // icon                       label
  {{ICON_RGB_RED,              LABEL_RED},
   {ICON_RGB_GREEN,            LABEL_GREEN},
@@ -232,6 +243,7 @@ LABEL_RGB_SETTINGS,
   {ICON_BACKGROUND,           LABEL_BACKGROUND},
   {ICON_BACKGROUND,           LABEL_BACKGROUND},
   {ICON_BACK,                 LABEL_BACK},}
+#endif
 };
 
 void menuRGBSettings(void)
