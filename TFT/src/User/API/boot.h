@@ -18,7 +18,15 @@
 #define INFOBOX_ADDR            (BYTE_ASCII_ADDR - 0x8000) //total byte size 0x8000 32KB
 #define SMALL_ICON_START_ADDR   (INFOBOX_ADDR-0x1000) //total byte size 0x1000 4KB
 #define SMALL_ICON_ADDR(num)    ((num)*0x1000+SMALL_ICON_START_ADDR)
+#elif defined (MKS_32_V1_2)
+#define ICON_ADDR(num)          (((num)*0x4000)+0x4000) 
 
+#define WORD_UNICODE            (0x200000) //0x200000 unicode 2MB
+#define BYTE_ASCII_ADDR         (WORD_UNICODE-0x1000) //0x1000 ascii 4KB
+
+#define INFOBOX_ADDR            (BYTE_ASCII_ADDR - 0x8000) //total byte size 0x8000 32KB
+#define SMALL_ICON_START_ADDR   (INFOBOX_ADDR-0x1000) //total byte size 0x1000 4KB
+#define SMALL_ICON_ADDR(num)    ((num)*0x1000+SMALL_ICON_START_ADDR)
 #else
 #define WORD_UNICODE            0x4B000 // unicode (+0x480000 4.5M)
 #define BYTE_ASCII_ADDR         (WORD_UNICODE+0x480000) // ascii (+0x1000 4K)
