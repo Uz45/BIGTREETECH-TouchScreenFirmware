@@ -47,10 +47,45 @@ bool LCD_ReadPen(uint8_t intervals)
   return false;
 }
 
+#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+u8 LCD_ButtonTouch(uint8_t intervals)
+{
+	static u32 BtnTime = 0;
+    u16 tx,ty;
+  if(!XPT2046_Read_Pen())
+  {
+		TS_Get_Coordinates(&tx,&ty);
+    	if(OS_GetTime() - BtnTime > intervals)
+    {
+		if (ty >(LCD_HEIGHT-(LCD_HEIGHT/4)))
+		{
+			if(tx<(LCD_WIDTH/3))
+			{
+			 return 3;
+			}
+			if(tx<(LCD_WIDTH-(LCD_WIDTH/3)))
+			{
+			 return 2;
+			}
+			if(tx<LCD_WIDTH)
+			{
+			 return 1;
+			}		
+		}
+     return 0;
+    }
+  }
+  else
+  {
+    BtnTime = OS_GetTime();
+  }
+  return 4;
+}
+#else
 bool LCD_BtnTouch(uint8_t intervals)
 {
 	static u32 BtnTime = 0;
-  u16 tx,ty;
+    u16 tx,ty;
   if(!XPT2046_Read_Pen())
   {
 		TS_Get_Coordinates(&tx,&ty);
@@ -66,6 +101,7 @@ bool LCD_BtnTouch(uint8_t intervals)
   }
   return false;
 }
+#endif
 
 #if 1
  uint8_t LCD_ReadTouch(void)
@@ -122,6 +158,60 @@ void Touch_Sw(uint8_t num)
 	GPIO_InitSet(LCD_ENCA_PIN, MGPIO_MODE_OUT_PP, 0);
 	GPIO_InitSet(LCD_ENCB_PIN, MGPIO_MODE_OUT_PP, 0);
   }
+ #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+   u8 delayenc=14;
+   u8 pulses;
+	switch(num)
+	{
+		case 0:
+			break;
+		case 1:
+			GPIO_SetLevel(LCD_BTN_PIN, 0);
+			Delay_us(20);
+			GPIO_SetLevel(LCD_BTN_PIN, 1);
+			break;
+		case 2:
+	for(pulses = 1; pulses <= ENCODER_PULSES_PER_STEP; pulses++)
+  {
+			GPIO_SetLevel(LCD_ENCA_PIN, 1);
+			GPIO_SetLevel(LCD_ENCB_PIN, 1);
+			Delay_us(delayenc);
+			GPIO_SetLevel(LCD_ENCA_PIN, 0);
+			GPIO_SetLevel(LCD_ENCB_PIN, 1);
+			Delay_us(delayenc);
+			GPIO_SetLevel(LCD_ENCA_PIN, 0);
+			GPIO_SetLevel(LCD_ENCB_PIN, 0);
+			Delay_us(delayenc);
+			GPIO_SetLevel(LCD_ENCA_PIN, 1);
+			GPIO_SetLevel(LCD_ENCB_PIN, 0);
+			Delay_us(delayenc);
+  			GPIO_SetLevel(LCD_ENCA_PIN, 1);
+			GPIO_SetLevel(LCD_ENCB_PIN, 1);
+			Delay_us(delayenc);						
+  }					
+			break;
+		case 3:
+	for(pulses = 1; pulses <= ENCODER_PULSES_PER_STEP; pulses++)
+  {
+			GPIO_SetLevel(LCD_ENCA_PIN, 1);
+			GPIO_SetLevel(LCD_ENCB_PIN, 1);
+			Delay_us(delayenc);
+			GPIO_SetLevel(LCD_ENCA_PIN, 1);
+			GPIO_SetLevel(LCD_ENCB_PIN, 0);
+			Delay_us(delayenc);
+			GPIO_SetLevel(LCD_ENCA_PIN, 0);
+			GPIO_SetLevel(LCD_ENCB_PIN, 0);
+			Delay_us(delayenc);
+			GPIO_SetLevel(LCD_ENCA_PIN, 0);
+			GPIO_SetLevel(LCD_ENCB_PIN, 1);
+			Delay_us(delayenc);
+  			GPIO_SetLevel(LCD_ENCA_PIN, 1);
+			GPIO_SetLevel(LCD_ENCB_PIN, 1);
+			Delay_us(delayenc);						
+  }		
+			break;
+	}
+ #else 
 	switch(num)
 	{
 		case 0:
@@ -163,6 +253,7 @@ void Touch_Sw(uint8_t num)
 			GPIO_SetLevel(LCD_ENCB_PIN, 1);
 			break;
 	}
+#endif
 
   LCD_EncoderInit();
 }

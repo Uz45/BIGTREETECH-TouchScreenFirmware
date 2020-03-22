@@ -13,7 +13,7 @@
 #elif ST7920_SPI == _SPI2
   #define ST7920_SPI_NUM          SPI2
 #elif ST7920_SPI == _SPI3
-  #define W25QXX_SPI_NUM          SPI3
+  #define ST7920_SPI_NUM          SPI3
 #endif
 
 //#define _SPI_SLAVE_IRQ(n)  n##_IRQHandler
@@ -43,20 +43,23 @@ void SPI_ReEnable(u8 mode)
 
 void SPI_Slave(void)
 {
+  //GPIO_InitSet(PB3, MGPIO_MODE_IPU, 0);
+  //GPIO_InitSet(PB5, MGPIO_MODE_IPU, 0);
+  //GPIO_InitSet(SPI3_SCK_PIN, MGPIO_MODE_OUT_PP, 0);
   NVIC_InitTypeDef   NVIC_InitStructure;
 
   SPISlave.data = malloc(SPI_SLAVE_MAX);
   while(!SPISlave.data); // malloc failed
   SPI_GPIO_Init(ST7920_SPI);
-  GPIO_InitSet(PB12, MGPIO_MODE_IPU, 0);  // CS
+  GPIO_InitSet(PB1, MGPIO_MODE_IPU, 0);  // CS
 
-  NVIC_InitStructure.NVIC_IRQChannel = SPI2_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannel = SPI3_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
 
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2,ENABLE);
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI3,ENABLE);
   SPI_ReEnable(1);
 }
 
@@ -64,21 +67,21 @@ void SPI_SlaveDeInit(void)
 {
   NVIC_InitTypeDef   NVIC_InitStructure;
 
-  NVIC_InitStructure.NVIC_IRQChannel = SPI2_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannel = SPI3_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelCmd = DISABLE;
   NVIC_Init(&NVIC_InitStructure);
-  NVIC_InitStructure.NVIC_IRQChannel = EXTI15_10_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannel = EXTI1_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelCmd = DISABLE;
   NVIC_Init(&NVIC_InitStructure);
 
-  RCC_APB1PeriphResetCmd(RCC_APB1Periph_SPI2, ENABLE);
-  RCC_APB1PeriphResetCmd(RCC_APB1Periph_SPI2, DISABLE);
+  RCC_APB1PeriphResetCmd(RCC_APB1Periph_SPI3, ENABLE);
+  RCC_APB1PeriphResetCmd(RCC_APB1Periph_SPI3, DISABLE);
   free(SPISlave.data);
   SPISlave.data = NULL;
 }
 
 
-void SPI2_IRQHandler(void)
+void SPI3_IRQHandler(void)
 {
   SPISlave.data[SPISlave.wIndex] =  ST7920_SPI_NUM->DR;
   SPISlave.wIndex = (SPISlave.wIndex + 1) % SPI_SLAVE_MAX;
@@ -92,16 +95,16 @@ void SPI_Slave_CS_Config(void)
 
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
   /* ��GPIOA_0���ж������� */
-  GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource12);
+  GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource1);
 
   /* �����ж���0λ�ⲿ�½����ж� */
-  EXTI_InitStructure.EXTI_Line = EXTI_Line12;
+  EXTI_InitStructure.EXTI_Line = EXTI_Line1;
   EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
   EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
   EXTI_InitStructure.EXTI_LineCmd = ENABLE;
   EXTI_Init(&EXTI_InitStructure);
 
-  NVIC_InitStructure.NVIC_IRQChannel = EXTI15_10_IRQn;			//ʹ�ܰ������ڵ��ⲿ�ж�ͨ��
+  NVIC_InitStructure.NVIC_IRQChannel = EXTI1_IRQn;			//ʹ�ܰ������ڵ��ⲿ�ж�ͨ��
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x00;	//��ռ���ȼ�2��
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x01;					//�����ȼ�1
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;								//ʹ���ⲿ�ж�ͨ��
@@ -110,9 +113,9 @@ void SPI_Slave_CS_Config(void)
 
 
 /* �ⲿ�ж� */
-void EXTI15_10_IRQHandler(void)
+void EXTI1_IRQHandler(void)
 {
-  if((GPIOB->IDR & (1<<12)) != 0)
+  if((GPIOB->IDR & (1<<1)) != 0)
   {
     SPI_ReEnable(!!(GPIOB->IDR & (1<<13))); //����Ӧ spi mode0/mode3
     ST7920_SPI_NUM->CR1 |= (1<<6);
@@ -122,8 +125,8 @@ void EXTI15_10_IRQHandler(void)
     RCC->APB1RSTR |= 1<<14;	//��λSPI1
     RCC->APB1RSTR &= ~(1<<14);
   }
-/* ����ж�״�?�Ĵ��� */
-  EXTI->PR = 1<<12;
+/* ����ж�״�?�Ĵ��� */
+  EXTI->PR = 1<<1;
 }
 
 #endif

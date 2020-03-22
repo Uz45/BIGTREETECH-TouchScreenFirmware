@@ -96,7 +96,10 @@ void loopCheckMode(void)
 //  #endif
   if(LCD_ReadBtn(LCD_CHANGE_MODE_INTERVALS) || LCD_ReadPen(LCD_CHANGE_MODE_INTERVALS))
   {
-    infoMenu.menu[++infoMenu.cur] = menuMode;
+    #if defined MKS_32_V1_4 || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+    W25Qxx_Init();
+    #endif
+    infoMenu.menu[++infoMenu.cur] = menuMode;  
   }
 }
 #endif

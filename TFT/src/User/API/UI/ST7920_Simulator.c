@@ -133,8 +133,16 @@ void menuST7920(void)
     GUI_DispStringInRect(0, 0, LCD_WIDTH, SIMULATOR_YSTART, (u8*)ST7920_BANNER_TEXT);
   #endif
 
+#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+// Menu for LCD Encoder
+  GUI_DispStringInRect(0, LCD_HEIGHT-(LCD_HEIGHT/4), LCD_WIDTH/3, LCD_HEIGHT, "UP");
+  GUI_DispStringInRect(LCD_WIDTH/3, LCD_HEIGHT-(LCD_HEIGHT/4), LCD_WIDTH-(LCD_WIDTH/3), LCD_HEIGHT, "DOWN");
+  GUI_DispStringInRect(LCD_WIDTH-(LCD_WIDTH/3), LCD_HEIGHT-(LCD_HEIGHT/4), LCD_WIDTH, LCD_HEIGHT, "OK");
+#endif
+
   SPI_Slave();
   SPI_Slave_CS_Config();
+  u8 tsw;
 
   while(infoMenu.menu[infoMenu.cur] == menuST7920)
   {
@@ -145,10 +153,19 @@ void menuST7920(void)
       SPISlave.rIndex = (SPISlave.rIndex + 1) % SPI_SLAVE_MAX;
     }
 
-    Touch_Sw(LCD_ReadTouch());
+#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+    tsw=LCD_ButtonTouch(LCD_BUTTON_INTERVALS);
 
-    if(LCD_BtnTouch(LCD_BUTTON_INTERVALS))
-			Touch_Sw(1);
+      if(tsw==1 || tsw==2 || tsw ==3)
+      {
+    Touch_Sw(tsw);        
+      }
+#else
+   Touch_Sw(LCD_ReadTouch());
+   
+   if(LCD_BtnTouch(LCD_BUTTON_INTERVALS))
+   Touch_Sw(1);
+#endif 
 
     #if LCD_ENCODER_SUPPORT
       loopCheckMode();

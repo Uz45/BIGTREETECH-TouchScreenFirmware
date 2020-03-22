@@ -194,8 +194,11 @@
 #if defined(TFT24_V1_1) || defined(TFT35_V3_0) || defined(TFT28_V3_0)
   #define ST7920_SPI    _SPI2
 #elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
-  //#define ST7920_SPI    _SPI1
-  //#define SPISIM_CS_PIN    PB4
+  #define ST7920_SPI    _SPI3
+  #define SPISIM_CS_PIN    PB1
+  //#define SPI3_CS_PIN  PB1
+  //#define SPI3_SCK_PIN  PB3
+  //#define SPI3_MOSI_PIN  PB5
 #endif
 
 //buzzer support
@@ -221,9 +224,9 @@
   #define LCD_ENCB_PIN  PC9
   #define LCD_BTN_PIN   PC8
 #elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
-  #define LCD_ENCA_PIN  PB0
-  #define LCD_ENCB_PIN  PB1
-  #define LCD_BTN_PIN   PB5
+  #define LCD_ENCA_PIN  PA13 //JTAG DIO 31
+  #define LCD_ENCB_PIN  PA14 //JTAG CLK 33
+  #define LCD_BTN_PIN   PB0
 #endif
 #define LCD_ENCODER_SUPPORT (defined(LCD_ENCA_PIN) && defined(LCD_ENCB_PIN) && defined(LCD_BTN_PIN))
 
@@ -255,6 +258,10 @@
   #define DISABLE_DEBUG   //
 #elif defined(TFT35_V3_0) || defined(TFT28_V3_0)
   //stm32f207 needn't this
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+  #if (LCD_ENCODER_SUPPORT)
+  #define DISABLE_DEBUG  //free JTAG(PB3/PB4) for SPI3 and free SWDIO PA13 PA14 for encoder pins
+  #endif    
 #endif
 
 //LCD resolution, font and icon size

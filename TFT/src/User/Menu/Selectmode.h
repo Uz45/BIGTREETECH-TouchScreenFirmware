@@ -17,7 +17,11 @@ typedef enum
 bool LCD_ReadPen(uint8_t intervals);
 uint8_t LCD_ReadTouch(void);
 void Touch_Sw(uint8_t num);
+#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+u8 LCD_ButtonTouch(uint8_t intervals);
+#else
 bool LCD_BtnTouch(uint8_t intervals);
+#endif
 
 //select mode fun
 void show_selectICON(void);
