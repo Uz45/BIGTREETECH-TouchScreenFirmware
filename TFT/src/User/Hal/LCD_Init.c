@@ -495,7 +495,7 @@ LCD_WR_REG(0x11);
 LCD_WR_REG(0x29);
 LCD_WR_REG(0x2C);
 }
-#elif defined (MKSTFTV3)  //for MKS TFT V3.0
+#elif defined (MKSTFTV3M)  //for MKS TFT V3.0 If the image is mirrored
   void LCD_init_RGB(void) 
 {	
 //  DisplayOrientation SwapXY mirror X		
@@ -510,7 +510,7 @@ LCD_WR_REG(0x2C);
 	    LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
       LCD_WR_DATA(R60h);
 }   
-#elif defined (MKSTFTV3M) || defined(MKSTFTV2) || defined(MKSTFTV1)   //for MKS TFT V1.0 or MKS TFT V3.0 If the image is mirrored
+#elif defined (MKSTFTV3) || defined(MKSTFTV2) || defined(MKSTFTV1)
   void LCD_init_RGB(void) 
 {	
 //  DisplayOrientation SwapXY mirror X		
@@ -558,9 +558,9 @@ void LCD_RefreshDirection(void)
       #endif
     #endif
     #ifdef HX8558
-     LCD_WR_DATA(0XA4);
+     LCD_WR_DATA(0X64);
     #endif
-    #ifdef MKSTFTV3
+    #ifdef MKSTFTV3M
 //  case DisplayOrientation::Landscape:SwapXY Scan Direction invert        Rotate 180 degress  		
 	    uint16_t R01h, R03h, R60h;
       R01h = (0 << 8) | (0 << 10);// SS = 1, SM = 0,  from S720 to S1 (see also  GS bit (R60h))
@@ -573,7 +573,7 @@ void LCD_RefreshDirection(void)
       LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
       LCD_WR_DATA(R60h);     
     #endif 
-      #if defined (MKSTFTV3M) || defined(MKSTFTV2) || defined(MKSTFTV1)  //for MKS TFT V1.0 or MKS TFT V3.0 If the image is mirrored
+      #if defined (MKSTFTV3) || defined(MKSTFTV2) || defined(MKSTFTV1)  //for MKS TFT V1.0 or MKS TFT V3.0 If the image is mirrored
 //  DisplayOrientation SwapXY mirror X		
 	    uint16_t R01h, R03h, R60h;
       R01h = (0 << 8) | (0 << 10);// SS = 0, SM = 0,  from S720 to S1 (see also  GS bit (R60h))
@@ -585,7 +585,7 @@ void LCD_RefreshDirection(void)
       LCD_WR_DATA(R03h);
 	    LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
       LCD_WR_DATA(R60h);     
-    #endif
+    #endif    
   }
   else
   {
@@ -606,7 +606,7 @@ void LCD_RefreshDirection(void)
     #ifdef HX8558
      LCD_WR_DATA(0xA4);
     #endif
-    #ifdef MKSTFTV3
+    #ifdef MKSTFTV3M
       //case DisplayOrientation::SwapXY:ReverseX:   		
 	    uint16_t R01h, R03h, R60h;
       R01h = (1 << 8) | (0 << 10);// SS = 1, SM = 0,  from S720 to S1 (see also  GS bit (R60h))
@@ -619,7 +619,7 @@ void LCD_RefreshDirection(void)
       LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
       LCD_WR_DATA(R60h);     
     #endif
-    #if defined (MKSTFTV3M) || defined(MKSTFTV2) || defined(MKSTFTV1)  //for MKS TFT V1.0 or MKS TFT V3.0 If the image is mirrored
+    #if defined (MKSTFTV3) || defined(MKSTFTV2) || defined(MKSTFTV1)  //for MKS TFT V1.0 or MKS TFT V3.0 If the image is mirrored
 //  DisplayOrientation SwapXY mirror X		
 	    uint16_t R01h, R03h, R60h;
       R01h = (1 << 8) | (0 << 10);// SS = 1, SM = 0,  from S720 to S1 (see also  GS bit (R60h))
@@ -631,7 +631,7 @@ void LCD_RefreshDirection(void)
       LCD_WR_DATA(R03h);
 	    LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
       LCD_WR_DATA(R60h);     
-    #endif     
+    #endif       
   }
 }
 

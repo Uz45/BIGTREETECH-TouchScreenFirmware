@@ -255,18 +255,30 @@ void sendQueueCmd(void)
           
           case 82: //M82
             eSetRelative(false);
-          break;
+            break;
 
           case 83: //M83
             eSetRelative(true);
-          break;
+            break;
+
+          case 92: //M92
+            if(cmd_seen('X')) setParameterSteps(X_AXIS, cmd_value());
+            if(cmd_seen('Y')) setParameterSteps(Y_AXIS, cmd_value());
+            if(cmd_seen('Z')) setParameterSteps(Z_AXIS, cmd_value());
+            if(cmd_seen('E')) setParameterSteps(E_AXIS, cmd_value());
+            break;
 
           case 109: //M109
           {
             TOOL i = heatGetCurrentToolNozzle();
             if(cmd_seen('T')) i = (TOOL)(cmd_value() + NOZZLE0);
             infoCmd.queue[infoCmd.index_r].gcode[3]='4';
-            heatSetIsWaiting(i,true);
+            if (cmd_seen('R')) {
+              infoCmd.queue[infoCmd.index_r].gcode[cmd_index-1] = 'S';
+              heatSetIsWaiting(i, WAIT_COOLING_HEATING);
+            } else {
+              heatSetIsWaiting(i, WAIT_HEATING);
+            }
           }
           case 104: //M104
           {
@@ -276,7 +288,7 @@ void sendQueueCmd(void)
             {
               heatSyncTargetTemp(i, cmd_value());
             }
-            else
+            else if (!cmd_seen('\n'))
             {
               char buf[12];
               sprintf(buf, "S%d\n", heatGetTargetTemp(i));
@@ -300,7 +312,7 @@ void sendQueueCmd(void)
             {
               fanSetSpeed(i, cmd_value());
             }
-            else
+            else if (!cmd_seen('\n'))
             {
               char buf[12];
               sprintf(buf, "S%d\n", fanGetSpeed(i));
@@ -334,13 +346,18 @@ void sendQueueCmd(void)
 
           case 190: //M190
             infoCmd.queue[infoCmd.index_r].gcode[2]='4';
-            heatSetIsWaiting(BED,true);
+            if (cmd_seen('R')) {
+              infoCmd.queue[infoCmd.index_r].gcode[cmd_index-1] = 'S';
+              heatSetIsWaiting(BED, WAIT_COOLING_HEATING);
+            } else {
+              heatSetIsWaiting(BED, WAIT_HEATING);
+            }
           case 140: //M140
             if(cmd_seen('S'))
             {
               heatSyncTargetTemp(BED,cmd_value());
             }
-            else
+            else if (!cmd_seen('\n'))
             {
               char buf[12];
               sprintf(buf, "S%d\n", heatGetTargetTemp(BED));
@@ -354,7 +371,7 @@ void sendQueueCmd(void)
             {
               speedSetPercent(0,cmd_value());
             }
-            else
+            else if (!cmd_seen('\n'))
             {
               char buf[12];
               sprintf(buf, "S%d\n", speedGetPercent(0));
@@ -362,18 +379,38 @@ void sendQueueCmd(void)
               speedSetSendWaiting(0, false);
             }
             break;
+            
           case 221: //M221
             if(cmd_seen('S'))
             {
               speedSetPercent(1,cmd_value());
             }
-            else
+            else if (!cmd_seen('\n'))
             {
               char buf[12];
               sprintf(buf, "S%d\n", speedGetPercent(1));
               strcat(infoCmd.queue[infoCmd.index_r].gcode,(const char*)buf);
               speedSetSendWaiting(1, false);
             }
+            break;
+
+          #ifdef BUZZER_PIN
+            case 300: //M300
+              if (cmd_seen('S')) {
+                uint16_t hz = cmd_value();
+                if (cmd_seen('P')) {
+                  uint16_t ms = cmd_value();
+                  Buzzer_TurnOn(hz, ms);
+                }
+              }
+              break;
+          #endif
+
+          case 906: //M906
+            if(cmd_seen('X')) setParameterCurrent(X_AXIS, cmd_value());
+            if(cmd_seen('Y')) setParameterCurrent(Y_AXIS, cmd_value());
+            if(cmd_seen('Z')) setParameterCurrent(Z_AXIS, cmd_value());
+            if(cmd_seen('E')) setParameterCurrent(E_AXIS, cmd_value());
             break;
         }
         break;
@@ -446,12 +483,10 @@ void sendQueueCmd(void)
   setCurrentAckSrc(infoCmd.queue[infoCmd.index_r].src);
   Serial_Puts(SERIAL_PORT, infoCmd.queue[infoCmd.index_r].gcode); //
   if (avoid_terminal != true){
-  sendGcodeTerminalCache(infoCmd.queue[infoCmd.index_r].gcode, TERMINAL_GCODE);
+    sendGcodeTerminalCache(infoCmd.queue[infoCmd.index_r].gcode, TERMINAL_GCODE);
   }
   infoCmd.count--;
   infoCmd.index_r = (infoCmd.index_r + 1) % CMD_MAX_LIST;
 
   infoHost.wait = infoHost.connected;          //
-
-  powerFailedEnable(true);
 }

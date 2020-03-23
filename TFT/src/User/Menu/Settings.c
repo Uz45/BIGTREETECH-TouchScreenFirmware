@@ -30,7 +30,11 @@ void infoSettingsReset(void)
 // Version infomation
 void menuInfo(void)
 {
+  #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+  const char* hardware = "Board   : MKS_" HARDWARE_VERSION;
+  #else
   const char* hardware = "Board   : BIGTREETECH_" HARDWARE_VERSION;
+  #endif
   const char* firmware = "Firmware: "HARDWARE_VERSION"." STRINGIFY(SOFTWARE_VERSION) " " __DATE__;
 
   u16 HW_X = (LCD_WIDTH - GUI_StrPixelWidth((u8 *)hardware))/2;
@@ -57,10 +61,10 @@ void menuDisconnect(void)
   GUI_DispStringInRect(20, 0, LCD_WIDTH-20, LCD_HEIGHT, textSelect(LABEL_DISCONNECT_INFO));
   GUI_DispStringInRect(20, LCD_HEIGHT - (BYTE_HEIGHT*2), LCD_WIDTH-20, LCD_HEIGHT, textSelect(LABEL_TOUCH_TO_EXIT));
 
-  Serial_DeInit();
+  Serial_ReSourceDeInit();
   while(!isPress());
   while(isPress());
-  Serial_Init(infoSettings.baudrate);
+  Serial_ReSourceInit();
 
   infoMenu.cur--;
 }
@@ -74,18 +78,25 @@ LABEL_SETTINGS,
   {ICON_FEATURE_SETTINGS,     LABEL_FEATURE_SETTINGS},
   {ICON_SCREEN_INFO,          LABEL_SCREEN_INFO},
   {ICON_DISCONNECT,           LABEL_DISCONNECT},
-  {ICON_BAUDRATE,             LABEL_BAUDRATE_115200},
+  {ICON_BAUDRATE,             LABEL_BACKGROUND},
   {ICON_BACKGROUND,           LABEL_BACKGROUND},
   {ICON_BACK,                 LABEL_BACK},}
 };
 
-#define ITEM_BAUDRATE_NUM 2
+#define ITEM_BAUDRATE_NUM 9
 const ITEM itemBaudrate[ITEM_BAUDRATE_NUM] = {
 // icon                       label
-  {ICON_BAUDRATE,             LABEL_BAUDRATE_115200},
-  {ICON_BAUDRATE,             LABEL_BAUDRATE_250000},
+  {ICON_BAUDRATE,             {.address = "2400"}},
+  {ICON_BAUDRATE,             {.address = "9600"}},
+  {ICON_BAUDRATE,             {.address = "19200"}},
+  {ICON_BAUDRATE,             {.address = "38400"}},
+  {ICON_BAUDRATE,             {.address = "57600"}},
+  {ICON_BAUDRATE,             {.address = "115200"}},
+  {ICON_BAUDRATE,             {.address = "250000"}},
+  {ICON_BAUDRATE,             {.address = "500000"}},
+  {ICON_BAUDRATE,             {.address = "1000000"}},
 };
-const  u32 item_baudrate[ITEM_BAUDRATE_NUM] = {115200, 250000};
+const  u32 item_baudrate[ITEM_BAUDRATE_NUM] = {2400, 9600, 19200, 38400, 57600, 115200, 250000, 500000, 1000000};
 static u8  item_baudrate_i = 0;
 
 void menuSettings(void)
@@ -134,8 +145,9 @@ void menuSettings(void)
         settingsItems.items[key_num] = itemBaudrate[item_baudrate_i];
         menuDrawItem(&settingsItems.items[key_num], key_num);
         infoSettings.baudrate = item_baudrate[item_baudrate_i];
-        Serial_DeInit(); // Serial_Init() will malloc a dynamic memory, so Serial_DeInit() first to free, then malloc again.
-        Serial_Init(infoSettings.baudrate);
+        Serial_ReSourceDeInit(); // Serial_Init() will malloc a dynamic memory, so Serial_DeInit() first to free, then malloc again.
+        Serial_ReSourceInit();
+        reminderMessage(LABEL_UNCONNECTED, STATUS_UNCONNECT);
         break;
 
       case KEY_ICON_7:

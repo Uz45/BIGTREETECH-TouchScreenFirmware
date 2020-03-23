@@ -84,7 +84,7 @@ LISTITEM settingPage[SKEY_COUNT] = {
   {ICONCHAR_TOGGLE_ON,  LIST_TOGGLE,        LABEL_AUTO_SHUT_DOWN,     LABEL_BACKGROUND},
   #endif
   #ifdef FIL_RUNOUT_PIN
-  {ICONCHAR_BLANK,      LIST_CUSTOMVALUE,   LABEL_FILAMENT_RUNOUT,    LABEL_OFF       },
+  {ICONCHAR_BLANK,      LIST_CUSTOMVALUE,   LABEL_FILAMENT_SENSOR,    LABEL_OFF       },
   #endif
   {ICONCHAR_BLANK,      LIST_CUSTOMVALUE,   LABEL_MOVE_SPEED,                 LABEL_NORMAL_SPEED},
   {ICONCHAR_TOGGLE_ON,  LIST_TOGGLE,        LABEL_SEND_START_GCODE,           LABEL_BACKGROUND},
@@ -227,7 +227,7 @@ void loadFeatureSettings(){
         featureSettingsItems.items[i] = settingPage[item_index];
         break;
 
-		case SKEY_INVERT_X:
+      case SKEY_INVERT_X:
         settingPage[item_index].icon = toggleitem[infoSettings.invert_axis[X_AXIS]];
         featureSettingsItems.items[i] = settingPage[item_index];
         break;
@@ -244,16 +244,16 @@ void loadFeatureSettings(){
 
       #ifdef PS_ON_PIN
         case SKEY_POWER:
-        settingPage[item_index].icon = toggleitem[infoSettings.auto_off];
-        featureSettingsItems.items[i] = settingPage[item_index];
-        break;
+          settingPage[item_index].icon = toggleitem[infoSettings.auto_off];
+          featureSettingsItems.items[i] = settingPage[item_index];
+          break;
       #endif
 
       #ifdef FIL_RUNOUT_PIN
         case SKEY_RUNOUT:
-        settingPage[item_index].valueLabel = itemRunout[infoSettings.runout];
-        featureSettingsItems.items[i] = settingPage[item_index];
-        break;
+          settingPage[item_index].valueLabel = itemRunout[infoSettings.runout];
+          featureSettingsItems.items[i] = settingPage[item_index];
+          break;
       #endif
 
       case SKEY_SPEED:
@@ -283,14 +283,13 @@ void loadFeatureSettings(){
 
       #ifdef LED_color_PIN
         case SKEY_KNOB:
-        settingPage[item_index].valueLabel = itemLedcolor[infoSettings.knob_led_color];
-        featureSettingsItems.items[i] = settingPage[item_index];
-        break;
+          settingPage[item_index].valueLabel = itemLedcolor[infoSettings.knob_led_color];
+          featureSettingsItems.items[i] = settingPage[item_index];
+          break;
       #endif
 
       default:
-        settingPage[item_index].icon = ICONCHAR_BACKGROUND;
-        featureSettingsItems.items[i] = settingPage[item_index];
+        featureSettingsItems.items[i].icon = ICONCHAR_BACKGROUND;
       break;
     }
   }

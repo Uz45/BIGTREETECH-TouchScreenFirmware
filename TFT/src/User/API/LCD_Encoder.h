@@ -6,12 +6,12 @@
 
 #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
 #define ENCODER_PULSES_PER_STEP   1
-#define LCD_CHANGE_MODE_INTERVALS 150 //long pressed 1.5s
-#define LCD_BUTTON_INTERVALS      3   //60ms
+#define LCD_CHANGE_MODE_INTERVALS 1500 //long pressed 1.5s
+#define LCD_BUTTON_INTERVALS      20   //60ms
 #else
-#define ENCODER_PULSES_PER_STEP   4//4
-#define LCD_CHANGE_MODE_INTERVALS 150 //long pressed 1.5s
-#define LCD_BUTTON_INTERVALS      2   //20ms
+#define ENCODER_PULSES_PER_STEP   4
+#define LCD_CHANGE_MODE_INTERVALS 1500 //long pressed 1.5s
+#define LCD_BUTTON_INTERVALS      20   //20ms
 #endif
 
 #define EN_A (1<<0)
@@ -24,7 +24,7 @@ extern int16_t encoderPosition;
 
 
 void LCD_EncoderInit(void);
-bool LCD_ReadBtn(uint8_t intervals);
+bool LCD_ReadBtn(uint16_t intervals);
 void LCD_LoopEncoder(void);
 void loopCheckMode(void);
 

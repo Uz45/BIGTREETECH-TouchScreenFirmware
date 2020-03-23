@@ -29,33 +29,33 @@ void show_selectICON(void)
     return ;
 }
 
-bool LCD_ReadPen(uint8_t intervals)
+bool LCD_ReadPen(uint16_t intervals)
 {
   static u32 TouchTime = 0;
 
   if(!XPT2046_Read_Pen())
   {
-    if(OS_GetTime() - TouchTime > intervals)
+    if(OS_GetTimeMs() - TouchTime > intervals)
     {
       return true;
     }
   }
   else
   {
-    TouchTime = OS_GetTime();
+    TouchTime = OS_GetTimeMs();
   }
   return false;
 }
 
 #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
-u8 LCD_ButtonTouch(uint8_t intervals)
+u8 LCD_ButtonTouch(uint16_t intervals)
 {
 	static u32 BtnTime = 0;
     u16 tx,ty;
   if(!XPT2046_Read_Pen())
   {
 		TS_Get_Coordinates(&tx,&ty);
-    	if(OS_GetTime() - BtnTime > intervals)
+    	if(OS_GetTimeMs() - BtnTime > intervals)
     {
 		if (ty >(LCD_HEIGHT-(LCD_HEIGHT/4)))
 		{
@@ -77,19 +77,19 @@ u8 LCD_ButtonTouch(uint8_t intervals)
   }
   else
   {
-    BtnTime = OS_GetTime();
+    BtnTime = OS_GetTimeMs();
   }
   return 4;
 }
 #else
-bool LCD_BtnTouch(uint8_t intervals)
+bool LCD_BtnTouch(uint16_t intervals)
 {
 	static u32 BtnTime = 0;
     u16 tx,ty;
   if(!XPT2046_Read_Pen())
   {
 		TS_Get_Coordinates(&tx,&ty);
-    if(OS_GetTime() - BtnTime > intervals)
+    if(OS_GetTimeMs() - BtnTime > intervals)
     {
 			if(tx>LCD_WIDTH-LCD_WIDTH/5 && ty<LCD_HEIGHT/5)
       return true;
@@ -97,7 +97,7 @@ bool LCD_BtnTouch(uint8_t intervals)
   }
   else
   {
-    BtnTime = OS_GetTime();
+    BtnTime = OS_GetTimeMs();
   }
   return false;
 }
@@ -111,7 +111,7 @@ bool LCD_BtnTouch(uint8_t intervals)
   static u16 sy;
 	static bool MOVE = false;
 
-	if(!XPT2046_Read_Pen() && CTime < OS_GetTime())
+	if(!XPT2046_Read_Pen() && CTime < OS_GetTimeMs())
   {
 		TS_Get_Coordinates(&ex,&ey);
 		if(!MOVE)
@@ -141,7 +141,7 @@ bool LCD_BtnTouch(uint8_t intervals)
 	}
 	else
 	{
-		CTime = OS_GetTime();
+		CTime = OS_GetTimeMs();
 		sy = ey =0;
 		MOVE = false;
     return 0;
@@ -154,7 +154,7 @@ void Touch_Sw(uint8_t num)
 {
   if(num==1 || num==2 || num ==3)
   {
-  GPIO_InitSet(LCD_BTN_PIN, MGPIO_MODE_OUT_PP, 0);
+  	GPIO_InitSet(LCD_BTN_PIN, MGPIO_MODE_OUT_PP, 0);
 	GPIO_InitSet(LCD_ENCA_PIN, MGPIO_MODE_OUT_PP, 0);
 	GPIO_InitSet(LCD_ENCB_PIN, MGPIO_MODE_OUT_PP, 0);
   }

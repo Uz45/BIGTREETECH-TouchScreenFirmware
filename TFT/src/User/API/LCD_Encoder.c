@@ -29,20 +29,20 @@ bool LCD_ReadEncB(void)
   return !GPIO_GetLevel(LCD_ENCB_PIN);
 }
 
-bool LCD_ReadBtn(uint8_t intervals)
+bool LCD_ReadBtn(uint16_t intervals)
 {
   static u32 nowTime = 0;
 
   if(!GPIO_GetLevel(LCD_BTN_PIN))
   {
-    if(OS_GetTime() - nowTime > intervals)
+    if(OS_GetTimeMs() - nowTime > intervals)
     {
       return true;
     }
   }
   else
   {
-    nowTime = OS_GetTime();
+    nowTime = OS_GetTimeMs();
   }
   return false;
 }
@@ -96,10 +96,7 @@ void loopCheckMode(void)
 //  #endif
   if(LCD_ReadBtn(LCD_CHANGE_MODE_INTERVALS) || LCD_ReadPen(LCD_CHANGE_MODE_INTERVALS))
   {
-    #if defined MKS_32_V1_4 || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
-    W25Qxx_Init();
-    #endif
-    infoMenu.menu[++infoMenu.cur] = menuMode;  
+    infoMenu.menu[++infoMenu.cur] = menuMode;
   }
 }
 #endif

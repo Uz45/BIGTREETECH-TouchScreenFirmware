@@ -62,15 +62,18 @@
   #define HX8558
   #define LCD_DATA_16BIT 1
 #elif defined(MKS_32_V1_3)
-  //#define MKSTFTV3
-  #define MKSTFTV3M //If the image is mirrored
+  #define MKSTFTV3      //Comment this line If the image is mirrored
+  
+  #ifndef MKSTFTV3
+  #define MKSTFTV3M
+  #endif
   #define LCD_DATA_16BIT 1
 #elif defined(MKS_32_V1_2)
   #define MKSTFTV2
   #define LCD_DATA_16BIT 1
 #elif defined(MKS_32_V1_1)
   #define MKSTFTV1
-  #define LCD_DATA_16BIT 1   
+  #define LCD_DATA_16BIT 1    
 #endif
 
 //LCD Backlight pin (PWM can adjust brightness)
@@ -78,7 +81,7 @@
   #define LCD_LED_PIN   PA8
 #elif defined(TFT35_V3_0) || defined(TFT28_V3_0)
   #define LCD_LED_PIN   PD12
-#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
  #define LCD_LED_PIN    PD14
 #endif
 
@@ -93,7 +96,7 @@
   #define SERIAL_PORT_2 _USART1
   #define SERIAL_PORT_3 _USART3
   #define SERIAL_PORT_4 _UART4
-#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
   #define SERIAL_PORT   _USART2
   #define SERIAL_PORT_2 _USART1
   #define SERIAL_PORT_3 _USART3
@@ -125,7 +128,7 @@
   #define XPT2046_MISO  PE4
   #define XPT2046_MOSI  PE3
   #define XPT2046_TPEN  PC13
-#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
   #define XPT2046_CS    PC9
   #define XPT2046_SCK   PC10
   #define XPT2046_MISO  PC11
@@ -150,7 +153,7 @@
   #define SPI1_CS_PIN   PA4
 #elif defined(TFT35_V2_0)
   #define SD_SDIO_SUPPORT
-#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
   #define SD_SPI_SUPPORT
   #define SD_LOW_SPEED  7
   #define SD_HIGH_SPEED 1
@@ -167,7 +170,7 @@
   #define SD_CD_PIN     PC6
 #elif defined(TFT35_V3_0) || defined(TFT28_V3_0)
   #define SD_CD_PIN     PC4
-#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
   #define SD_CD_PIN     PB15
 #endif
 
@@ -215,9 +218,9 @@
   #if LCD_ENCODER_SUPPORT
    #define ST7920_SPI    _SPI3
    #define SPISIM_CS_PIN    PB1
-  //SPI3 CS PIN  PB1
-  //SPI3 SCK PIN  PB3
-  //SPI3 MOSI PIN  PB5
+    //SPI3 CS PIN  PB1
+    //SPI3 SCK PIN  PB3
+    //SPI3 MOSI PIN  PB5
   #endif
 #endif
 
@@ -231,6 +234,7 @@
 #elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
   #define BUZZER_PIN    PA2
 #endif
+
 
 //U disk support
 #if defined(TFT24_V1_1) || defined(TFT35_V3_0) || defined(TFT28_V3_0)
@@ -260,10 +264,10 @@
   #define DISABLE_DEBUG   //
 #elif defined(TFT35_V3_0) || defined(TFT28_V3_0)
   //stm32f207 needn't this
-#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
   #if (LCD_ENCODER_SUPPORT)
   #define DISABLE_DEBUG  //free JTAG(PB3/PB4) for SPI3 and free SWDIO PA13 PA14 for encoder pins
-  #endif    
+  #endif  
 #endif
 
 //LCD resolution, font and icon size
@@ -353,7 +357,7 @@
 #elif defined(MKS_32_V1_1) 
   #define ROOT_DIR "MKSV1" 
 #elif defined(MKS_32_V1_2) 
-  #define ROOT_DIR "MKSV2"    
+  #define ROOT_DIR "MKSV2"   
 #endif
 
 //hardware version config
@@ -381,7 +385,7 @@
   #elif defined(MKS_32_V1_2)
     #define HARDWARE_VERSION "TFT32_V2.0"
   #elif defined(MKS_32_V1_1)
-    #define HARDWARE_VERSION "TFT32_V1.0"
+    #define HARDWARE_VERSION "TFT32_V1.0"    
   #endif
 #endif
 

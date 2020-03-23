@@ -43,7 +43,11 @@ void SPI_ReEnable(u8 mode)
 
 void SPI_Slave(void)
 {
-#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)    
+#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
+  GPIO_InitSet(PB1, MGPIO_MODE_IPU, 0);
+  GPIO_InitSet(PB3, MGPIO_MODE_IPU, 0);
+  GPIO_InitSet(PB5, MGPIO_MODE_IPU, 0);  
+  //GPIO_InitSet(PB1, MGPIO_MODE_OUT_PP, 0);   
   NVIC_InitTypeDef   NVIC_InitStructure;
 
   SPISlave.data = malloc(SPI_SLAVE_MAX);

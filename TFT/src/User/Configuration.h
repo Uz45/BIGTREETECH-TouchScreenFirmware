@@ -22,14 +22,13 @@
  *
  * :[2400, 9600, 19200, 38400, 57600, 115200, 250000, 500000, 1000000]
  */
-#define BAUDRATE 250000
+#define BAUDRATE 115200
 
 /**
  * Default LANGUAGE
  *
  * Select the language to display on the LCD. These languages are available:
  * ENGLISH, CHINESE, RUSSIAN, JAPANESE, ARMENIAN, GERMAN, CZECH, SPAIN, FRENCH, PORTUGUESE, ITALIAN, POLISH, SLOVAK, DUTCH
- *
  */
 #define DEFAULT_LANGUAGE ENGLISH
 
@@ -41,7 +40,6 @@
  * These are available:
  * ST7920_SPI // LCD12864 Sumilator
  * SERIAL_TSC // Default
- *
  */
 #define DEFAULT_LCD_MODE SERIAL_TSC
 
@@ -49,9 +47,14 @@
  * The duration and frequency for the UI feedback sound.
  * Set these to 0 to disable audio feedback in the LCD menus.
  * Only valid for SERIAL_TSC LCD MODE anf if BUZZER_PIN is set or availible.
+ *
+ * Note: Test audio output with the G-Code:
+ * M300 S<frequency Hz> P<duration ms>
  */
-#define LCD_FEEDBACK_FREQUENCY_DURATION_L_US 11   // Default 11
-#define LCD_FEEDBACK_FREQUENCY_H_US          3    // Default 3
+#define BUZZER_FREQUENCY_DURATION_MS 20 // Default 20
+#define BUZZER_FREQUENCY_HZ 10000       // Default 10000, 20Hz to 60KHz
+#define BUZZER_STOP_LEVEL false
+
 
 // Marlin Mode Background & Font Color Options
 // Current color options from lcd.h: BLACK, BLUE, BROWN, BRRED, CYAN, GBLUE, GRAY, GREEN, MAGENTA, RED, WHITE, YELLOW
@@ -114,7 +117,6 @@
 //                       PLA      PETG       ABS
 #define PREHEAT_BED      {60,      70,       100}
 #define PREHEAT_HOTEND   {200,     250,      230}
-#define PREHEAT_TEXT     {"PLA",  "PETG",   "ABS"}
 
 #define HEAT_MAX_TEMP    {150,    275,       275,       275,       275,       275,       275}    //max temperature can be set
 #define HEAT_SIGN_ID     {"B:",   "T0:",     "T1:",     "T2:",     "T3:",     "T4:",     "T5:"}
@@ -185,7 +187,7 @@
 
 // Filament runout detection
 #define FIL_RUNOUT_INVERTING true  // Set to false to invert the logic of the sensor.
-#define FIL_NOISE_THRESHOLD  10     // 10*10 = 100ms,  Pause print when filament runout is detected for 100ms.
+#define FIL_NOISE_THRESHOLD  100   // 100ms,  Pause print when filament runout is detected for 100ms.
 
 // Smart filament runout detection
 // For use with an encoder disc that toggles runout pin as filament moves
@@ -231,8 +233,6 @@
   * turn on the fan to cool down, wait for the hotend temperature to be lower than this value, then turn off the power automatically
   */
 #define AUTO_SHUT_DOWN_MAXTEMP 50
-
-#define EXTRUDE_STEPS  100.0f
 
 #define SHOW_FAN_PERCENTAGE // enable to show fan speed as a percentage instead of a value
 
@@ -285,13 +285,13 @@
 //
 //Start Gcode - run this gcode before starting print
 //
-#define PRINT_START_GCODE "G28\n" // home and abl "G28\nG29\nG1 Z20\n" 
+#define PRINT_START_GCODE "G28\nG29\nG1 Z20\n" // home and abl
 
 //
 //End Gcode - run this gcode after finishing print
 //
 #define PRINT_END_GCODE "G90\nG1 E-4\nG92 E0\nM18\n" //reduce filament pressure , reset Extruder position, disable steppers
 
-#define CANCEL_PRINT_GCODE "G28 X0 Y0\n"
+#define CANCEL_PRINT_GCODE "G28 XY R10\n" // Raise Z-axis 10mm before Home XY
 
 #endif
