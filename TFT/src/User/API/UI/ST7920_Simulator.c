@@ -138,11 +138,12 @@ void menuST7920(void)
   GUI_DispStringInRect(0, LCD_HEIGHT-(LCD_HEIGHT/4), LCD_WIDTH/3, LCD_HEIGHT, "UP");
   GUI_DispStringInRect(LCD_WIDTH/3, LCD_HEIGHT-(LCD_HEIGHT/4), LCD_WIDTH-(LCD_WIDTH/3), LCD_HEIGHT, "DOWN");
   GUI_DispStringInRect(LCD_WIDTH-(LCD_WIDTH/3), LCD_HEIGHT-(LCD_HEIGHT/4), LCD_WIDTH, LCD_HEIGHT, "OK");
+  
+  u8 tsw; // OK-1 UP-2 DOWN-3
 #endif
 
   SPI_Slave();
   SPI_Slave_CS_Config();
-  u8 tsw;
 
   while(infoMenu.menu[infoMenu.cur] == menuST7920)
   {
