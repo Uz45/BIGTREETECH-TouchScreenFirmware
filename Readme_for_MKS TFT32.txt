@@ -37,7 +37,13 @@ V1.0
  SPI3_SCK_PIN  PB3 	PB3 		=>	exp1 D23-pin (LCD_PINS_D4)
  SPI3_MOSI_PIN  PB5 	PB5		=>	exp1 D17-pin (LCD_PINS_ENABLE)
 
+Настройки марлина.
 
+Тип контроллера LCD выбираем
+#define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
+
+  Из особых настроек мне понадобилась только одна
+#define ENCODER_STEPS_PER_MENU_ITEM 5
 
 
 Features of using this firmware with MKS TFT32L
@@ -83,3 +89,11 @@ for example, MKS Gen L V1. 0
  SPISIM_CS_PIN    PB1 	PB1		=>	exp1 D16-pin (LCD_PINS_RS)
  SPI3_SCK_PIN  PB3 	PB3 		=>	exp1 D23-pin (LCD_PINS_D4)
  SPI3_MOSI_PIN  PB5 	PB5		=>	exp1 D17-pin (LCD_PINS_ENABLE)
+ 
+ Marlin settings.
+
+Select the type of LCD controller
+#define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
+
+  I only needed one of the special settings
+#define ENCODER_STEPS_PER_MENU_ITEM 5
