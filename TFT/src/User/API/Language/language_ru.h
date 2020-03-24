@@ -11,7 +11,7 @@
     #define RU_SETTINGS               "Настройки"
     #define RU_SCREEN_SETTINGS        "Экран"
     #define RU_MACHINE_SETTINGS       "Принтер"
-    #define RU_FEATURE_SETTINGS       "Другие \u08D2" //Checkbox Sign
+    #define RU_FEATURE_SETTINGS       "Опции"
     #define RU_SILENT_ON              "Звук выкл"
     #define RU_SILENT_OFF             "Звук вкл"
     #define RU_SHUT_DOWN              "Выключить"
@@ -152,5 +152,9 @@
     #define RU_FILE_LISTMODE          "Файлы в режиме строк"
     #define RU_CURRENT_SETTING        "Настройка TMC драйверов"
     #define RU_STEPS_SETTING          "Настройка шагов на mm"
+    #define RU_RESET                  "Reset"
+    #define RU_RESET_SETTINGS         "All settings will be reset to it's default values. Continue?"
+    #define RU_RESET_SETTINGS_DONE    "Resetting all settings successfully done. To take full effect, please restart the device."
+    #define RU_INFO                   "Info"
 
 #endif
