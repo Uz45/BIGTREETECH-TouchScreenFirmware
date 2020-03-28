@@ -356,7 +356,7 @@
   #define ROOT_DIR "MKS"
 #elif defined(MKS_32_V1_1)
   #define ROOT_DIR "MKSV1" 
-#elif defined(MKS_32_V1_2) 
+#elif defined(MKS_32_V1_2)
   #define ROOT_DIR "MKSV2"  
 #endif
 
