@@ -35,7 +35,7 @@
   #define F_CPUM 120
   #define STM32F2XX
   #include "stm32f2xx.h"
-#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
   #define HSE_VALUE ((uint32_t)25000000) //25Mhz XTAL
   #define F_CPUM 48
   #define STM32F10X_CL
@@ -187,7 +187,7 @@
   #define W25Qxx_SPEED  1
   #define W25Qxx_SPI    _SPI3
   #define SPI3_CS_PIN   PB6
-#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
   #define W25Qxx_SPEED  1
   #define W25Qxx_SPI    _SPI1
   #define W25Qxx_CS     PB9
@@ -204,7 +204,7 @@
   #define LCD_ENCA_PIN  PA8
   #define LCD_ENCB_PIN  PC9
   #define LCD_BTN_PIN   PC8
-#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
   //#define LCD_ENCA_PIN  PA13 //JTAG DIO 31
   //#define LCD_ENCB_PIN  PA14 //JTAG CLK 33
   //#define LCD_BTN_PIN   PB0
@@ -221,7 +221,7 @@
     //SPI3 CS PIN  PB1
     //SPI3 SCK PIN  PB3
     //SPI3 MOSI PIN  PB5
-  #endif
+  #endif 
 #endif
 
 //buzzer support
@@ -231,7 +231,7 @@
   #define BUZZER_PIN    PB2
 #elif defined(TFT35_V3_0) || defined(TFT28_V3_0)
   #define BUZZER_PIN    PD13
-#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
   #define BUZZER_PIN    PA2
 #endif
 
@@ -240,7 +240,7 @@
 #if defined(TFT24_V1_1) || defined(TFT35_V3_0) || defined(TFT28_V3_0)
   #define U_DISK_SUPPROT
   #define USE_USB_OTG_FS
-#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
   #define U_DISK_SUPPROT
   #define USE_USB_OTG_FS
 #endif
@@ -252,7 +252,7 @@
 #elif defined(TFT35_V3_0) || defined(TFT28_V3_0)
   #define PS_ON_PIN      PA12
   #define FIL_RUNOUT_PIN PA15
-#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
   #define PS_ON_PIN      PB0
   #define FIL_RUNOUT_PIN PB1
 #endif
@@ -264,10 +264,10 @@
   #define DISABLE_DEBUG   //
 #elif defined(TFT35_V3_0) || defined(TFT28_V3_0)
   //stm32f207 needn't this
-#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
   #if (LCD_ENCODER_SUPPORT)
   #define DISABLE_DEBUG  //free JTAG(PB3/PB4) for SPI3 and free SWDIO PA13 PA14 for encoder pins
-  #endif  
+  #endif      
 #endif
 
 //LCD resolution, font and icon size
@@ -316,7 +316,7 @@
   #define SMALLICON_HEIGHT   16
 
   #define selecticonw 70
-#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
+#elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
   #define LCD_WIDTH	  320
   #define LCD_HEIGHT	240
 
@@ -354,10 +354,10 @@
   #define ROOT_DIR "TFT24"
 #elif defined(MKS_32_V1_4) || defined(MKS_32_V1_3)
   #define ROOT_DIR "MKS"
-#elif defined(MKS_32_V1_1) 
+#elif defined(MKS_32_V1_1)
   #define ROOT_DIR "MKSV1" 
 #elif defined(MKS_32_V1_2) 
-  #define ROOT_DIR "MKSV2"   
+  #define ROOT_DIR "MKSV2"  
 #endif
 
 //hardware version config
@@ -385,7 +385,7 @@
   #elif defined(MKS_32_V1_2)
     #define HARDWARE_VERSION "TFT32_V2.0"
   #elif defined(MKS_32_V1_1)
-    #define HARDWARE_VERSION "TFT32_V1.0"    
+    #define HARDWARE_VERSION "TFT32_V1.0"     
   #endif
 #endif
 

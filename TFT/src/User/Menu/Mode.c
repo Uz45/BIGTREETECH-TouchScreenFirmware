@@ -103,7 +103,7 @@ void menuMode(void)
   MODEselect = 1;
   bool keyback = false;
 
-  int16_t nowEncoder = encoderPosition = 0;
+  int16_t /*nowEncoder =*/ encoderPosition = 0;
   int8_t  nowMode = modeRadio.select = infoSettings.mode;
 
   GUI_Clear(BACKGROUND_COLOR);
@@ -112,7 +112,7 @@ void menuMode(void)
     Serial_ReSourceDeInit();
   #endif
   resetInfoFile();
-  #if !defined MKS_32_V1_4 && !defined(MKS_32_V1_3) && !defined(MKS_32_V1_2)  && !defined(MKS_32_V1_1) 
+  #if !defined MKS_32_V1_4 
   SD_DeInit();
   #endif
 

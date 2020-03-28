@@ -2,29 +2,59 @@
 #include "includes.h"
 
 SETTINGS infoSettings;
+MACHINESETTINGS infoMachineSettings;
 
 // Reset settings data
 void infoSettingsReset(void)
 {
-  infoSettings.baudrate = BAUDRATE;
-  infoSettings.language = DEFAULT_LANGUAGE;
-  infoSettings.mode = DEFAULT_LCD_MODE;
-  infoSettings.runout = 0;
-  infoSettings.rotate_ui = 0;
-  infoSettings.bg_color = ST7920_BKCOLOR;
-  infoSettings.font_color = ST7920_FNCOLOR;
-  infoSettings.silent = 0;
-  infoSettings.auto_off = 0;
-  infoSettings.terminalACK = 0;
-  infoSettings.invert_axis[X_AXIS] = 0;
-  infoSettings.invert_axis[Y_AXIS] = 0;
-  infoSettings.invert_axis[Z_AXIS] = 0;
-  infoSettings.move_speed = 0;
-  infoSettings.knob_led_color = (STARTUP_KNOB_LED_COLOR - 1); 
-  infoSettings.send_start_gcode = 1;
-  infoSettings.send_end_gcode = 1;
-  infoSettings.persistent_info = 1;
-  infoSettings.file_listmode = 1;
+  infoSettings.baudrate             = BAUDRATE;
+  infoSettings.language             = DEFAULT_LANGUAGE;
+  infoSettings.mode                 = DEFAULT_LCD_MODE;
+  infoSettings.runout               = 0;
+  infoSettings.rotate_ui            = 0;
+  infoSettings.bg_color             = ST7920_BKCOLOR;
+  infoSettings.font_color           = ST7920_FNCOLOR;
+  infoSettings.silent               = 0;
+  infoSettings.auto_off             = 0;
+  infoSettings.terminalACK          = 0;
+  infoSettings.invert_axis[X_AXIS]  = 0;
+  infoSettings.invert_axis[Y_AXIS]  = 0;
+  infoSettings.invert_axis[Z_AXIS]  = 0;
+  infoSettings.move_speed           = 0;
+  infoSettings.knob_led_color       = (STARTUP_KNOB_LED_COLOR - 1);
+  infoSettings.send_start_gcode     = 0;
+  infoSettings.send_end_gcode       = 0;
+  infoSettings.persistent_info      = 1;
+  infoSettings.file_listmode        = 1;
+  #ifdef LCD_LED_PIN
+  infoSettings.lcd_brightness       = DEFAULT_LCD_BRIGHTNESS;
+  #endif
+}
+
+void initMachineSetting(void){
+
+  infoMachineSettings.EEPROM                  = 0;
+  infoMachineSettings.autoReportTemp          = 0;
+  infoMachineSettings.autoLevel               = 0;
+  infoMachineSettings.zProbe                  = 0;
+  infoMachineSettings.levelingData            = 0;
+  infoMachineSettings.softwarePower           = 0;
+  infoMachineSettings.toggleLights            = 0;
+  infoMachineSettings.caseLightsBrightness    = 0;
+  infoMachineSettings.emergencyParser         = 0;
+  infoMachineSettings.promptSupport           = 0;
+  infoMachineSettings.autoReportSDStatus      = 0;
+}
+
+void setupMachine(void){
+  #ifdef AUTO_SAVE_LOAD_LEVELING_VALUE
+    if (infoMachineSettings.autoLevel == 1 && infoMachineSettings.EEPROM == 1){
+      storeCmd("M420 S1\n");
+    }
+  #endif
+  if (infoMachineSettings.emergencyParser != 1){
+    statusScreen_setMsg(textSelect(LABEL_WARNING), textSelect(LABEL_EMERGENCYPARSER));
+  }
 }
 
 // Version infomation
@@ -78,7 +108,7 @@ LABEL_SETTINGS,
   {ICON_FEATURE_SETTINGS,     LABEL_FEATURE_SETTINGS},
   {ICON_SCREEN_INFO,          LABEL_SCREEN_INFO},
   {ICON_DISCONNECT,           LABEL_DISCONNECT},
-  {ICON_BAUDRATE,             LABEL_BACKGROUND},
+  {ICON_BAUD_RATE,             LABEL_BACKGROUND},
   {ICON_BACKGROUND,           LABEL_BACKGROUND},
   {ICON_BACK,                 LABEL_BACK},}
 };
@@ -86,15 +116,15 @@ LABEL_SETTINGS,
 #define ITEM_BAUDRATE_NUM 9
 const ITEM itemBaudrate[ITEM_BAUDRATE_NUM] = {
 // icon                       label
-  {ICON_BAUDRATE,             {.address = "2400"}},
-  {ICON_BAUDRATE,             {.address = "9600"}},
-  {ICON_BAUDRATE,             {.address = "19200"}},
-  {ICON_BAUDRATE,             {.address = "38400"}},
-  {ICON_BAUDRATE,             {.address = "57600"}},
-  {ICON_BAUDRATE,             {.address = "115200"}},
-  {ICON_BAUDRATE,             {.address = "250000"}},
-  {ICON_BAUDRATE,             {.address = "500000"}},
-  {ICON_BAUDRATE,             {.address = "1000000"}},
+  {ICON_BAUD_RATE,             {.address = "2400"}},
+  {ICON_BAUD_RATE,             {.address = "9600"}},
+  {ICON_BAUD_RATE,             {.address = "19200"}},
+  {ICON_BAUD_RATE,             {.address = "38400"}},
+  {ICON_BAUD_RATE,             {.address = "57600"}},
+  {ICON_BAUD_RATE,             {.address = "115200"}},
+  {ICON_BAUD_RATE,             {.address = "250000"}},
+  {ICON_BAUD_RATE,             {.address = "500000"}},
+  {ICON_BAUD_RATE,             {.address = "1000000"}},
 };
 const  u32 item_baudrate[ITEM_BAUDRATE_NUM] = {2400, 9600, 19200, 38400, 57600, 115200, 250000, 500000, 1000000};
 static u8  item_baudrate_i = 0;

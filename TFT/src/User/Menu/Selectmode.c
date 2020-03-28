@@ -11,13 +11,8 @@ const GUI_RECT rect_of_mode[SELECTMODE]={
 };
 
 u32 select_mode [SELECTMODE]={
-#if defined (MKS_32_V1_1)
-  	ICON_GCODE,
-    ICON_TOUCHSCREEN_ADJUST,
-#else	
     ICON_MARLIN,
-    ICON_BIGTREE,
-#endif
+    ICON_BIGTREETECH,
 };
 
 void show_selectICON(void)
@@ -47,7 +42,7 @@ bool LCD_ReadPen(uint16_t intervals)
   return false;
 }
 
-#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+#if defined(MKS_32_V1_4)
 u8 LCD_ButtonTouch(uint16_t intervals)
 {
 	static u32 BtnTime = 0;
@@ -85,7 +80,7 @@ u8 LCD_ButtonTouch(uint16_t intervals)
 bool LCD_BtnTouch(uint16_t intervals)
 {
 	static u32 BtnTime = 0;
-    u16 tx,ty;
+  u16 tx,ty;
   if(!XPT2046_Read_Pen())
   {
 		TS_Get_Coordinates(&tx,&ty);
@@ -154,11 +149,11 @@ void Touch_Sw(uint8_t num)
 {
   if(num==1 || num==2 || num ==3)
   {
-  	GPIO_InitSet(LCD_BTN_PIN, MGPIO_MODE_OUT_PP, 0);
+    GPIO_InitSet(LCD_BTN_PIN, MGPIO_MODE_OUT_PP, 0);
 	GPIO_InitSet(LCD_ENCA_PIN, MGPIO_MODE_OUT_PP, 0);
 	GPIO_InitSet(LCD_ENCB_PIN, MGPIO_MODE_OUT_PP, 0);
   }
- #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+  #if defined(MKS_32_V1_4)
    u8 delayenc=14;
    u8 pulses;
 	switch(num)
@@ -254,7 +249,6 @@ void Touch_Sw(uint8_t num)
 			break;
 	}
 #endif
-
   LCD_EncoderInit();
 }
 

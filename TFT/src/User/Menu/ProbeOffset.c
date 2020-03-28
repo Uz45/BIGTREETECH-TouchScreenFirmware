@@ -56,13 +56,9 @@ static float probe_offset_value=0.0;
 #define PROBE_OFFSET_MAX_VALUE 20.0f
 #define PROBE_OFFSET_MIN_VALUE -20.0f
 
-void showProbeOffset(void)
+void showProbeOffset(float val)
 {
-  GUI_DispFloat(CENTER_X - 5*BYTE_WIDTH/2, CENTER_Y, probe_offset_value, 3, 2, RIGHT);
-}
-void probeOffsetReDraw(void)
-{
-  GUI_DispFloat(CENTER_X - 5*BYTE_WIDTH/2, CENTER_Y, probe_offset_value, 3, 2, RIGHT);
+  GUI_DispFloat(CENTER_X - 5*BYTE_WIDTH/2, CENTER_Y, val, 3, 2, RIGHT);
 }
 
 /* Set current offset */
@@ -70,6 +66,7 @@ void setCurrentOffset(float offset)
 {
   //probe_offset_value = limitValue(PROBE_OFFSET_MIN_VALUE, offset, PROBE_OFFSET_MAX_VALUE);
   probe_offset_value = offset;
+  showProbeOffset(offset);
 }
 
 void menuProbeOffset(void)
@@ -78,10 +75,10 @@ void menuProbeOffset(void)
   float now = probe_offset_value;
   initElements(KEY_ICON_5);
   menuDrawPage(&probeOffsetItems);
-  showProbeOffset();
+  showProbeOffset(now);
 
   #if LCD_ENCODER_SUPPORT
-    encoderPosition = 0;    
+    encoderPosition = 0;
   #endif
 
   while(infoMenu.menu[infoMenu.cur] == menuProbeOffset)
@@ -104,7 +101,9 @@ void menuProbeOffset(void)
         }
         break;
       case KEY_ICON_4:
-        storeCmd("M500\n");
+        if(infoMachineSettings.EEPROM == 1){
+           storeCmd("M500\n");
+        }
         break;
       case KEY_ICON_5:
         elementsUnit.cur = (elementsUnit.cur + 1) % elementsUnit.totaled;
@@ -123,7 +122,7 @@ void menuProbeOffset(void)
           if(encoderPosition)
           {
             probe_offset_value += elementsUnit.ele[elementsUnit.cur]*encoderPosition;
-            encoderPosition = 0;    
+            encoderPosition = 0;
           }
           LCD_LoopEncoder();
         #endif
@@ -132,7 +131,7 @@ void menuProbeOffset(void)
     if(now != probe_offset_value)
     {
       now = probe_offset_value;
-      probeOffsetReDraw();
+      showProbeOffset(now);
     }
     loopProcess();
   }

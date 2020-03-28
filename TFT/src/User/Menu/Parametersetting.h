@@ -47,19 +47,55 @@ typedef enum
   NUM_KEY_EXIT,
   NUM_KEY_DEC,
   NUM_KEY_0,
-  NUM_KEY_14,
+  NUM_KEY_MINUS,
   NUM_KEY_15,
 
   NUM_KEY_IDLE = IDLE_TOUCH,
 }NUM_KEY_VALUES;
 
+typedef enum
+{
+P_STEPS_PER_MM = 0,
+P_CURRENT,
+P_MAX_FEED_RATE,
+P_MAX_ACCELERATION,
+P_ACCELERATION,
+P_PROBE_OFFSET,
+P_BUMPSENSITIVITY,
+PARAMETERS_COUNT
+}PARAMETER_NAME;
 
-float getParameterCurrent(AXIS index);
-float getParameterSteps(AXIS index);
-void setParameterCurrent(AXIS index, float val);
-void setParameterSteps(AXIS index, float val);
-void parametersetting(void);
-float num_pad(float old_val);
+typedef enum
+{
+X_STEPPER = 0,
+Y_STEPPER,
+Z_STEPPER,
+E_STEPPER,
+E2_STEPPER,
+STEPPER_COUNT
+}STEPPERS;
+
+typedef struct
+{
+float StepsPerMM[STEPPER_COUNT];
+float Current[STEPPER_COUNT];
+float MaxFeedRate[STEPPER_COUNT];
+float MaxAcceleration[STEPPER_COUNT];
+float Acceleration[3];
+float ProbeOffset[3];
+float BumpSensitivity[3];
+}PARAMETERS;
+
+#define PS_PAGE_COUNT  (PARAMETERS_COUNT+LISTITEM_PER_PAGE-1)/LISTITEM_PER_PAGE
+
+extern PARAMETERS infoParameters;
+extern bool dualstepper[TOTAL_AXIS];
+
+float getParameter(PARAMETER_NAME name, int index);
+void setParameter(PARAMETER_NAME name, int index, float val);
+
+void menuParameterSettings(void);
+float num_pad(float old_val, bool negative_val);
 
 void show_GlobalInfo(void);
 void temp_Change(void);

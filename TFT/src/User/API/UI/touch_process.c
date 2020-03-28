@@ -29,6 +29,7 @@
 
 u32 TSC_Para[7];//У׼ϵ��
 static volatile bool touchScreenIsPress=false;
+bool touchSound = true;
 
 void TS_Get_Coordinates(u16 *x, u16 *y)
 {
@@ -40,7 +41,6 @@ void TS_Get_Coordinates(u16 *x, u16 *y)
   #else
   *x = (A*tp_x+B*tp_y+C)/K;
   #endif
-  *y = (D*tp_x+E*tp_y+F)/K;
   *y = (D*tp_x+E*tp_y+F)/K;
 }
 
@@ -109,7 +109,7 @@ void TSC_Calibration(void)
     GUI_SetColor(RED);
     for(tp_num = 0;tp_num<3;tp_num++)
     {
-    #if defined MKSTFTV3M
+      #if defined MKSTFTV3M
       GUI_FillCircle(LCD_WIDTH-LCD_X[tp_num],LCD_Y[tp_num],3);
       for(i=0;i<10;i++)
       {
@@ -128,9 +128,6 @@ void TSC_Calibration(void)
         GUI_DrawPoint(LCD_X[tp_num],LCD_Y[tp_num]-i);
       }
     #endif
-      while(isPress() == false);
-      TP_X[tp_num] = XPT2046_Repeated_Compare_AD(CMD_RDX);
-      TP_Y[tp_num] = XPT2046_Repeated_Compare_AD(CMD_RDY);
       while(isPress() != false);
     }
     K = (X1 - X3)*(Y2 - Y3) - (X2 - X3)*(Y1 - Y3);
@@ -157,7 +154,7 @@ u16 Key_value(u8 total_rect,const GUI_RECT* menuRect)
     if((x>menuRect[i].x0)&&(x<menuRect[i].x1)&&(y>menuRect[i].y0)&&(y<menuRect[i].y1))
     {
       #ifdef BUZZER_PIN
-        Buzzer_TurnOn(BUZZER_FREQUENCY_HZ, BUZZER_FREQUENCY_DURATION_MS);
+        if(touchSound == true) BUZZER_PLAY(sound_keypress);
       #endif
       return i;
     }
@@ -234,10 +231,10 @@ typedef enum
   LONG_PRESS,
 }KEY_STATUS;
 
-#define KEY_DOUOBLE_SPACE        15     //�೤ʱ���ڵ�������ж��?˫��
-#define KEY_LONG_PRESS_START     200     //��������ÿ�ʼ�ж��? ���� ��ֵ
+#define KEY_DOUOBLE_SPACE        15     //锟洁长时锟斤拷锟节碉拷锟斤拷锟斤拷锟斤拷卸锟轿?双锟斤拷
+#define KEY_LONG_PRESS_START     200     //锟斤拷锟斤拷锟斤拷锟斤拷每锟绞硷拷卸锟轿? 锟斤拷锟斤拷 锟斤拷值
 
-#define KEY_LONG_PRESS_SPACE_MAX 10     //����ʱ ���÷���һ�μ��?
+#define KEY_LONG_PRESS_SPACE_MAX 10     //锟斤拷锟斤拷时 锟筋长锟斤拷梅锟斤拷锟揭伙拷渭锟街?
 #define KEY_LONG_PRESS_SPACE_MIN 2      //����ʱ ��̶�÷���һ�μ�ֵ
 
 //u16 KEY_GetValue(u8 total_rect,const GUI_RECT* menuRect)

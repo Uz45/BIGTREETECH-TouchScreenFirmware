@@ -13,6 +13,56 @@ void LCD_LED_Off()
   GPIO_SetLevel(LCD_LED_PIN, 0);
 }
 
+const  uint32_t LCD_BRIGHTNESS[ITEM_BRIGHTNESS_NUM] = {
+  LCD_5_PERCENT,
+  LCD_10_PERCENT,
+  LCD_20_PERCENT,
+  LCD_30_PERCENT,
+  LCD_40_PERCENT,
+  LCD_50_PERCENT,
+  LCD_60_PERCENT,
+  LCD_70_PERCENT,
+  LCD_80_PERCENT,
+  LCD_90_PERCENT,
+  LCD_100_PERCENT
+};
+const LABEL itemBrightness[ITEM_BRIGHTNESS_NUM] = {
+  //item value text(only for custom value)
+  LABEL_5_PERCENT,
+  LABEL_10_PERCENT,
+  LABEL_20_PERCENT,
+  LABEL_30_PERCENT,
+  LABEL_40_PERCENT,
+  LABEL_50_PERCENT,
+  LABEL_60_PERCENT,
+  LABEL_70_PERCENT,
+  LABEL_80_PERCENT,
+  LABEL_90_PERCENT,
+  LABEL_100_PERCENT
+};
+
+void LCD_LED_PWM_Init()
+{
+#if defined(TFT35_V1_2) || defined(TFT35_V2_0) || defined(TFT35_V3_0)
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+  GPIO_InitTypeDef GPIO_InitStructure;
+    GPIO_InitStructure.GPIO_Pin    = GPIO_Pin_12;  //LCD_LED_PIN PD12
+    GPIO_InitStructure.GPIO_Mode   = GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_Speed  = GPIO_Speed_50MHz;
+  GPIO_Init(GPIOD, &GPIO_InitStructure);
+  
+  GPIO_PinAFConfig(GPIOD, GPIO_PinSource12, GPIO_AF_TIM4);
+
+  TIM_OCInitTypeDef outputChannelInit = {0,};
+    outputChannelInit.TIM_OCMode      = TIM_OCMode_PWM1;
+    outputChannelInit.TIM_OCPolarity  = TIM_OCPolarity_High;
+    outputChannelInit.TIM_OutputState = TIM_OutputState_Enable;
+    outputChannelInit.TIM_Pulse       = F_CPUM;
+  TIM_OC1Init(TIM4, &outputChannelInit);
+  TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Enable);
+#endif
+}
+
 void LCD_LED_Init(void)
 {
   LCD_LED_Off();
@@ -501,7 +551,7 @@ LCD_WR_REG(0x2C);
 //  DisplayOrientation SwapXY mirror X		
 	    uint16_t R01h, R03h, R60h;
       R01h = (1 << 8) | (0 << 10);// SS = 1, SM = 0,  from S720 to S1 (see also  GS bit (R60h))
-      R03h = (1 << 12) | (1 << 5) | (1 << 4) | (1 << 3);// TRI=0, DFM=0, BGR=1, ORG=0, I/D[1:0]=11, AM=1
+      R03h = (1 << 12) | (1 << 5) | (1 << 4) | (1 << 3);// TRI=0, DFM=0, BGR=1, ORG=0, I/D[1:0]=11, AM=1 
       R60h = (1 << 15) | (0x27 << 8);	// Gate Scan Control (R60h) GS=1(G1) NL[5:0]=0x27 (320 lines)
       LCD_WR_REG(0x0001);			 // Driver Output Control Register (R01h)	
       LCD_WR_DATA(R01h);
@@ -524,7 +574,7 @@ LCD_WR_REG(0x2C);
       LCD_WR_DATA(R03h);
 	    LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
       LCD_WR_DATA(R60h);
-}   
+} 
 #endif
 
 u16 LCD_ReadID(void)
@@ -585,7 +635,7 @@ void LCD_RefreshDirection(void)
       LCD_WR_DATA(R03h);
 	    LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
       LCD_WR_DATA(R60h);     
-    #endif    
+    #endif
   }
   else
   {
@@ -631,7 +681,7 @@ void LCD_RefreshDirection(void)
       LCD_WR_DATA(R03h);
 	    LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
       LCD_WR_DATA(R60h);     
-    #endif       
+    #endif    
   }
 }
 
@@ -645,6 +695,7 @@ void LCD_Init(void)
 #ifdef LCD_LED_PIN
   LCD_LED_Init();
   LCD_LED_On();
+  LCD_LED_PWM_Init();
 #endif
 
 #ifdef STM32_HAS_FSMC

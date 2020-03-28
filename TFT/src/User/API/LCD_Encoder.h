@@ -4,7 +4,7 @@
 #include "stdbool.h"
 #include "stdint.h"
 
-#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+#if defined(MKS_32_V1_4)
 #define ENCODER_PULSES_PER_STEP   1
 #define LCD_CHANGE_MODE_INTERVALS 1500 //long pressed 1.5s
 #define LCD_BUTTON_INTERVALS      20   //60ms

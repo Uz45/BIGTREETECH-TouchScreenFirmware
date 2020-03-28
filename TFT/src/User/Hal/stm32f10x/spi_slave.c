@@ -43,13 +43,10 @@ void SPI_ReEnable(u8 mode)
 
 void SPI_Slave(void)
 {
-#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
-  GPIO_InitSet(PB1, MGPIO_MODE_IPU, 0);
+#if defined(MKS_32_V1_4)
+  NVIC_InitTypeDef   NVIC_InitStructure;
   GPIO_InitSet(PB3, MGPIO_MODE_IPU, 0);
   GPIO_InitSet(PB5, MGPIO_MODE_IPU, 0);  
-  //GPIO_InitSet(PB1, MGPIO_MODE_OUT_PP, 0);   
-  NVIC_InitTypeDef   NVIC_InitStructure;
-
   SPISlave.data = malloc(SPI_SLAVE_MAX);
   while(!SPISlave.data); // malloc failed
   SPI_GPIO_Init(ST7920_SPI);
@@ -63,7 +60,7 @@ void SPI_Slave(void)
   
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI3,ENABLE);
   SPI_ReEnable(1);
-#else
+#else  
   NVIC_InitTypeDef   NVIC_InitStructure;
 
   SPISlave.data = malloc(SPI_SLAVE_MAX);
@@ -79,12 +76,12 @@ void SPI_Slave(void)
 
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2,ENABLE);
   SPI_ReEnable(1);
-#endif
+#endif  
 }
 
 void SPI_SlaveDeInit(void)
 {
-#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)   
+#if defined(MKS_32_V1_4)
   NVIC_InitTypeDef   NVIC_InitStructure;
 
   NVIC_InitStructure.NVIC_IRQChannel = SPI3_IRQn;
@@ -98,7 +95,7 @@ void SPI_SlaveDeInit(void)
   RCC_APB1PeriphResetCmd(RCC_APB1Periph_SPI3, DISABLE);
   free(SPISlave.data);
   SPISlave.data = NULL;
-#else
+#else  
   NVIC_InitTypeDef   NVIC_InitStructure;
 
   NVIC_InitStructure.NVIC_IRQChannel = SPI2_IRQn;
@@ -112,10 +109,11 @@ void SPI_SlaveDeInit(void)
   RCC_APB1PeriphResetCmd(RCC_APB1Periph_SPI2, DISABLE);
   free(SPISlave.data);
   SPISlave.data = NULL;
-#endif
+#endif   
 }
 
-#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+
+#if defined(MKS_32_V1_4)
 void SPI3_IRQHandler(void)
 {
   SPISlave.data[SPISlave.wIndex] =  ST7920_SPI_NUM->DR;
@@ -129,9 +127,10 @@ void SPI2_IRQHandler(void)
 }
 #endif
 
+/* �ⲿ�ж����� */
 void SPI_Slave_CS_Config(void)
 {
-#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
+#if defined(MKS_32_V1_4)
   EXTI_InitTypeDef EXTI_InitStructure;
   NVIC_InitTypeDef   NVIC_InitStructure;
 
@@ -150,30 +149,30 @@ void SPI_Slave_CS_Config(void)
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x01;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;	
   NVIC_Init(&NVIC_InitStructure);
-#else
+#else  
   EXTI_InitTypeDef EXTI_InitStructure;
   NVIC_InitTypeDef   NVIC_InitStructure;
 
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
-
+  /* ��GPIOA_0���ж������� */
   GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource12);
 
-
+  /* �����ж���0λ�ⲿ�½����ж� */
   EXTI_InitStructure.EXTI_Line = EXTI_Line12;
   EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
   EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
   EXTI_InitStructure.EXTI_LineCmd = ENABLE;
   EXTI_Init(&EXTI_InitStructure);
 
-  NVIC_InitStructure.NVIC_IRQChannel = EXTI15_10_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x00;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x01;	
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;	
+  NVIC_InitStructure.NVIC_IRQChannel = EXTI15_10_IRQn;			//ʹ�ܰ������ڵ��ⲿ�ж�ͨ��
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x00;	//��ռ���ȼ�2��
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x01;					//�����ȼ�1
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;								//ʹ���ⲿ�ж�ͨ��
   NVIC_Init(&NVIC_InitStructure);
-#endif 
+#endif   
 }
 
-#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+#if defined(MKS_32_V1_4)
 void EXTI1_IRQHandler(void)
 {
   if((GPIOB->IDR & (1<<1)) != 0)
@@ -190,21 +189,22 @@ void EXTI1_IRQHandler(void)
   EXTI->PR = 1<<1;
 }
 #else
+/* �ⲿ�ж� */
 void EXTI15_10_IRQHandler(void)
 {
   if((GPIOB->IDR & (1<<12)) != 0)
   {
-    SPI_ReEnable(!!(GPIOB->IDR & (1<<13))); // spi mode0/mode3
+    SPI_ReEnable(!!(GPIOB->IDR & (1<<13))); //����Ӧ spi mode0/mode3
     ST7920_SPI_NUM->CR1 |= (1<<6);
   }
   else
   {
-    RCC->APB1RSTR |= 1<<14;	
+    RCC->APB1RSTR |= 1<<14;	//��λSPI1
     RCC->APB1RSTR &= ~(1<<14);
   }
-
+/* ����ж�״�?�Ĵ��� */
   EXTI->PR = 1<<12;
 }
-#endif 
+#endif
 
 #endif

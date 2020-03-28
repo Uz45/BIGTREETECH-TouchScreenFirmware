@@ -14,7 +14,7 @@ void lcd_frame_display(u16 sx,u16 sy,u16 w,u16 h, u32 addr)
   u32 address = addr;
 
   LCD_SetWindow(sx,sy,sx+w-1,sy+h-1);
-#if defined (MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) 
+#if defined (MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
   LCD_WR_REG(0x22); 
 #else
   LCD_WR_REG(0x2C);
@@ -43,14 +43,14 @@ void LOGO_ReadDisplay(void)
 {
   #if defined(MKS_32_V1_1) || defined(MKS_32_V1_2)
   lcd_frame_display((LCD_WIDTH/2-(ICON_WIDTH/2)), (LCD_HEIGHT/2-(ICON_HEIGHT/2)), ICON_WIDTH, ICON_HEIGHT, LOGO_ADDR);
-  #else
+  #else  
   lcd_frame_display(0, 0, LCD_WIDTH, LCD_HEIGHT, LOGO_ADDR);
-  #endif  
+  #endif    
 }
 
 void ICON_ReadDisplay(u16 sx,u16 sy, u8 icon)
 {
-  lcd_frame_display(sx, sy, ICON_WIDTH, ICON_HEIGHT, ICON_ADDR(icon));
+  lcd_frame_display(sx, sy, ICON_WIDTH, ICON_HEIGHT, ICON_ADDR(icon)); 
 }
 
 //directly draw BMP file to lcd (pos - GUI_POINT(top left corner of image location on lcd), bmp: path of bmp file)
