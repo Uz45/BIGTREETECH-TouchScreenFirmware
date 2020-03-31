@@ -43,7 +43,7 @@ void SPI_ReEnable(u8 mode)
 
 void SPI_Slave(void)
 {
-#if defined(MKS_32_V1_4)
+#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
   NVIC_InitTypeDef   NVIC_InitStructure;
   GPIO_InitSet(PB3, MGPIO_MODE_IPU, 0);
   GPIO_InitSet(PB5, MGPIO_MODE_IPU, 0);  
@@ -81,7 +81,7 @@ void SPI_Slave(void)
 
 void SPI_SlaveDeInit(void)
 {
-#if defined(MKS_32_V1_4)
+#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
   NVIC_InitTypeDef   NVIC_InitStructure;
 
   NVIC_InitStructure.NVIC_IRQChannel = SPI3_IRQn;
@@ -113,7 +113,7 @@ void SPI_SlaveDeInit(void)
 }
 
 
-#if defined(MKS_32_V1_4)
+#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
 void SPI3_IRQHandler(void)
 {
   SPISlave.data[SPISlave.wIndex] =  ST7920_SPI_NUM->DR;
@@ -130,7 +130,7 @@ void SPI2_IRQHandler(void)
 /* �ⲿ�ж����� */
 void SPI_Slave_CS_Config(void)
 {
-#if defined(MKS_32_V1_4)
+#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
   EXTI_InitTypeDef EXTI_InitStructure;
   NVIC_InitTypeDef   NVIC_InitStructure;
 
@@ -172,7 +172,7 @@ void SPI_Slave_CS_Config(void)
 #endif   
 }
 
-#if defined(MKS_32_V1_4)
+#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
 void EXTI1_IRQHandler(void)
 {
   if((GPIOB->IDR & (1<<1)) != 0)
