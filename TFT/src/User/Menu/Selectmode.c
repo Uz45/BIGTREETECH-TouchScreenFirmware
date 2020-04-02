@@ -42,7 +42,7 @@ bool LCD_ReadPen(uint16_t intervals)
   return false;
 }
 
-#if defined(MKS_32_V1_4)
+#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
 u8 LCD_ButtonTouch(uint16_t intervals)
 {
 	static u32 BtnTime = 0;
@@ -153,7 +153,7 @@ void Touch_Sw(uint8_t num)
 	GPIO_InitSet(LCD_ENCA_PIN, MGPIO_MODE_OUT_PP, 0);
 	GPIO_InitSet(LCD_ENCB_PIN, MGPIO_MODE_OUT_PP, 0);
   }
-  #if defined(MKS_32_V1_4)
+  #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
    u8 delayenc=14;
    u8 pulses;
 	switch(num)

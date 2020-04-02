@@ -112,7 +112,7 @@ void menuMode(void)
     Serial_ReSourceDeInit();
   #endif
   resetInfoFile();
-  #if !defined MKS_32_V1_4 
+  #if !defined (MKS_32_V1_4) && !defined (MKS_32_V1_3) && !defined (MKS_32_V1_2) && !defined (MKS_32_V1_1)
   SD_DeInit();
   #endif
 
