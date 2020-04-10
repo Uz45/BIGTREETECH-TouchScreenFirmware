@@ -128,6 +128,9 @@ void TSC_Calibration(void)
         GUI_DrawPoint(LCD_X[tp_num],LCD_Y[tp_num]-i);
       }
 #endif
+      while(isPress() == false);
+      TP_X[tp_num] = XPT2046_Repeated_Compare_AD(CMD_RDX);
+      TP_Y[tp_num] = XPT2046_Repeated_Compare_AD(CMD_RDY);
       while(isPress() != false);
     }
     K = (X1 - X3)*(Y2 - Y3) - (X2 - X3)*(Y1 - Y3);
