@@ -29,16 +29,26 @@
 #define KEEP_KNOB_LED_COLOR_MARLIN_MODE  // Keeps the LED state in Marlin Mode
 
 /**
- * Default LCD Brightness
+ * Default LCD Brightness and LCD IDLE Brightness
  *
- * Options:  LCD_5_PERCENT, LCD_10_PERCENT, LCD_20_PERCENT,
- *           LCD_30_PERCENT, LCD_40_PERCENT, LCD_50_PERCENT,
- *           LCD_60_PERCENT, LCD_70_PERCENT, LCD_80_PERCENT,
- *           LCD_90_PERCENT, LCD_100_PERCENT
+ * Brightness:  1: LCD_5_PERCENT,  2: LCD_10_PERCENT, 3: LCD_20_PERCENT,
+ *              4: LCD_30_PERCENT, 5: LCD_40_PERCENT, 6: LCD_50_PERCENT,
+ *              7: LCD_60_PERCENT, 8: LCD_70_PERCENT, 9: LCD_80_PERCENT,
+ *              10: LCD_90_PERCENT, 11: LCD_100_PERCENT
+ *
+ * Settings for the idle dim timer. The LCD screen will dim to idle brightness,
+ * if the display is not touched for the period of the lcd idle timer.
+ *
+ * Idle Timer:  1: LCD_DIM_OFF,         2: LCD_DIM_5_SECONDS.   3: LCD_DIM_10_SECONDS,
+ *              4: LCD_DIM_30_SECONDS,  4: LCD_DIM_60_SECONDS,  5: LCD_DIM_120_SECONDS,
+ *              6: LCD_DIM_300_SECONDS, 7: LCD_DIM_CUSTOM_SECONDS
+ *
  */
-#ifdef LCD_LED_PIN
-  #define DEFAULT_LCD_BRIGHTNESS LCD_100_PERCENT
-#endif
+#define DEFAULT_LCD_BRIGHTNESS      11  // 11: LCD_100_PERCENT - Brightness value from list
+#define DEFAULT_LCD_IDLE_BRIGHTNESS 2   // 2: LCD_10_PERCENT - Brightness value from list
+#define DEFAULT_LCD_IDLE_TIMER      1   // 1: LCD_DIM_OFF
+#define LCD_DIM_CUSTOM_SECONDS      600 // Custom value in seconds. Will be used if
+                                          // LCD_DIM_CUSTOM_SECONDS is set as idle timer.
 
 //===========================================================================
 //=========================== Marlin Mode Settings ==========================
@@ -60,11 +70,12 @@
 //#define ST7920_BANNER_TEXT "LCD12864 Simulator"
 
 /**
- * Run Marlin Mode Fullscreen
+ * Run Marlin Mode in Fullscreen
  *
- *  *** NOT RECOMMENDED FOR TFT24 ***
+ *  Options:  0: Disabled. RECOMMENDED FOR TFT24
+ *            1: Enabled Marlin Fullscreen mode.
  */
-//#define ST7920_FULLSCREEN
+#define DEFAULT_ST7920_FULLSCREEN_MODE 0 // 0: Disabled. RECOMMENDED FOR TFT24
 
 /**
  * Clean Mode Switching Support
@@ -90,14 +101,14 @@
  *
  * :[2400, 9600, 19200, 38400, 57600, 115200, 250000, 500000, 1000000]
  */
-#define BAUDRATE 250000
+#define BAUDRATE 115200
 
 /**
  * Default Touch Mode Language
  *
  * Select the language to display on the LCD while in Touch Mode.
  *
- * Options: ARMENIAN, CHINESE, CZECH, DUTCH, ENGLISH, FRENCH, GERMAN, HUNGARY, ITALIAN, JAPANESE, POLISH, PORTUGUESE, RUSSIAN, SLOVAK, SPAIN
+ * Options: ARMENIAN, CHINESE, CZECH, DUTCH, ENGLISH, FRENCH, GERMAN, HUNGARIAN, ITALIAN, JAPANESE, POLISH, PORTUGUESE, RUSSIAN, SLOVAK, SPAIN
  */
 #define DEFAULT_LANGUAGE ENGLISH
 
@@ -313,7 +324,7 @@
  * Enable Start & End G-code in SETTINGS -> FEATURE menu.
  */
 // Start G-code - run this G-code before starting print
-#define PRINT_START_GCODE "G28\nG29\nG1 Z20\n" // Home all, run ABL routine, raise Z 20 mm
+#define PRINT_START_GCODE "G28 XY R10\n" // Raise Z 10mm before homing X & Y
 
 // End G-code - run this G-code after finishing print
 #define PRINT_END_GCODE "G90\nG1 E-4\nG92 E0\nM18\n" // Switch to absolute positioning, reduce filament pressure by performing small retract, reset extruder position, disable steppers

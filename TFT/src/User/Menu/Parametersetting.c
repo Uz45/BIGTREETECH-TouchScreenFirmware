@@ -154,14 +154,14 @@ void menuShowParameter(void){
     // title
     parameter_names[cur_parameter],
     // icon                     ItemType                Item Title            item value text(only for custom value)
-    {{ICONCHAR_EDIT,           LIST_CUSTOMVALUE,       LABEL_DYNAMIC,      LABEL_DYNAMIC},
-    {ICONCHAR_EDIT,            LIST_CUSTOMVALUE,       LABEL_DYNAMIC,      LABEL_DYNAMIC},
-    {ICONCHAR_EDIT,            LIST_CUSTOMVALUE,       LABEL_DYNAMIC,      LABEL_DYNAMIC},
-    {ICONCHAR_EDIT,            LIST_CUSTOMVALUE,       LABEL_DYNAMIC,      LABEL_DYNAMIC},
-    {ICONCHAR_BACKGROUND,       LIST_CUSTOMVALUE,       LABEL_DYNAMIC,      LABEL_DYNAMIC},
-    {ICONCHAR_BACKGROUND,       LIST_LABEL,             LABEL_BACKGROUND,      LABEL_BACKGROUND},
-    {ICONCHAR_BACKGROUND,       LIST_LABEL,             LABEL_BACKGROUND,      LABEL_BACKGROUND},
-    {ICONCHAR_BACK,             LIST_LABEL,             LABEL_BACKGROUND,      LABEL_BACKGROUND},}
+    {{ICONCHAR_EDIT,            LIST_CUSTOMVALUE,       LABEL_DYNAMIC,        LABEL_DYNAMIC},
+    {ICONCHAR_EDIT,             LIST_CUSTOMVALUE,       LABEL_DYNAMIC,        LABEL_DYNAMIC},
+    {ICONCHAR_EDIT,             LIST_CUSTOMVALUE,       LABEL_DYNAMIC,        LABEL_DYNAMIC},
+    {ICONCHAR_EDIT,             LIST_CUSTOMVALUE,       LABEL_DYNAMIC,        LABEL_DYNAMIC},
+    {ICONCHAR_BACKGROUND,       LIST_CUSTOMVALUE,       LABEL_DYNAMIC,        LABEL_DYNAMIC},
+    {ICONCHAR_BACKGROUND,       LIST_LABEL,             LABEL_BACKGROUND,     LABEL_BACKGROUND},
+    {ICONCHAR_BACKGROUND,       LIST_LABEL,             LABEL_BACKGROUND,     LABEL_BACKGROUND},
+    {ICONCHAR_BACK,             LIST_LABEL,             LABEL_BACKGROUND,     LABEL_BACKGROUND},}
     };
 
     for (int i = 0; i < STEPPER_COUNT; i++) {
@@ -215,13 +215,13 @@ void menuShowParameter(void){
                 {
                     storeCmd(parameter_Cmd[cur_parameter][key_num],v);
                 //send current setting gcode for dual steppers(x,y & z only) if they exists
-                    if(cur_parameter == P_CURRENT && key_num < E_STEPPER)
+                    if(cur_parameter == P_CURRENT && key_num < (KEY_VALUES)E_STEPPER)
                     {
                         if(dualstepper[key_num] == true){
                             storeCmd(dualstepper_current_Cmd[key_num],v);
                         }
                     }
-                    else if(cur_parameter == P_BUMPSENSITIVITY && key_num < E_STEPPER)
+                    else if(cur_parameter == P_BUMPSENSITIVITY && key_num < (KEY_VALUES)E_STEPPER)
                     {
                         if(dualstepper[key_num] == true){
                             storeCmd(dualstepper_bump_Cmd[key_num],v);
@@ -317,6 +317,10 @@ void menuParameterSettings(void){
             }
             break;
         case KEY_ICON_7:
+            if(memcmp(&now, &infoParameters, sizeof(PARAMETERS)))
+                {
+                    storeCmd("M500\n");
+                }
             infoMenu.cur--;
             break;
 
@@ -332,10 +336,6 @@ void menuParameterSettings(void){
         }
     loopProcess();
     }
-  if(memcmp(&now, &infoParameters, sizeof(PARAMETERS)))
-  {
-    storeCmd("M500\n");
-  }
 
 }
 
@@ -508,17 +508,15 @@ void show_GlobalInfo(void)
 {
     if(infoSettings.persistent_info != 1) return;
     if(infoHost.connected == false || infoMenu.menu[infoMenu.cur] == menuPrinting)    return;
-    if(infoMenu.menu[infoMenu.cur] == menuMove || infoMenu.menu[infoMenu.cur] == menuStatus || infoMenu.menu[infoMenu.cur] == menuParameterSettings) return;
+    if(infoMenu.menu[infoMenu.cur] == menuMove || infoMenu.menu[infoMenu.cur] == menuStatus) return;
     drawGlobalInfo();
 
     return;
 }
 
 void drawGlobalInfo(void){
-
-
     char tempstr[10];
-
+    GUI_SetBkColor(TITLE_BACKGROUND_COLOR);
     GUI_ClearRect(LCD_WIDTH/3, 0, LCD_WIDTH, BYTE_HEIGHT);
 
     //global nozzle
@@ -530,4 +528,5 @@ void drawGlobalInfo(void){
     lcd_frame_display(ICON_BED_X, 0, 2*BYTE_WIDTH, BYTE_HEIGHT, ICON_ADDR(ICON_GLOBAL_BED));
     my_sprintf(tempstr, "%d/%d", heatGetCurrentTemp(BED), heatGetTargetTemp(BED));
     GUI_DispStringInRect(VALUE_BED_X,0,VALUE_BED_X+8*BYTE_WIDTH,BYTE_HEIGHT, (u8 *)tempstr);
+    GUI_SetBkColor(BACKGROUND_COLOR);
 }

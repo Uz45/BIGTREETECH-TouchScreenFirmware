@@ -35,7 +35,11 @@ void SPI_ReEnable(u8 mode)
                       | (7<<3)   // bit3-5   000:fPCLK/2    001:fPCLK/4    010:fPCLK/8     011:fPCLK/16
                                  //          100:fPCLK/32   101:fPCLK/64   110:fPCLK/128   111:fPCLK/256
                       | (0<<2)   // 0:Slave 1:Master
+#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+                      | (0<<1)   // CPOL  (mode<<1)
+#else
                       | (mode<<1)   // CPOL
+#endif 
                       | (mode<<0);  // CPHA
 
   ST7920_SPI_NUM->CR2 |= 1<<6; // RX buffer not empty interrupt enable SPI_I2S_IT_RXNE
@@ -44,9 +48,8 @@ void SPI_ReEnable(u8 mode)
 void SPI_Slave(void)
 {
 #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
-  NVIC_InitTypeDef   NVIC_InitStructure;
-  GPIO_InitSet(PB3, MGPIO_MODE_IPU, 0);
-  GPIO_InitSet(PB5, MGPIO_MODE_IPU, 0);  
+
+  NVIC_InitTypeDef   NVIC_InitStructure;  
   SPISlave.data = malloc(SPI_SLAVE_MAX);
   while(!SPISlave.data); // malloc failed
   SPI_GPIO_Init(ST7920_SPI);
@@ -60,6 +63,7 @@ void SPI_Slave(void)
   
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI3,ENABLE);
   SPI_ReEnable(1);
+    ST7920_SPI_NUM->CR1 |= (1<<6);
 #else  
   NVIC_InitTypeDef   NVIC_InitStructure;
 
@@ -177,7 +181,7 @@ void EXTI1_IRQHandler(void)
 {
   if((GPIOB->IDR & (1<<1)) != 0)
   {
-    SPI_ReEnable(!!(GPIOB->IDR & (1<<13))); //spi mode0/mode3
+    SPI_ReEnable(!!(GPIOB->IDR & (1<<13))); //spi mode0/mode3 
     ST7920_SPI_NUM->CR1 |= (1<<6);
   }
   else

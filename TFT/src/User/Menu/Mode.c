@@ -2,6 +2,7 @@
 #include "includes.h"
 
 bool serialHasBeenInitialized = false;
+bool freshboot = true;
 
 void Serial_ReSourceDeInit(void)
 {
@@ -14,7 +15,7 @@ void Serial_ReSourceInit(void)
 {
   if (serialHasBeenInitialized) return;
   serialHasBeenInitialized = true;
-  
+
   memset(&infoHost, 0, sizeof(infoHost));
   reminderSetUnConnected(); // reset connect status
   Serial_Init(infoSettings.baudrate);
@@ -39,21 +40,25 @@ void infoMenuSelect(void)
       #endif
       GUI_SetColor(FONT_COLOR);
       GUI_SetBkColor(BACKGROUND_COLOR);
-      
+
       #ifdef UNIFIED_MENU //if Unified menu is selected
         infoMenu.menu[infoMenu.cur] = menuStatus; //status screen as default screen on boot
       #else // classic UI
         infoMenu.menu[infoMenu.cur] = menuMain;
       #endif
       #ifdef SHOW_BTT_BOOTSCREEN
-        u32 startUpTime = OS_GetTimeMs();
-        heatSetUpdateTime(TEMPERATURE_QUERY_FAST_DURATION);
-        LOGO_ReadDisplay();
-        while(OS_GetTimeMs() - startUpTime < 3000)  //Display 3s logo
+        if (freshboot)
         {
-          loopProcess();
+          u32 startUpTime = OS_GetTimeMs();
+          heatSetUpdateTime(TEMPERATURE_QUERY_FAST_DURATION);
+          LOGO_ReadDisplay();
+          while (OS_GetTimeMs() - startUpTime < 3000) //Display 3s logo
+          {
+            loopProcess();
+          }
+          heatSetUpdateTime(TEMPERATURE_QUERY_SLOW_DURATION);
+          freshboot = false;
         }
-        heatSetUpdateTime(TEMPERATURE_QUERY_SLOW_DURATION);
       #endif
       break;
     }
@@ -65,8 +70,8 @@ void infoMenuSelect(void)
       #ifdef BUZZER_PIN
         Buzzer_DeConfig();  // Disable buzzer in LCD12864 Simulations mode.
       #endif
-      
-      #ifdef LED_color_PIN
+
+      #ifdef LED_COLOR_PIN
         #ifndef KEEP_KNOB_LED_COLOR_MARLIN_MODE
           knob_LED_DeInit();
         #endif
@@ -75,7 +80,7 @@ void infoMenuSelect(void)
       GUI_SetBkColor(ST7920_BKCOLOR);
       infoMenu.menu[infoMenu.cur] = menuST7920;
       break;
-      
+
     #endif
   }
 }
@@ -108,7 +113,7 @@ void menuMode(void)
 
   GUI_Clear(BACKGROUND_COLOR);
   //RADIO_Create(&modeRadio);
-  #ifndef CLEAN_MODE_SWITCHING_SUPPORT  
+  #ifndef CLEAN_MODE_SWITCHING_SUPPORT
     Serial_ReSourceDeInit();
   #endif
   resetInfoFile();
@@ -146,6 +151,7 @@ void menuMode(void)
     }
 
     LCD_LoopEncoder();
+    LCD_loopCheckEncoder();
     #ifdef CLEAN_MODE_SWITCHING_SUPPORT
       loopBackEnd();
     #endif

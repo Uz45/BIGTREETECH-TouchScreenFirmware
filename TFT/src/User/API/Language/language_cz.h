@@ -30,6 +30,7 @@
     #define CZ_BLTOUCH_DEPLOY       "Vysunout"
     #define CZ_BLTOUCH_STOW         "Zasunout"
     #define CZ_BLTOUCH_REPEAT       "Opakovat"
+    #define CZ_Z_OFFSET             "Z Offset"
     #define CZ_PROBE_OFFSET         "Probe Ofset"
     #define CZ_EEPROM_SAVE          "Uložit"
     #define CZ_INC                  "Přidat"
@@ -173,5 +174,15 @@
     #define CZ_INFO                     "Info"
     #define CZ_LCD_BRIGHTNESS           "LCD Brightness"
     #define CZ_EMERGENCYPARSER          "EMERGENCY_PARSER is disabled in Printer Firmware."
+    #define CZ_LCD_BRIGHTNESS_DIM       "LCD Brightness dim"
+    #define CZ_LCD_DIM_IDLE_TIMER       "LCD dim idle timer"
+    #define CZ_5_SECONDS                "5 Sec."
+    #define CZ_10_SECONDS               "10 Sec."
+    #define CZ_30_SECONDS               "30 Sec."
+    #define CZ_60_SECONDS               "1 Min."
+    #define CZ_120_SECONDS              "2 Min."
+    #define CZ_300_SECONDS              "5 Min."
+    #define CZ_CUSTOM_SECONDS           "Custom"
+    #define CZ_ST7920_FULLSCREEN        "Marlin mode in fullscreen"
 
 #endif

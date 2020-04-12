@@ -26,9 +26,12 @@ void infoSettingsReset(void)
   infoSettings.send_end_gcode       = 0;
   infoSettings.persistent_info      = 1;
   infoSettings.file_listmode        = 1;
-  #ifdef LCD_LED_PIN
-  infoSettings.lcd_brightness       = DEFAULT_LCD_BRIGHTNESS;
+  #ifdef LCD_LED_PWM_CHANNEL
+  infoSettings.lcd_brightness       = (DEFAULT_LCD_BRIGHTNESS - 1);
+  infoSettings.lcd_idle_brightness  = (DEFAULT_LCD_IDLE_BRIGHTNESS - 1);
+  infoSettings.lcd_idle_timer       = (DEFAULT_LCD_IDLE_TIMER - 1);
   #endif
+  infoSettings.marlin_mode_fullscreen = DEFAULT_ST7920_FULLSCREEN_MODE;
 }
 
 void initMachineSetting(void){
@@ -52,8 +55,8 @@ void setupMachine(void){
       storeCmd("M420 S1\n");
     }
   #endif
-  if (infoMachineSettings.emergencyParser != 1){
-    statusScreen_setMsg(textSelect(LABEL_WARNING), textSelect(LABEL_EMERGENCYPARSER));
+  if (infoMachineSettings.emergencyParser != 1 && wasRestored == true){
+    popupReminder(textSelect(LABEL_WARNING), textSelect(LABEL_EMERGENCYPARSER));
   }
 }
 

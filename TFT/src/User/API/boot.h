@@ -8,7 +8,6 @@
 
 //address in spiflash W25Qxx
 #define LOGO_ADDR               0x0
-
 #if defined (MKS_32_V1_1)
 #define ICON_ADDR(num)          (((num)*0x4000)+0x4000) 
 
@@ -36,8 +35,6 @@
 #define SMALL_ICON_START_ADDR   (INFOBOX_ADDR+0xA7F8)
 #define SMALL_ICON_ADDR(num)    ((num)*0x1000+SMALL_ICON_START_ADDR)
 #endif
-
-
 
 #define ADMIN_MODE_FILE "0:admin.txt"
 #define FIRMWARE_NAME STRINGIFY(HARDWARE) "." STRINGIFY(SOFTWARE_VERSION)

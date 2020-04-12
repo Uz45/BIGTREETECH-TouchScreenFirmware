@@ -38,9 +38,9 @@ void TS_Get_Coordinates(u16 *x, u16 *y)
 
  #if defined (MKSTFTV3M)
   *x = LCD_WIDTH-(A*tp_x+B*tp_y+C)/K;
-  #else
+ #else
   *x = (A*tp_x+B*tp_y+C)/K;
-  #endif
+ #endif
   *y = (D*tp_x+E*tp_y+F)/K;
 }
 
@@ -173,6 +173,9 @@ void loopTouchScreen(void) // Handle in interrupt
     if(touch >= 20) // 20ms
     {
       touchScreenIsPress = true;
+      #ifdef LCD_LED_PWM_CHANNEL
+        LCD_Dim_Idle_Timer_Reset();
+      #endif
     }
     else
     {
@@ -183,6 +186,9 @@ void loopTouchScreen(void) // Handle in interrupt
   {
     touchScreenIsPress = false;
     touch = 0;
+    #ifdef LCD_LED_PWM_CHANNEL
+      LCD_Dim_Idle_Timer();
+    #endif
   }
 }
 

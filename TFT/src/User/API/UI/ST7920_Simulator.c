@@ -11,10 +11,19 @@ ST7920_CTRL_STATUS status = ST7920_IDLE;
 void ST7920_DrawPixel(int16_t x, int16_t y, uint16_t color)
 {
 //  GUI_DrawPixel(x, y, color);
-  GUI_FillRectColor(SIMULATOR_XSTART + PIXEL_XSIZE*x,
-                    SIMULATOR_YSTART + PIXEL_YSIZE*y,
-                    SIMULATOR_XSTART + PIXEL_XSIZE*(x+1),
-                    SIMULATOR_YSTART + PIXEL_YSIZE*(y+1), color);
+  if(infoSettings.marlin_mode_fullscreen)
+  {
+    GUI_FillRectColor(SIMULATOR_XSTART_FULLSCREEN + PIXEL_XSIZE_FULLSCREEN*x,
+                      SIMULATOR_YSTART_FULLSCREEN + PIXEL_YSIZE_FULLSCREEN*y,
+                      SIMULATOR_XSTART_FULLSCREEN + PIXEL_XSIZE_FULLSCREEN*(x+1),
+                      SIMULATOR_YSTART_FULLSCREEN + PIXEL_YSIZE_FULLSCREEN*(y+1),
+                      color);
+
+  } else {
+    GUI_FillRectColor(SIMULATOR_XSTART + PIXEL_XSIZE*x,     SIMULATOR_YSTART + PIXEL_YSIZE*y ,
+                      SIMULATOR_XSTART + PIXEL_XSIZE*(x+1), SIMULATOR_YSTART + PIXEL_YSIZE*(y+1),
+                      color);
+  }
 }
 
 int16_t ST7920_MapCoordinateX(void)
@@ -135,8 +144,8 @@ void menuST7920(void)
 
 #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
 // Menu for LCD Encoder
-  GUI_DispStringInRect(0, LCD_HEIGHT-(LCD_HEIGHT/4), LCD_WIDTH/3, LCD_HEIGHT, "UP");
-  GUI_DispStringInRect(LCD_WIDTH/3, LCD_HEIGHT-(LCD_HEIGHT/4), LCD_WIDTH-(LCD_WIDTH/3), LCD_HEIGHT, "DOWN");
+  GUI_DispStringInRect(0, LCD_HEIGHT-(LCD_HEIGHT/4), LCD_WIDTH/3, LCD_HEIGHT, "UP -");
+  GUI_DispStringInRect(LCD_WIDTH/3, LCD_HEIGHT-(LCD_HEIGHT/4), LCD_WIDTH-(LCD_WIDTH/3), LCD_HEIGHT, "DOWN +");
   GUI_DispStringInRect(LCD_WIDTH-(LCD_WIDTH/3), LCD_HEIGHT-(LCD_HEIGHT/4), LCD_WIDTH, LCD_HEIGHT, "OK");
   
   u8 tsw; // OK-1 UP-2 DOWN-3
@@ -159,17 +168,18 @@ void menuST7920(void)
 
       if(tsw==1 || tsw==2 || tsw ==3)
       {
-    Touch_Sw(tsw);        
+    Touch_Sw(tsw);       
       }
-#else
-   Touch_Sw(LCD_ReadTouch());
-   
-   if(LCD_BtnTouch(LCD_BUTTON_INTERVALS))
-   Touch_Sw(1);
-#endif 
+#endif
+
+    Touch_Sw(LCD_ReadTouch());
+
+    if(LCD_BtnTouch(LCD_BUTTON_INTERVALS))
+			Touch_Sw(1);
 
     #if LCD_ENCODER_SUPPORT
       loopCheckMode();
+      LCD_loopCheckEncoder();
     #endif
     #ifdef CLEAN_MODE_SWITCHING_SUPPORT
       loopBackEnd();

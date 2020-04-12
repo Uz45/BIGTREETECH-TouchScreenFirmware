@@ -30,6 +30,7 @@
     #define PT_BLTOUCH_DEPLOY       "Abrir"
     #define PT_BLTOUCH_STOW         "Encolher"
     #define PT_BLTOUCH_REPEAT       "Repetir"
+    #define PT_Z_OFFSET             "Z Offset"
     #define PT_PROBE_OFFSET         "Probe Offset"
     #define PT_EEPROM_SAVE          "Gravar"
     #define PT_INC                  "Aumentar"
@@ -173,5 +174,15 @@
     #define PT_INFO                     "Info"
     #define PT_LCD_BRIGHTNESS           "LCD Brightness"
     #define PT_EMERGENCYPARSER          "EMERGENCY_PARSER is disabled in Printer Firmware."
+    #define PT_LCD_BRIGHTNESS_DIM       "LCD Brightness dim"
+    #define PT_LCD_DIM_IDLE_TIMER       "LCD dim idle timer"
+    #define PT_5_SECONDS                "5 Sec."
+    #define PT_10_SECONDS               "10 Sec."
+    #define PT_30_SECONDS               "30 Sec."
+    #define PT_60_SECONDS               "1 Min."
+    #define PT_120_SECONDS              "2 Min."
+    #define PT_300_SECONDS              "5 Min."
+    #define PT_CUSTOM_SECONDS           "Custom"
+    #define PT_ST7920_FULLSCREEN        "Marlin mode in fullscreen"
 
 #endif

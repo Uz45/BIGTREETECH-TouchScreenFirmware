@@ -6,8 +6,8 @@
 
 const GUI_RECT rect_of_mode[SELECTMODE]={
   //2 select icon
-  {1*SPACE_SELEX+0*selecticonw,SPACE_SELEY,1*SPACE_SELEX+1*selecticonw,SPACE_SELEY+selecticonw},
-  {3*SPACE_SELEX+1*selecticonw,SPACE_SELEY,3*SPACE_SELEX+2*selecticonw,SPACE_SELEY+selecticonw},
+  {1*SPACE_SELEX+0*ICON_WIDTH, SPACE_SELEY, 1*SPACE_SELEX+1*ICON_WIDTH, SPACE_SELEY+ICON_HEIGHT},
+  {3*SPACE_SELEX+1*ICON_WIDTH, SPACE_SELEY, 3*SPACE_SELEX+2*ICON_WIDTH, SPACE_SELEY+ICON_HEIGHT},
 };
 
 u32 select_mode [SELECTMODE]={
@@ -19,7 +19,7 @@ void show_selectICON(void)
 {
     for(u8 i=0;i<SELECTMODE;i++)
     {
-        lcd_frame_display(rect_of_mode[i].x0,rect_of_mode[i].y0-BYTE_HEIGHT,selecticonw,selecticonw,ICON_ADDR(select_mode[i]));
+        lcd_frame_display(rect_of_mode[i].x0, rect_of_mode[i].y0-BYTE_HEIGHT, ICON_WIDTH, ICON_HEIGHT,ICON_ADDR(select_mode[i]));
     }
     return ;
 }
@@ -42,7 +42,7 @@ bool LCD_ReadPen(uint16_t intervals)
   return false;
 }
 
-#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+#if LCD_ENCODER_SUPPORT && defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
 u8 LCD_ButtonTouch(uint16_t intervals)
 {
 	static u32 BtnTime = 0;
@@ -56,11 +56,11 @@ u8 LCD_ButtonTouch(uint16_t intervals)
 		{
 			if(tx<(LCD_WIDTH/3))
 			{
-			 return 3;
+			 return 2;
 			}
 			if(tx<(LCD_WIDTH-(LCD_WIDTH/3)))
 			{
-			 return 2;
+			 return 3;
 			}
 			if(tx<LCD_WIDTH)
 			{
@@ -76,7 +76,9 @@ u8 LCD_ButtonTouch(uint16_t intervals)
   }
   return 4;
 }
-#else
+#endif
+
+
 bool LCD_BtnTouch(uint16_t intervals)
 {
 	static u32 BtnTime = 0;
@@ -96,7 +98,6 @@ bool LCD_BtnTouch(uint16_t intervals)
   }
   return false;
 }
-#endif
 
 #if 1
  uint8_t LCD_ReadTouch(void)
@@ -149,64 +150,10 @@ void Touch_Sw(uint8_t num)
 {
   if(num==1 || num==2 || num ==3)
   {
-    GPIO_InitSet(LCD_BTN_PIN, MGPIO_MODE_OUT_PP, 0);
+  GPIO_InitSet(LCD_BTN_PIN, MGPIO_MODE_OUT_PP, 0);
 	GPIO_InitSet(LCD_ENCA_PIN, MGPIO_MODE_OUT_PP, 0);
 	GPIO_InitSet(LCD_ENCB_PIN, MGPIO_MODE_OUT_PP, 0);
   }
-  #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
-   u8 delayenc=14;
-   u8 pulses;
-	switch(num)
-	{
-		case 0:
-			break;
-		case 1:
-			GPIO_SetLevel(LCD_BTN_PIN, 0);
-			Delay_us(20);
-			GPIO_SetLevel(LCD_BTN_PIN, 1);
-			break;
-		case 2:
-	for(pulses = 1; pulses <= ENCODER_PULSES_PER_STEP; pulses++)
-  {
-			GPIO_SetLevel(LCD_ENCA_PIN, 1);
-			GPIO_SetLevel(LCD_ENCB_PIN, 1);
-			Delay_us(delayenc);
-			GPIO_SetLevel(LCD_ENCA_PIN, 0);
-			GPIO_SetLevel(LCD_ENCB_PIN, 1);
-			Delay_us(delayenc);
-			GPIO_SetLevel(LCD_ENCA_PIN, 0);
-			GPIO_SetLevel(LCD_ENCB_PIN, 0);
-			Delay_us(delayenc);
-			GPIO_SetLevel(LCD_ENCA_PIN, 1);
-			GPIO_SetLevel(LCD_ENCB_PIN, 0);
-			Delay_us(delayenc);
-  			GPIO_SetLevel(LCD_ENCA_PIN, 1);
-			GPIO_SetLevel(LCD_ENCB_PIN, 1);
-			Delay_us(delayenc);						
-  }					
-			break;
-		case 3:
-	for(pulses = 1; pulses <= ENCODER_PULSES_PER_STEP; pulses++)
-  {
-			GPIO_SetLevel(LCD_ENCA_PIN, 1);
-			GPIO_SetLevel(LCD_ENCB_PIN, 1);
-			Delay_us(delayenc);
-			GPIO_SetLevel(LCD_ENCA_PIN, 1);
-			GPIO_SetLevel(LCD_ENCB_PIN, 0);
-			Delay_us(delayenc);
-			GPIO_SetLevel(LCD_ENCA_PIN, 0);
-			GPIO_SetLevel(LCD_ENCB_PIN, 0);
-			Delay_us(delayenc);
-			GPIO_SetLevel(LCD_ENCA_PIN, 0);
-			GPIO_SetLevel(LCD_ENCB_PIN, 1);
-			Delay_us(delayenc);
-  			GPIO_SetLevel(LCD_ENCA_PIN, 1);
-			GPIO_SetLevel(LCD_ENCB_PIN, 1);
-			Delay_us(delayenc);						
-  }		
-			break;
-	}
- #else 
 	switch(num)
 	{
 		case 0:
@@ -214,6 +161,7 @@ void Touch_Sw(uint8_t num)
 		case 1:
 			GPIO_SetLevel(LCD_BTN_PIN, 0);
 			GPIO_SetLevel(LCD_BTN_PIN, 1);
+			    			Delay_us(20); 
 			break;
 		case 2:
 			GPIO_SetLevel(LCD_ENCA_PIN, 1);
@@ -230,6 +178,7 @@ void Touch_Sw(uint8_t num)
 			Delay_us(8);
 			GPIO_SetLevel(LCD_ENCA_PIN, 1);
 			GPIO_SetLevel(LCD_ENCB_PIN, 1);
+			    			Delay_ms(15); 
 			break;
 		case 3:
 			GPIO_SetLevel(LCD_ENCA_PIN, 1);
@@ -246,9 +195,10 @@ void Touch_Sw(uint8_t num)
 			Delay_us(8);
 			GPIO_SetLevel(LCD_ENCA_PIN, 1);
 			GPIO_SetLevel(LCD_ENCB_PIN, 1);
+			    			Delay_ms(15); 
 			break;
 	}
-#endif
+
   LCD_EncoderInit();
 }
 
@@ -260,22 +210,22 @@ MKEY_VALUES MKeyGetValue(void)
 void selectmode(int8_t  nowMode)
 {
 	GUI_SetBkColor(BLACK);
-    GUI_ClearRect(text_startx,rect_of_mode[1].y0-BYTE_HEIGHT+selecticonw+BYTE_WIDTH,LCD_WIDTH,rect_of_mode[1].y0+selecticonw+BYTE_WIDTH);
-	GUI_ClearRect(0,rect_of_mode[1].y0-BYTE_HEIGHT+selecticonw+BYTE_WIDTH,text_startx,rect_of_mode[1].y0+selecticonw+BYTE_WIDTH);
+  GUI_ClearRect(text_startx, rect_of_mode[1].y0-BYTE_HEIGHT+ICON_WIDTH+BYTE_WIDTH, LCD_WIDTH, rect_of_mode[1].y0+ICON_WIDTH+BYTE_WIDTH);
+	GUI_ClearRect(0, rect_of_mode[1].y0-BYTE_HEIGHT+ICON_WIDTH+BYTE_WIDTH, text_startx, rect_of_mode[1].y0+ICON_WIDTH+BYTE_WIDTH);
 
   if(nowMode==SERIAL_TSC)
   {
     GUI_SetColor(ST7920_FNCOLOR);
-    GUI_DispStringInRect(text_startx,rect_of_mode[1].y0-BYTE_HEIGHT+selecticonw+BYTE_WIDTH,LCD_WIDTH,rect_of_mode[1].y0+selecticonw+BYTE_WIDTH,(uint8_t *)"Touch Mode");
+    GUI_DispStringInRect(text_startx, rect_of_mode[1].y0-BYTE_HEIGHT+ICON_WIDTH+BYTE_WIDTH, LCD_WIDTH, rect_of_mode[1].y0+ICON_WIDTH+BYTE_WIDTH,(uint8_t *)"Touch Mode");
     GUI_SetColor(FONT_COLOR);
-    GUI_DispStringInRect(0,rect_of_mode[1].y0-BYTE_HEIGHT+selecticonw+BYTE_WIDTH,text_startx,rect_of_mode[1].y0+selecticonw+BYTE_WIDTH,(uint8_t *)"Marlin Mode");
+    GUI_DispStringInRect(0, rect_of_mode[1].y0-BYTE_HEIGHT+ICON_WIDTH+BYTE_WIDTH, text_startx, rect_of_mode[1].y0+ICON_WIDTH+BYTE_WIDTH,(uint8_t *)"Marlin Mode");
   }
   else
   {
     GUI_SetColor(ST7920_FNCOLOR);
-    GUI_DispStringInRect(0,rect_of_mode[1].y0-BYTE_HEIGHT+selecticonw+BYTE_WIDTH,text_startx,rect_of_mode[1].y0+selecticonw+BYTE_WIDTH,(uint8_t *)"Marlin Mode");
+    GUI_DispStringInRect(0, rect_of_mode[1].y0-BYTE_HEIGHT+ICON_WIDTH+BYTE_WIDTH, text_startx,rect_of_mode[1].y0+ICON_WIDTH+BYTE_WIDTH,(uint8_t *)"Marlin Mode");
     GUI_SetColor(FONT_COLOR);
-    GUI_DispStringInRect(text_startx,rect_of_mode[1].y0-BYTE_HEIGHT+selecticonw+BYTE_WIDTH,LCD_WIDTH,rect_of_mode[1].y0+selecticonw+BYTE_WIDTH,(uint8_t *)"Touch Mode");
+    GUI_DispStringInRect(text_startx,rect_of_mode[1].y0-BYTE_HEIGHT+ICON_WIDTH+BYTE_WIDTH,LCD_WIDTH,rect_of_mode[1].y0+ICON_WIDTH+BYTE_WIDTH,(uint8_t *)"Touch Mode");
   }
 }
 

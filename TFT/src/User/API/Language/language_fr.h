@@ -30,6 +30,7 @@
     #define FR_BLTOUCH_DEPLOY       "Déployer"
     #define FR_BLTOUCH_STOW         "Rentrer"
     #define FR_BLTOUCH_REPEAT       "Répéter"
+    #define FR_Z_OFFSET             "Z Offset"
     #define FR_PROBE_OFFSET         "Probe Offset"
     #define FR_EEPROM_SAVE          "Sauver"
     #define FR_INC                  "Plus"
@@ -173,5 +174,15 @@
     #define FR_INFO                     "Info"
     #define FR_LCD_BRIGHTNESS           "LCD Brightness"
     #define FR_EMERGENCYPARSER          "EMERGENCY_PARSER is disabled in Printer Firmware."
+    #define FR_LCD_BRIGHTNESS_DIM       "LCD Brightness dim"
+    #define FR_LCD_DIM_IDLE_TIMER       "LCD dim idle timer"
+    #define FR_5_SECONDS                "5 Sec."
+    #define FR_10_SECONDS               "10 Sec."
+    #define FR_30_SECONDS               "30 Sec."
+    #define FR_60_SECONDS               "1 Min."
+    #define FR_120_SECONDS              "2 Min."
+    #define FR_300_SECONDS              "5 Min."
+    #define FR_CUSTOM_SECONDS           "Custom"
+    #define FR_ST7920_FULLSCREEN        "Marlin mode in fullscreen"
 
 #endif

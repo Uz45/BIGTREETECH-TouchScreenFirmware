@@ -10,7 +10,7 @@ LABEL_ABL,
   {ICON_BLTOUCH_STOW,          LABEL_BLTOUCH_STOW},
   {ICON_BLTOUCH_TEST,          LABEL_BLTOUCH_TEST},
   {ICON_BLTOUCH_REPEAT,        LABEL_BLTOUCH_REPEAT},
-  {ICON_PROBE_OFFSET,          LABEL_PROBE_OFFSET},
+  {ICON_PROBE_OFFSET,          LABEL_Z_OFFSET},
   {ICON_BABYSTEP,              LABEL_BABYSTEP},
   {ICON_BACK,                  LABEL_BACK},}
 };
@@ -41,6 +41,7 @@ void menuAutoLeveling(void)
         storeCmd("M280 P0 S120\n");
         break;
       case KEY_ICON_4:
+        storeCmd("G28\n");
         storeCmd("M48\n");
         break;
       case KEY_ICON_5:
@@ -81,7 +82,7 @@ void moveToLevelingPoint(u8 point)
     {LEVELING_POINT_3_X, LEVELING_POINT_3_Y},
     {LEVELING_POINT_4_X, LEVELING_POINT_4_Y},
   };
-  if(coordinateIsClear() == false)
+  if(coordinateIsKnown() == false)
   {
     storeCmd("G28\n");
   }

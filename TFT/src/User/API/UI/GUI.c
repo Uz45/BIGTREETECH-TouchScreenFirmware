@@ -22,7 +22,6 @@ void LCD_SetWindow(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey)
 	  LCD_WR_REG(0x21);
     LCD_WR_DATA(sx);
 #else
-
     LCD_WR_REG(0x2A); 
     LCD_WR_DATA(sx>>8);LCD_WR_DATA(sx&0xFF);
     LCD_WR_DATA(ex>>8);LCD_WR_DATA(ex&0xFF);

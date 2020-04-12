@@ -3,10 +3,11 @@
 
 #define PARA_SIZE 256  //bytes
 #define TSC_SIGN  0x20190827 // DO NOT MODIFY
-#define PARA_SIGN 0x20200321 // If a new setting parameter is added, modify here and initialize the initial value in the "infoSettingsReset()" function
+#define PARA_SIGN 0x20200331 // If a new setting parameter is added, modify here and initialize the initial value in the "infoSettingsReset()" function
 
 extern u32 TSC_Para[7];        //
 extern SETTINGS infoSettings;  //
+bool wasRestored = false;
 
 void wordToByte(u32 word, u8 *bytes)  //
 {
@@ -51,6 +52,7 @@ bool readStoredPara(void)
   sign = byteToWord(data + (index += 4), 4);
   if(sign != PARA_SIGN) // If the settings parameter is illegal, reset settings parameter
   {
+    wasRestored = true;
     infoSettingsReset();
   }
   else
@@ -74,9 +76,12 @@ bool readStoredPara(void)
     infoSettings.persistent_info     = byteToWord(data + (index += 4), 4);
     infoSettings.file_listmode       = byteToWord(data + (index += 4), 4);
     infoSettings.knob_led_color      = byteToWord(data + (index += 4), 4);
-    #ifdef LCD_LED_PIN
+    #ifdef LCD_LED_PWM_CHANNEL
     infoSettings.lcd_brightness      = byteToWord(data + (index += 4), 4);
+    infoSettings.lcd_idle_brightness = byteToWord(data + (index += 4), 4);
+    infoSettings.lcd_idle_timer      = byteToWord(data + (index += 4), 4);
     #endif
+    infoSettings.marlin_mode_fullscreen = byteToWord(data + (index += 4), 4);
   }
 
   return paraExist;
@@ -112,9 +117,12 @@ void storePara(void)
   wordToByte(infoSettings.persistent_info,    data + (index += 4));
   wordToByte(infoSettings.file_listmode,      data + (index += 4));
   wordToByte(infoSettings.knob_led_color,     data + (index += 4));
-  #ifdef LCD_LED_PIN
-  wordToByte(infoSettings.lcd_brightness,     data + (index += 4));
+  #ifdef LCD_LED_PWM_CHANNEL
+  wordToByte(infoSettings.lcd_brightness,      data + (index += 4));
+  wordToByte(infoSettings.lcd_idle_brightness, data + (index += 4));
+  wordToByte(infoSettings.lcd_idle_timer,      data + (index += 4));
   #endif
+  wordToByte(infoSettings.marlin_mode_fullscreen , data + (index += 4));
 
   STM32_FlashWrite(data, PARA_SIZE);
 }

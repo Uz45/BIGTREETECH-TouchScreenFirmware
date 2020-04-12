@@ -30,6 +30,7 @@
     #define IT_BLTOUCH_DEPLOY       "Schiera"
     #define IT_BLTOUCH_STOW         "Stiva"
     #define IT_BLTOUCH_REPEAT       "Ripeti"
+    #define IT_Z_OFFSET             "Z Offset"
     #define IT_PROBE_OFFSET         "Probe Offset"
     #define IT_EEPROM_SAVE          "Salva"
     #define IT_INC                  "Incrementa"
@@ -173,5 +174,15 @@
     #define IT_INFO                     "Info"
     #define IT_LCD_BRIGHTNESS           "LCD Brightness"
     #define IT_EMERGENCYPARSER          "EMERGENCY_PARSER is disabled in Printer Firmware."
+    #define IT_LCD_BRIGHTNESS_DIM       "LCD Brightness dim"
+    #define IT_LCD_DIM_IDLE_TIMER       "LCD dim idle timer"
+    #define IT_5_SECONDS                "5 Sec."
+    #define IT_10_SECONDS               "10 Sec."
+    #define IT_30_SECONDS               "30 Sec."
+    #define IT_60_SECONDS               "1 Min."
+    #define IT_120_SECONDS              "2 Min."
+    #define IT_300_SECONDS              "5 Min."
+    #define IT_CUSTOM_SECONDS           "Custom"
+    #define IT_ST7920_FULLSCREEN        "Marlin mode in fullscreen"
 
 #endif
