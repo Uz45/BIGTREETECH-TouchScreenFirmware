@@ -16,6 +16,10 @@
 #define ILI9341 2
 #define ST7789  3
 #define HX8558  4
+#define MKSTFTV1 5
+#define MKSTFTV2 6
+#define MKSTFTV3 7
+#define MKSTFTV3M 8
 
 #if defined(TFT24_V1_1)
   #include "pin_TFT24_V1_1.h"
