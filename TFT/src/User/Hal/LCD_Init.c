@@ -510,7 +510,7 @@ void LCD_init_RGB(void)
   LCD_WR_REG(0x2C);
 }
 
-#elif defined (MKSTFTV3) || defined(MKSTFTV2) || defined(MKSTFTV1)
+#elif LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   void LCD_init_RGB(void) 
 {	
 //  DisplayOrientation SwapXY mirror X		
@@ -526,7 +526,7 @@ void LCD_init_RGB(void)
       LCD_WR_DATA(R60h);
 } 
 
-#elif defined (MKSTFTV3M)  //for MKS TFT V3.0 If the image is mirrored
+#elif LCD_DRIVER_IS(MKSTFTV3M)  //for MKS TFT V3.0 If the image is mirrored
   void LCD_init_RGB(void) 
 {	
 //  DisplayOrientation SwapXY mirror X		
