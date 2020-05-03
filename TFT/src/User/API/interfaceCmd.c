@@ -183,7 +183,7 @@ void sendQueueCmd(void)
             }
           }
           statusScreen_setMsg((u8 *)"M117", (u8 *)&message);
-          if (infoMenu.menu[infoMenu.cur] != menuStatus && infoMenu.menu[infoMenu.cur] !=menuPrinting)
+          if (infoMenu.menu[infoMenu.cur] != menuStatus)
           {
             popupReminder((u8 *)"M117", (u8 *)&message);
           }
@@ -394,7 +394,7 @@ void sendQueueCmd(void)
 
           case 117: //M117
             statusScreen_setMsg((u8 *)"M117", (u8 *)&infoCmd.queue[infoCmd.index_r].gcode[5]);
-            if (infoMenu.menu[infoMenu.cur] != menuStatus && infoMenu.menu[infoMenu.cur] !=menuPrinting)
+            if (infoMenu.menu[infoMenu.cur] != menuStatus)
             {
               popupReminder((u8 *)"M117", (u8 *)&infoCmd.queue[infoCmd.index_r].gcode[5]);
             }
