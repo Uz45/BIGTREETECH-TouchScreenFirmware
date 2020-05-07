@@ -24,6 +24,7 @@ void infoSettingsReset(void)
   infoSettings.knob_led_color       = (STARTUP_KNOB_LED_COLOR - 1);
   infoSettings.send_start_gcode     = 0;
   infoSettings.send_end_gcode       = 0;
+  infoSettings.send_cancel_gcode    = 1;
   infoSettings.persistent_info      = 1;
   infoSettings.file_listmode        = 1;
   #ifdef LCD_LED_PWM_CHANNEL
@@ -35,17 +36,18 @@ void infoSettingsReset(void)
 }
 
 void initMachineSetting(void){
-
-  infoMachineSettings.EEPROM                  = 0;
+  // some settings are assumes as active unless reported disabled by marlin
+  infoMachineSettings.EEPROM                  = 1;
   infoMachineSettings.autoReportTemp          = 0;
-  infoMachineSettings.autoLevel               = 0;
-  infoMachineSettings.zProbe                  = 0;
-  infoMachineSettings.levelingData            = 0;
+  infoMachineSettings.autoLevel               = 1;
+  infoMachineSettings.zProbe                  = 1;
+  infoMachineSettings.levelingData            = 1;
   infoMachineSettings.softwarePower           = 0;
   infoMachineSettings.toggleLights            = 0;
   infoMachineSettings.caseLightsBrightness    = 0;
   infoMachineSettings.emergencyParser         = 0;
   infoMachineSettings.promptSupport           = 0;
+  infoMachineSettings.onboard_sd_support      = 1;
   infoMachineSettings.autoReportSDStatus      = 0;
 }
 
@@ -58,11 +60,19 @@ void setupMachine(void){
   if (infoMachineSettings.emergencyParser != 1 && wasRestored == true){
     popupReminder(textSelect(LABEL_WARNING), textSelect(LABEL_EMERGENCYPARSER));
   }
+  printSetUpdateWaiting(M27_WATCH_OTHER_SOURCES);
 }
 
 // Version infomation
 void menuInfo(void)
 {
+  char buf[128];
+  const GUI_POINT clocks[] = {{0 * LCD_WIDTH / 3, 0 * BYTE_HEIGHT},
+                             {1 * LCD_WIDTH / 3, 0 * BYTE_HEIGHT},
+                             {2 * LCD_WIDTH / 3, 0 * BYTE_HEIGHT},
+                             {0 * LCD_WIDTH / 3, 1 * BYTE_HEIGHT},
+                             {1 * LCD_WIDTH / 3, 1 * BYTE_HEIGHT},
+                             {2 * LCD_WIDTH / 3, 1 * BYTE_HEIGHT},};
   #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
   const char* hardware = "Board   : MKS_" HARDWARE_VERSION;
   #else
@@ -77,6 +87,24 @@ void menuInfo(void)
 
   GUI_Clear(BACKGROUND_COLOR);
 
+  my_sprintf(buf, "SYS:%dMhz", mcuClocks.rccClocks.SYSCLK_Frequency / 1000000);
+  GUI_DispString(clocks[0].x, clocks[0].y, (uint8_t *)buf);
+
+  my_sprintf(buf, "APB1:%dMhz", mcuClocks.rccClocks.PCLK1_Frequency / 1000000);
+  GUI_DispString(clocks[1].x, clocks[1].y, (uint8_t *)buf);
+
+  my_sprintf(buf, "P1Tim:%dMhz", mcuClocks.PCLK1_Timer_Frequency / 1000000);
+  GUI_DispString(clocks[2].x, clocks[2].y, (uint8_t *)buf);
+
+  my_sprintf(buf, "AHB:%dMhz", mcuClocks.rccClocks.HCLK_Frequency / 1000000);
+  GUI_DispString(clocks[3].x, clocks[3].y, (uint8_t *)buf);
+
+  my_sprintf(buf, "APB2:%dMhz", mcuClocks.rccClocks.PCLK2_Frequency / 1000000);
+  GUI_DispString(clocks[4].x, clocks[4].y, (uint8_t *)buf);
+
+  my_sprintf(buf, "P2Tim:%dMhz", mcuClocks.PCLK2_Timer_Frequency / 1000000);
+  GUI_DispString(clocks[5].x, clocks[5].y, (uint8_t *)buf);
+                             
   GUI_DispString(startX, centerY - BYTE_HEIGHT, (u8 *)hardware);
   GUI_DispString(startX, centerY, (u8 *)firmware);
   GUI_DispStringInRect(20, LCD_HEIGHT - (BYTE_HEIGHT*2), LCD_WIDTH-20, LCD_HEIGHT, textSelect(LABEL_TOUCH_TO_EXIT));
@@ -111,7 +139,7 @@ LABEL_SETTINGS,
   {ICON_FEATURE_SETTINGS,     LABEL_FEATURE_SETTINGS},
   {ICON_SCREEN_INFO,          LABEL_SCREEN_INFO},
   {ICON_DISCONNECT,           LABEL_DISCONNECT},
-  {ICON_BAUD_RATE,             LABEL_BACKGROUND},
+  {ICON_BAUD_RATE,            LABEL_BACKGROUND},
   {ICON_BACKGROUND,           LABEL_BACKGROUND},
   {ICON_BACK,                 LABEL_BACK},}
 };

@@ -21,7 +21,7 @@
 
 // LCD interface
 #ifndef TFTLCD_DRIVER
-  #define TFTLCD_DRIVER MKSTFTV3  // Tape MKSTFTV3M If image is mirrored
+  #define TFTLCD_DRIVER MKSTFTV3M  // Tape MKSTFTV3 If image is mirrored
   #define TFTLCD_0_DEGREE_REG_VALUE   0xA4
   #define TFTLCD_180_DEGREE_REG_VALUE 0XA4
 #endif
@@ -96,7 +96,7 @@
 #define BUZZER_PIN    PA2
 
 // U disk support
-#define U_DISK_SUPPROT
+#define U_DISK_SUPPORT
 #define USE_USB_OTG_FS
 
 // Extend function(PS_ON, filament_detect)

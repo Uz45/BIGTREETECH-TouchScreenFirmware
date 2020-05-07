@@ -113,7 +113,7 @@ void SPI_SlaveDeInit(void)
   RCC_APB1PeriphResetCmd(RCC_APB1Periph_SPI2, DISABLE);
   free(SPISlave.data);
   SPISlave.data = NULL;
-#endif   
+#endif
 }
 
 
@@ -173,8 +173,9 @@ void SPI_Slave_CS_Config(void)
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x01;					//�����ȼ�1
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;								//ʹ���ⲿ�ж�ͨ��
   NVIC_Init(&NVIC_InitStructure);
-#endif   
+#endif
 }
+
 
 #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
 void EXTI1_IRQHandler(void)

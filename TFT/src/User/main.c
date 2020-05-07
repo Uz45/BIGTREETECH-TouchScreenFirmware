@@ -1,13 +1,31 @@
 #include "includes.h"
 
-HOST  infoHost;  // Information interaction with Marlin
-MENU  infoMenu;  // Menu structure
+HOST   infoHost;  // Information interaction with Marlin
+MENU   infoMenu;  // Menu structure
+CLOCKS mcuClocks; // system clocks: SYSCLK, AHB, APB1, APB2, APB1_Timer, APB2_Timer2
+
+void mcu_GetClocksFreq(CLOCKS *clk)
+{
+  RCC_GetClocksFreq(&clk->rccClocks);
+  if (clk->rccClocks.PCLK1_Frequency < clk->rccClocks.HCLK_Frequency) { // if (APBx presc = 1) x1 else x2
+    clk->PCLK1_Timer_Frequency = clk->rccClocks.PCLK1_Frequency * 2;
+  } else {
+    clk->PCLK1_Timer_Frequency = clk->rccClocks.PCLK1_Frequency;
+  }
+
+  if (clk->rccClocks.PCLK2_Frequency < clk->rccClocks.HCLK_Frequency) {
+    clk->PCLK2_Timer_Frequency = clk->rccClocks.PCLK2_Frequency * 2;
+  } else {
+    clk->PCLK2_Timer_Frequency = clk->rccClocks.PCLK2_Frequency;
+  }
+}
 
 void Hardware_GenericInit(void)
 {
+	mcu_GetClocksFreq(&mcuClocks);
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-  Delay_init(F_CPUM);
-  OS_TimerInit(1000-1, F_CPUM-1);  // System clock timer, cycle 1ms
+  Delay_init();
+  OS_TimerInitMs();  // System clock timer, cycle 1ms
 
   #ifdef DISABLE_JTAG
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
@@ -30,14 +48,12 @@ void Hardware_GenericInit(void)
   readStoredPara();
   LCD_RefreshDirection();  //refresh display direction after reading settings
   scanUpdates();
-  
   #if !defined (MKS_32_V1_4) && !defined(MKS_32_V1_3) && !defined(MKS_32_V1_2) && !defined(MKS_32_V1_1) 
   //causes hang if we deinit spi1    
   SD_DeInit();
   #endif
-
   #if LCD_ENCODER_SUPPORT
-    LCD_EncoderInit();
+    HW_EncoderInit();
   #endif
 
   #ifdef PS_ON_PIN
@@ -53,7 +69,7 @@ void Hardware_GenericInit(void)
   #else
     #define STARTUP_KNOB_LED_COLOR 1
   #endif
-  #ifdef U_DISK_SUPPROT
+  #ifdef U_DISK_SUPPORT
     USBH_Init(&USB_OTG_Core, USB_OTG_FS_CORE_ID, &USB_Host, &USBH_MSC_cb, &USR_cb);
   #endif
 

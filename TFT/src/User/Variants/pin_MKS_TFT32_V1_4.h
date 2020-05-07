@@ -96,7 +96,7 @@
 #define BUZZER_PIN    PA2
 
 // U disk support
-#define U_DISK_SUPPROT
+#define U_DISK_SUPPORT
 #define USE_USB_OTG_FS
 
 // Extend function(PS_ON, filament_detect)

@@ -41,7 +41,7 @@ void lcd_frame_display(u16 sx,u16 sy,u16 w,u16 h, u32 addr)
 
 void LOGO_ReadDisplay(void)
 {
-  #if LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
+  #if (defined (MKS_32_V1_1) || defined(MKS_32_V1_2)) && defined (UNIFIED_MENU)
   lcd_frame_display((LCD_WIDTH/2-(ICON_WIDTH/2)), (LCD_HEIGHT/2-(ICON_HEIGHT/2)), ICON_WIDTH, ICON_HEIGHT, LOGO_ADDR);
   #else  
   lcd_frame_display(0, 0, LCD_WIDTH, LCD_HEIGHT, LOGO_ADDR);
