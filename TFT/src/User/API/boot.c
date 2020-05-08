@@ -26,7 +26,7 @@ BMPUPDATE_STAT bmp_stat = BMP_SUCCESS;
 //This List is Auto-Generated. Please add new icons in icon_list.inc only
 const char iconBmpName[][32]={
 #define X_ICON(NAME) STRINGIFY(NAME) ,
-#if defined (MKS_32_V1_1)
+#if defined (MKS_32_V1_1) && defined (UNIFIED_MENU)
 #include "icon_listv1.inc"
 #else
 #include "icon_list.inc"

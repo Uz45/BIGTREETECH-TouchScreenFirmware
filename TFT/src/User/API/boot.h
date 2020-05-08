@@ -46,7 +46,7 @@
 enum
 {
 #define X_ICON(NAME) ICON_##NAME ,
-#if defined (MKS_32_V1_1)
+#if defined (MKS_32_V1_1) && defined (UNIFIED_MENU)
 #include "icon_listv1.inc"
 #else
 #include "icon_list.inc"
