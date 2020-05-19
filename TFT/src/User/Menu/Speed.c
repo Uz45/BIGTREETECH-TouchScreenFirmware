@@ -35,7 +35,6 @@ const ITEM itemPercentUnit[ITEM_PERCENT_UNIT_NUM] = {
   {ICON_E_1_PERCENT,          LABEL_1_PERCENT},
   {ICON_E_5_PERCENT,          LABEL_5_PERCENT},
   {ICON_E_10_PERCENT,         LABEL_10_PERCENT},
-
 };
 const  u8 item_percent_unit[ITEM_PERCENT_UNIT_NUM] = {1, 5, 10};
 static u8 item_percent_unit_i = 1;

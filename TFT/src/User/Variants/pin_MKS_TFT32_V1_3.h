@@ -21,7 +21,7 @@
 
 // LCD interface
 #ifndef TFTLCD_DRIVER
-  #define TFTLCD_DRIVER MKSTFTV3M  // Tape MKSTFTV3 If image is mirrored
+  #define TFTLCD_DRIVER MKSTFTV3
   #define TFTLCD_0_DEGREE_REG_VALUE   0xA4
   #define TFTLCD_180_DEGREE_REG_VALUE 0XA4
 #endif

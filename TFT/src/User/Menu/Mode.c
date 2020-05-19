@@ -23,29 +23,24 @@ void Serial_ReSourceInit(void)
 
 void infoMenuSelect(void)
 {
-  #ifdef CLEAN_MODE_SWITCHING_SUPPORT
-    Serial_ReSourceInit();
-  #endif
   infoMenu.cur = 0;
   switch(infoSettings.mode)
   {
     case SERIAL_TSC:
     {
-      #ifndef CLEAN_MODE_SWITCHING_SUPPORT
-        Serial_ReSourceInit();
-      #endif
+      Serial_ReSourceInit();
 
       #ifdef BUZZER_PIN
         Buzzer_Config();
       #endif
-      GUI_SetColor(FONT_COLOR);
-      GUI_SetBkColor(BACKGROUND_COLOR);
+      GUI_SetColor(lcd_colors[infoSettings.font_color]);
+      GUI_SetBkColor(lcd_colors[infoSettings.bg_color]);
 
-      #ifdef UNIFIED_MENU //if Unified menu is selected
+      if(infoSettings.unified_menu == 1) //if Unified menu is selected
         infoMenu.menu[infoMenu.cur] = menuStatus; //status screen as default screen on boot
-      #else // classic UI
-        infoMenu.menu[infoMenu.cur] = menuMain;
-      #endif
+      else
+        infoMenu.menu[infoMenu.cur] = classicMenu;   // classic UI
+
       #ifdef SHOW_BTT_BOOTSCREEN
         if (freshboot)
         {
@@ -66,7 +61,10 @@ void infoMenuSelect(void)
     #ifdef ST7920_SPI
 
     case LCD12864:
-
+      if (infoSettings.serial_alwaysOn == 1)
+      {
+        Serial_ReSourceInit();
+      }
       #ifdef BUZZER_PIN
         Buzzer_DeConfig();  // Disable buzzer in LCD12864 Simulations mode.
       #endif
@@ -76,8 +74,8 @@ void infoMenuSelect(void)
           knob_LED_DeInit();
         #endif
       #endif
-      GUI_SetColor(ST7920_FNCOLOR);
-      GUI_SetBkColor(ST7920_BKCOLOR);
+      GUI_SetColor(lcd_colors[infoSettings.marlin_mode_font_color]);
+      GUI_SetBkColor(lcd_colors[infoSettings.marlin_mode_bg_color]);
       infoMenu.menu[infoMenu.cur] = menuST7920;
       break;
 

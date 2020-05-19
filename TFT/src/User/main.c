@@ -37,7 +37,7 @@ void Hardware_GenericInit(void)
     GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE); //disable JTAG & SWD
   #endif
 
-  #if defined (MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+  #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
     GPIO_PinRemapConfig(GPIO_Remap_USART2, ENABLE);
   #endif
@@ -45,9 +45,16 @@ void Hardware_GenericInit(void)
   XPT2046_Init();
   W25Qxx_Init();
   LCD_Init();
-  readStoredPara();
+
+  if(readStoredPara() == false) // Read settings parameter
+  {
+    TSC_Calibration();
+    storePara();
+  }
   LCD_RefreshDirection();  //refresh display direction after reading settings
-  scanUpdates();
+
+  scanUpdates();           // scan icon, fonts and config files
+
   #if !defined (MKS_32_V1_4) && !defined(MKS_32_V1_3) && !defined(MKS_32_V1_2) && !defined(MKS_32_V1_1) 
   //causes hang if we deinit spi1    
   SD_DeInit();
@@ -66,23 +73,19 @@ void Hardware_GenericInit(void)
 
   #ifdef LED_COLOR_PIN
     knob_LED_Init();
-  #else
-    #define STARTUP_KNOB_LED_COLOR 1
   #endif
+
   #ifdef U_DISK_SUPPORT
     USBH_Init(&USB_OTG_Core, USB_OTG_FS_CORE_ID, &USB_Host, &USBH_MSC_cb, &USR_cb);
   #endif
 
-  if(readStoredPara() == false) // Read settings parameter
-  {
-    TSC_Calibration();
-    storePara();
-  }
+  printSetUpdateWaiting(infoSettings.m27_active);
   #ifdef LCD_LED_PWM_CHANNEL
-    Set_LCD_Brightness(LCD_BRIGHTNESS[infoSettings.lcd_brightness]);
+  Set_LCD_Brightness(LCD_BRIGHTNESS[infoSettings.lcd_brightness]);
   #endif
   GUI_RestoreColorDefault();
   infoMenuSelect();
+
 }
 
 int main(void)

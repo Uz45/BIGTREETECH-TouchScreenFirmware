@@ -36,11 +36,18 @@ void TS_Get_Coordinates(u16 *x, u16 *y)
   u16 tp_x = XPT2046_Repeated_Compare_AD(CMD_RDX);
   u16 tp_y = XPT2046_Repeated_Compare_AD(CMD_RDY);
 
- #if LCD_DRIVER_IS (MKSTFTV3M)
+#if LCD_DRIVER_IS (MKSTFTV3)
+ if(infoSettings.rotate_ui)
+ {
   *x = LCD_WIDTH-(A*tp_x+B*tp_y+C)/K;
- #else
+ }
+ else
+ {
   *x = (A*tp_x+B*tp_y+C)/K;
- #endif
+ }
+#else
+  *x = (A*tp_x+B*tp_y+C)/K;
+#endif  
   *y = (D*tp_x+E*tp_y+F)/K;
 }
 
@@ -109,7 +116,9 @@ void TSC_Calibration(void)
     GUI_SetColor(RED);
     for(tp_num = 0;tp_num<3;tp_num++)
     {
-#if LCD_DRIVER_IS (MKSTFTV3M)
+#if LCD_DRIVER_IS (MKSTFTV3)
+  if(infoSettings.rotate_ui)
+  {
       GUI_FillCircle(LCD_WIDTH-LCD_X[tp_num],LCD_Y[tp_num],3);
       for(i=0;i<10;i++)
       {
@@ -118,6 +127,18 @@ void TSC_Calibration(void)
         GUI_DrawPoint(LCD_WIDTH-LCD_X[tp_num],LCD_Y[tp_num]+i);
         GUI_DrawPoint(LCD_WIDTH-LCD_X[tp_num],LCD_Y[tp_num]-i);
       }
+  }
+  else
+  {
+      GUI_FillCircle(LCD_X[tp_num],LCD_Y[tp_num],3);
+      for(i=0;i<10;i++)
+      {
+        GUI_DrawPoint(LCD_X[tp_num]+i,LCD_Y[tp_num]);
+        GUI_DrawPoint(LCD_X[tp_num]-i,LCD_Y[tp_num]);
+        GUI_DrawPoint(LCD_X[tp_num],LCD_Y[tp_num]+i);
+        GUI_DrawPoint(LCD_X[tp_num],LCD_Y[tp_num]-i);
+      }
+  }
 #else
       GUI_FillCircle(LCD_X[tp_num],LCD_Y[tp_num],3);
       for(i=0;i<10;i++)

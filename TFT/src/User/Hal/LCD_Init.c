@@ -36,20 +36,7 @@ const uint32_t LCD_BRIGHTNESS[ITEM_BRIGHTNESS_NUM] = {
   LCD_90_PERCENT,
   LCD_100_PERCENT
 };
-const LABEL itemBrightness[ITEM_BRIGHTNESS_NUM] = {
-  //item value text(only for custom value)
-  LABEL_5_PERCENT,
-  LABEL_10_PERCENT,
-  LABEL_20_PERCENT,
-  LABEL_30_PERCENT,
-  LABEL_40_PERCENT,
-  LABEL_50_PERCENT,
-  LABEL_60_PERCENT,
-  LABEL_70_PERCENT,
-  LABEL_80_PERCENT,
-  LABEL_90_PERCENT,
-  LABEL_100_PERCENT
-};
+
 const LABEL itemDimTime[ITEM_SECONDS_NUM] = {
   //item value text(only for custom value)
   LABEL_OFF,
@@ -61,6 +48,7 @@ const LABEL itemDimTime[ITEM_SECONDS_NUM] = {
   LABEL_300_SECONDS,
   LABEL_CUSTOM_SECONDS
 };
+
 const uint32_t LCD_DIM_IDLE_TIME[ITEM_SECONDS_NUM] = {
   LCD_DIM_OFF,
   LCD_DIM_5_SECONDS,
@@ -526,22 +514,6 @@ void LCD_init_RGB(void)
       LCD_WR_DATA(R60h);
 } 
 
-#elif LCD_DRIVER_IS(MKSTFTV3M)  //for MKS TFT V3.0 If the image is mirrored
-  void LCD_init_RGB(void) 
-{	
-//  DisplayOrientation SwapXY mirror X		
-	    uint16_t R01h, R03h, R60h;
-      R01h = (1 << 8) | (0 << 10);// SS = 1, SM = 0,  from S720 to S1 (see also  GS bit (R60h))
-      R03h = (1 << 12) | (1 << 5) | (1 << 4) | (1 << 3);// TRI=0, DFM=0, BGR=1, ORG=0, I/D[1:0]=11, AM=1 
-      R60h = (1 << 15) | (0x27 << 8);	// Gate Scan Control (R60h) GS=1(G1) NL[5:0]=0x27 (320 lines)
-      LCD_WR_REG(0x0001);			 // Driver Output Control Register (R01h)	
-      LCD_WR_DATA(R01h);
-      LCD_WR_REG(0x0003);			 // Entry Mode (R03h)
-      LCD_WR_DATA(R03h);
-	    LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
-      LCD_WR_DATA(R60h);
-}
-
 #endif
 
 u16 LCD_ReadID(void)
@@ -559,8 +531,63 @@ u16 LCD_ReadID(void)
 
 void LCD_RefreshDirection(void)
 {
+#if defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+  if(infoSettings.rotate_ui)
+  {
+    #if LCD_DRIVER_IS(MKSTFTV3)		
+	    uint16_t R01h, R03h, R60h;
+      R01h = (1 << 8) | (0 << 10);// SS = 1, SM = 0,  from S720 to S1 (see also  GS bit (R60h))
+      R03h = (1 << 12) | (1 << 5) | (1 << 4) | (1 << 3);// TRI=0, DFM=0, BGR=1, ORG=0, I/D[1:0]=11, AM=1
+      R60h = (1 << 15) | (0x27 << 8);	// Gate Scan Control (R60h) GS=1(G1) NL[5:0]=0x27 (320 lines)
+      LCD_WR_REG(0x0001);			 // Driver Output Control Register (R01h)	
+      LCD_WR_DATA(R01h);
+      LCD_WR_REG(0x0003);			 // Entry Mode (R03h)
+      LCD_WR_DATA(R03h);
+      LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
+      LCD_WR_DATA(R60h);     
+    #else
+	    uint16_t R01h, R03h, R60h;
+      R01h = (0 << 8) | (0 << 10);// SS = 0, SM = 0,  from S720 to S1 (see also  GS bit (R60h))
+      R03h = (1 << 12) | (1 << 5) | (1 << 4) | (1 << 3);// TRI=0, DFM=0, BGR=1, ORG=0, I/D[1:0]=11, AM=1
+      R60h = (1 << 15) | (0x27 << 8);	// Gate Scan Control (R60h) GS=1(G1) NL[5:0]=0x27 (320 lines)
+      LCD_WR_REG(0x0001);			 // Driver Output Control Register (R01h)	
+      LCD_WR_DATA(R01h);
+      LCD_WR_REG(0x0003);			 // Entry Mode (R03h)
+      LCD_WR_DATA(R03h);
+	    LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
+      LCD_WR_DATA(R60h);     
+    #endif
+  }
+  else
+  {
+    #if LCD_DRIVER_IS (MKSTFTV3)	
+	    uint16_t R01h, R03h, R60h;
+      R01h = (1 << 8) | (0 << 10);// SS = 1, SM = 0,  from S720 to S1 (see also  GS bit (R60h))
+      R03h = (1 << 12) | (1 << 5) | (1 << 4) | (1 << 3);// TRI=0, DFM=0, BGR=1, ORG=0, I/D[1:0]=11, AM=1
+      R60h = (0 << 15) | (0x27 << 8);	// Gate Scan Control (R60h) GS=1(G1) NL[5:0]=0x27 (320 lines)
+      LCD_WR_REG(0x0001);			 // Driver Output Control Register (R01h)	
+      LCD_WR_DATA(R01h);
+      LCD_WR_REG(0x0003);			 // Entry Mode (R03h)
+      LCD_WR_DATA(R03h);
+      LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
+      LCD_WR_DATA(R60h);     
+    #else
+	    uint16_t R01h, R03h, R60h;
+      R01h = (1 << 8) | (0 << 10);// SS = 1, SM = 0,  from S720 to S1 (see also  GS bit (R60h))
+      R03h = (1 << 12) | (1 << 5) | (1 << 4) | (1 << 3);// TRI=0, DFM=0, BGR=1, ORG=0, I/D[1:0]=11, AM=1
+      R60h = (0 << 15) | (0x27 << 8);	// Gate Scan Control (R60h) GS=0(G1) NL[5:0]=0x27 (320 lines)
+      LCD_WR_REG(0x0001);			 // Driver Output Control Register (R01h)	
+      LCD_WR_DATA(R01h);
+      LCD_WR_REG(0x0003);			 // Entry Mode (R03h)
+      LCD_WR_DATA(R03h);
+	    LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
+      LCD_WR_DATA(R60h);     
+    #endif    
+  }
+  #else
   LCD_WR_REG(0X36);
   LCD_WR_DATA(infoSettings.rotate_ui ? TFTLCD_180_DEGREE_REG_VALUE : TFTLCD_0_DEGREE_REG_VALUE);
+  #endif
 }
 
 void LCD_Init(void)
