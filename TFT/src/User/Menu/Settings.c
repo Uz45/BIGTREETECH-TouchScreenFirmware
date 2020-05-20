@@ -80,14 +80,14 @@ void infoSettingsReset(void)
   infoSettings.m27_active             = M27_WATCH_OTHER_SOURCES;
   infoSettings.longFileName           = AUTO;     //ENABLED / DISABLED / AUTO
 
-  for(int i = 0; i < HEAT_NUM; i++)
+  for(int i = 0; i < MAX_HEATER_COUNT; i++)
   {
     infoSettings.max_temp[i]          = default_max_temp[i];
   }
 
   infoSettings.min_ext_temp           = PREVENT_COLD_EXTRUSION_MINTEMP;
 
-  for(int i = 0; i < MAX_TOOL_COUNT ;i++)
+  for(int i = 0; i < MAX_FAN_COUNT ;i++)
   {
     infoSettings.fan_max[i]           = default_max_fanPWM[i];
   }

@@ -75,9 +75,9 @@
 #define W25Qxx_CS_PIN PB9
 
 // LCD Encoder support
-  //#define LCD_ENCA_PIN  PA13 //JTAG DIO 31
-  //#define LCD_ENCB_PIN  PA14 //JTAG CLK 33
-  //#define LCD_BTN_PIN   PB0
+  // #define LCD_ENCA_PIN  PA13 //JTAG DIO 31
+  // #define LCD_ENCB_PIN  PA14 //JTAG CLK 33
+  // #define LCD_BTN_PIN   PB0
 
 // Debug disable, free pins for other function
 //#define DISABLE_JTAG  // free JTAG(PB3/PB4) for SPI3
