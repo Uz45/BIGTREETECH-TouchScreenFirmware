@@ -81,21 +81,21 @@ void getConfigFromFile(void)
       }
       configFile.cur++;
 
-      //
-      if (cur_char == '\n') // start parsing line after new line.
+      if (cur_char == '\n')             // start parsing line after new line.
       {
-        comment_mode = false; //for new command
+        comment_mode = false;           //for new command
         comment_space = true;
         if (count != 0)
         {
           //cur_line[count++] = '\n';
           cur_line[count++] = '\0';
-          cur_line[count] = 0; //terminate string
-          PRINTDEBUG("\n");
-          PRINTDEBUG(cur_line);
+          cur_line[count] = 0;          //terminate string
           parseConfigLine();
           drawProgress();
-          count = 0; //clear buffer
+
+          PRINTDEBUG("\n");
+          PRINTDEBUG(cur_line);
+          count = 0;                    //clear buffer
         }
       }
       else if (count < LINE_MAX_CHAR - 2)
@@ -104,17 +104,24 @@ void getConfigFromFile(void)
           comment_mode = true;
         else
         {
-          if (comment_space && cur_char != ' ') //ignore ' ' space bytes
+          if (comment_space && cur_char != ' ')                    //ignore ' ' space bytes
             comment_space = false;
           if (!comment_mode && !comment_space && cur_char != '\r') //normal code
           {
-            if (cur_char == 'n' && last_char == '\\') //replace "\n" with new line char('\n')
+            if (cur_char == 'n' && last_char == '\\')              //replace "\n" with new line char('\n')
             {
               cur_char = '\n';
               count--;
             }
             cur_line[count++] = cur_char;
             last_char = cur_char;
+
+            if (configFile.cur == configFile.size)
+            {
+              cur_line[count++] = '\0';
+              cur_line[count] = 0;        //terminate string
+              parseConfigLine();          //start parsing at the end of the file.
+            }
           }
         }
       }
