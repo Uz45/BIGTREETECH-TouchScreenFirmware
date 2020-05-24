@@ -42,4 +42,4 @@ jobs:
       - name: Build MKS TFT32 V1.2
         run: platformio run --environment MKS_32_V1_2        
       - name: Build MKS TFT32 V1.1
-        run: platformio run --environment MKS_32_V1_1  
+        run: platformio run --environment MKS_32_V1_1 

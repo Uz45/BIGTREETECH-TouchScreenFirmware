@@ -512,7 +512,7 @@ void LCD_init_RGB(void)
       LCD_WR_DATA(R03h);
 	    LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
       LCD_WR_DATA(R60h);
-} 
+}
 
 #endif
 

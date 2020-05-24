@@ -199,12 +199,12 @@ void EXTI15_10_IRQHandler(void)
 {
   if((GPIOB->IDR & (1<<12)) != 0)
   {
-    SPI_ReEnable(!!(GPIOB->IDR & (1<<13))); //����Ӧ spi mode0/mode3
+    SPI_ReEnable(!!(GPIOB->IDR & (1<<13))); // Adaptive spi mode0 / mode3
     ST7920_SPI_NUM->CR1 |= (1<<6);
   }
   else
   {
-    RCC->APB1RSTR |= 1<<14;	//��λSPI1
+    RCC->APB1RSTR |= 1<<14;	// Reset SPI
     RCC->APB1RSTR &= ~(1<<14);
   }
 /* ����ж�״�?�Ĵ��� */

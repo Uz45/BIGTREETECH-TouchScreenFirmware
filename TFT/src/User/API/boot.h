@@ -64,6 +64,7 @@
 #define SMALL_ICON_ADDR(num)    ((num)*0x1000+SMALL_ICON_START_ADDR)
 #endif
 
+
 #define ADMIN_MODE_FILE "0:admin.txt"
 #define FIRMWARE_NAME STRINGIFY(HARDWARE) "." STRINGIFY(SOFTWARE_VERSION)
 #define BMP_ROOT_DIR "0:" ROOT_DIR "/bmp"
@@ -100,11 +101,11 @@ BMP_INVALIDFILE
 
 typedef union
 {
-	u16 color;
-	struct{
-	u16  b:5;
-	u16  g:6;
-	u16  r:5;
+  u16 color;
+  struct{
+  u16  b:5;
+  u16  g:6;
+  u16  r:5;
  }RGB;
 }GUI_COLOR;
 
