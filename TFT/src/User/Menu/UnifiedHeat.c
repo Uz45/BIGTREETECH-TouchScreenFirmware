@@ -45,7 +45,7 @@ LABEL_UNIFIEDHEAT,
  }
 };
 
-  BUZZER_PLAY(sound_keypress);
+  Buzzer_TurnOn(1,1); //Sound off
 
   preheatnames = (STRINGS_STORE*)malloc(sizeof(STRINGS_STORE));
   uint8_t *data_p = (uint8_t *)preheatnames;
