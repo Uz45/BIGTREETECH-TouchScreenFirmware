@@ -45,7 +45,9 @@ LABEL_UNIFIEDHEAT,
  }
 };
 
-  Buzzer_TurnOn(1,1); //Sound off
+#if defined (BUZZER_PIN)
+  Buzzer_TurnOn(1,1);
+#endif
 
   preheatnames = (STRINGS_STORE*)malloc(sizeof(STRINGS_STORE));
   uint8_t *data_p = (uint8_t *)preheatnames;
