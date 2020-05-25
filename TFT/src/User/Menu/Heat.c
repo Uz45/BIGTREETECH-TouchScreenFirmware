@@ -134,7 +134,7 @@ TOOL heatGetCurrentTool(void)
 /* Set current nozzle */
 void heatSetCurrentToolNozzle(TOOL tool)
 {
-  if(tool >= (infoSettings.tool_count + 1) && tool < NOZZLE0) return;
+  if(tool >= (infoSettings.tool_count + 1) || tool < NOZZLE0) return;
   heater.nozzle = tool;
   heater.tool = tool;
 }
