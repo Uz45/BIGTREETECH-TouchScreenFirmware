@@ -531,7 +531,7 @@ u16 LCD_ReadID(void)
 
 void LCD_RefreshDirection(void)
 {
-#if defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+#if  LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   if(infoSettings.rotate_ui)
   {
     #if LCD_DRIVER_IS(MKSTFTV3)		
