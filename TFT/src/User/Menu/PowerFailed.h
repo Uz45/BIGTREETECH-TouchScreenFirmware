@@ -7,19 +7,19 @@
 #include "ff.h"
 #include "Configuration.h"
 
-#define BREAK_POINT_FILE		"Printing.sys"
+#define BREAK_POINT_FILE "Printing.sys"
 
 typedef struct
 {
   float axis[TOTAL_AXIS];
   u32   feedrate;
   u16   speed,flow;
-  u16	  target[HEATER_NUM],
-        fan[FAN_NUM];
+  u16   target[MAX_HEATER_COUNT];
+  u16   fan[MAX_FAN_COUNT];
   TOOL  nozzle;
-  u32	  offset;
-  bool  relative,
-        relative_e;
+  u32   offset;
+  bool  relative;
+  bool  relative_e;
 } BREAK_POINT;
 
 
@@ -31,7 +31,6 @@ void powerFailedCache(u32 offset);
 void powerFailedClose(void);
 void powerFailedDelete(void);
 
-void powerFailedEnable(bool enable);
 bool powerFailedlSeek(FIL* fp);
 
 #endif

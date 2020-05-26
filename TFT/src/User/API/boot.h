@@ -3,12 +3,12 @@
 
 #include "variants.h"
 #include "stdbool.h"
+#include "config.h"
 
 #define W25QXX_SECTOR_SIZE (0x1000) // 4096-4K
 
 //address in spiflash W25Qxx
 #define LOGO_ADDR               0x0
-
 #if defined (MKS_32_V1_1)
 #define ICON_ADDR(num)          (((num)*0x4000)+0x4000) 
 
@@ -16,278 +16,101 @@
 #define BYTE_ASCII_ADDR         (WORD_UNICODE-0x1000) //0x1000 ascii 4KB
 
 #define INFOBOX_ADDR            (BYTE_ASCII_ADDR - 0x8000) //total byte size 0x8000 32KB
-#define SMALL_ICON_START_ADDR   (INFOBOX_ADDR-0x1000) //total byte size 0x1000 4KB
-#define SMALL_ICON_ADDR(num)    ((num)*0x1000+SMALL_ICON_START_ADDR)
 
+#define STRINGS_STORE_ADDR      (INFOBOX_ADDR-STRINGS_STORE_MAX_SIZE)  //for label strings from config file
+#define STRINGS_STORE_MAX_SIZE	0x1000	//label strings max size
+
+#define PRINT_GCODES_ADDR       (STRINGS_STORE_ADDR-PRINT_GCODES_MAX_SIZE)	//for start/end/cancel gcodes from config file
+#define PRINT_GCODES_MAX_SIZE	  0x1000	//start/end/cancel gcodes  max size
+
+#define CUSTOM_GCODE_ADDR       (PRINT_GCODES_ADDR-CUSTOM_GCODE_MAX_SIZE)	//for custom gcodes from config file
+#define CUSTOM_GCODE_MAX_SIZE		0x1000	//custom gocdes max size
+
+#define SMALL_ICON_START_ADDR   (CUSTOM_GCODE_ADDR-0x1000) //total byte size 0x1000 4KB
+#define SMALL_ICON_ADDR(num)    ((num)*0x1000+SMALL_ICON_START_ADDR)
+#elif defined (MKS_32_V1_2)
+#define ICON_ADDR(num)          (((num)*0x4000)+0x4000)
+
+#define WORD_UNICODE            (0x200000) //0x34000 unicode 2MB-208KB
+#define BYTE_ASCII_ADDR         (WORD_UNICODE-0x1000) //0x1000 ascii 4KB
+
+#define INFOBOX_ADDR            (BYTE_ASCII_ADDR - 0x8000) //total byte size 0x8000 32KB
+
+#define STRINGS_STORE_ADDR      (INFOBOX_ADDR-STRINGS_STORE_MAX_SIZE)  //for label strings from config file
+#define STRINGS_STORE_MAX_SIZE	0x4000	//label strings max size
+
+#define PRINT_GCODES_ADDR       (STRINGS_STORE_ADDR-PRINT_GCODES_MAX_SIZE)	//for start/end/cancel gcodes from config file
+#define PRINT_GCODES_MAX_SIZE	  0x4000	//start/end/cancel gcodes  max size
+
+#define CUSTOM_GCODE_ADDR       (PRINT_GCODES_ADDR-CUSTOM_GCODE_MAX_SIZE)	//for custom gcodes from config file
+#define CUSTOM_GCODE_MAX_SIZE		0x4000	//custom gocdes max size
+
+#define SMALL_ICON_START_ADDR   (CUSTOM_GCODE_ADDR-0x1000) //total byte size 0x1000 4KB
+#define SMALL_ICON_ADDR(num)    ((num)*0x1000+SMALL_ICON_START_ADDR)
 #else
 #define WORD_UNICODE            0x4B000 // unicode (+0x480000 4.5M)
 #define BYTE_ASCII_ADDR         (WORD_UNICODE+0x480000) // ascii (+0x1000 4K)
 //#define BYTE_RESERVE_ADDR      0x710000
-#define ICON_ADDR(num)          ((num)*0x5000+BYTE_ASCII_ADDR+0x1000)
+#define STRINGS_STORE_ADDR      (BYTE_ASCII_ADDR+0x1000)  //for label strings from config file
+#define STRINGS_STORE_MAX_SIZE	0x5000	//label strings max size
+#define PRINT_GCODES_ADDR       (STRINGS_STORE_ADDR+STRINGS_STORE_MAX_SIZE)	//for start/end/cancel gcodes from config file
+#define PRINT_GCODES_MAX_SIZE	  0x5000	//start/end/cancel gcodes  max size
+#define CUSTOM_GCODE_ADDR       (PRINT_GCODES_ADDR+PRINT_GCODES_MAX_SIZE)	//for custom gcodes from config file
+#define CUSTOM_GCODE_MAX_SIZE		0x5000	//custom gocdes max size
+
+#define ICON_ADDR(num)          ((num)*0x5000+CUSTOM_GCODE_ADDR+CUSTOM_GCODE_MAX_SIZE)
 #define INFOBOX_ADDR            (ICON_ADDR(ICON_PREVIEW) + 0x5000) // total byte size 0xA7F8
 #define SMALL_ICON_START_ADDR   (INFOBOX_ADDR+0xA7F8)
 #define SMALL_ICON_ADDR(num)    ((num)*0x1000+SMALL_ICON_START_ADDR)
 #endif
 
-#define BMP		(1<<1)
-#define FONT	(1<<2)
 
-#define BMP_ROOT_DIR "0:"ROOT_DIR"/bmp"
-#define FONT_ROOT_DIR "0:"ROOT_DIR"/font"
+#define ADMIN_MODE_FILE "0:admin.txt"
+#define FIRMWARE_NAME STRINGIFY(HARDWARE) "." STRINGIFY(SOFTWARE_VERSION)
+#define BMP_ROOT_DIR "0:" ROOT_DIR "/bmp"
+#define FONT_ROOT_DIR "0:" ROOT_DIR "/font"
 #define TFT_RESET_FILE "0:reset.txt"
 
+//This List is Auto-Generated. Please add new icons in icon_list.inc only
 enum
 {
- #if defined (MKS_32_V1_1)
-  ICON_HEAT = 0,
-  ICON_MOVE,
-  ICON_HOME,
-  ICON_PRINT,
-  ICON_EXTRUDE,
-  ICON_FAN,
-  ICON_SETTINGS,
-  ICON_LEVELING,
-  ICON_INC,
-  ICON_DEC,
-  ICON_NOZZLE,
-  ICON_BED,
-  ICON_1_DEGREE,
-  ICON_5_DEGREE,
-  ICON_10_DEGREE,
-  ICON_STOP,
-  ICON_BACK,
-  ICON_X_INC,
-  ICON_Y_INC,
-  ICON_Z_INC,
-  ICON_01_MM,
-  ICON_1_MM,
-  ICON_10_MM,
-  ICON_X_DEC,
-  ICON_Y_DEC,
-  ICON_Z_DEC,
-  ICON_X_HOME,
-  ICON_Y_HOME,
-  ICON_Z_HOME,
-  ICON_FOLDER,
-  ICON_FILE,
-  ICON_PAGE_UP,
-  ICON_PAGE_DOWN,
-  ICON_PAUSE,
-  ICON_RESUME,
-  ICON_LOAD,
-  ICON_UNLOAD,
-  ICON_SLOW_SPEED,
-  ICON_NORMAL_SPEED,
-  ICON_FAST_SPEED,
-  ICON_E_1_MM,
-  ICON_E_5_MM,
-  ICON_E_10_MM,
-  ICON_FAN_FULL_SPEED,
-  ICON_FAN_HALF_SPEED,
-  ICON_ROTATE_UI,
-  ICON_LANGUAGE,
-  ICON_TOUCHSCREEN_ADJUST,
-  ICON_MORE,
-  ICON_SCREEN_INFO,
-  ICON_BKCOLOR,
-  ICON_FONTCOLOR,
-  ICON_DISCONNECT,
-  ICON_BAUDRATE,
-  ICON_PERCENTAGE,
-  ICON_BABYSTEP,
-  ICON_001_MM,
-  ICON_BSD_SOURCE,
-  ICON_SD_SOURCE,
-  ICON_U_DISK,
-  ICON_POINT_1,
-  ICON_POINT_2,
-  ICON_POINT_3,
-  ICON_POINT_4,
-  //ICON_MARLIN,
-  //ICON_BIGTREE,
-  ICON_GCODE,
-  ICON_BLTOUCH,
-  ICON_BLTOUCH_DEPLOY,
-  ICON_BLTOUCH_STOW,
-  ICON_BLTOUCH_TEST,
-  ICON_BLTOUCH_REPEAT,
-  ICON_SCREEN_SETTINGS,
-  ICON_MACHINE_SETTINGS,
-  ICON_FEATURE_SETTINGS,
-  ICON_PROBE_OFFSET,
-  ICON_EEPROM_SAVE,
-  ICON_SILENT_ON,
-  ICON_SHUT_DOWN,
-  ICON_RGB_SETTINGS,
-  //ICON_RGB_RED,
-  //ICON_RGB_GREEN,
-  //ICON_RGB_BLUE,
-  //ICON_RGB_WHITE,
-  //ICON_RGB_OFF,
-  ICON_PREHEAT_BOTH,
-  ICON_PREHEAT_PLA,
-  ICON_PREHEAT_PETG,
-  ICON_PREHEAT_ABS,
-  ICON_CUSTOM,
-  ICON_HOME_MOVE,
-  ICON_HEAT_FAN,
-  ICON_MANUAL_LEVEL,
-  ICON_COOLDOWN,
-  ICON_SILENT_OFF,
-  ICON_STATUSNOZZLE,
-  ICON_STATUSBED,
-  ICON_STATUSFAN,
-  ICON_MAINMENU,
-  ICON_STATUS_SPEED,
-  ICON_STATUS_FLOW,
-  ICON_PARAMETER,
-  ICON_GLOBAL_NOZZLE0,
-  ICON_GLOBAL_BED,
-  ICON_PRINTING_NOZZLE,
-  ICON_PRINTING_BED,
-  ICON_PRINTING_FAN,
-  ICON_PRINTING_TIMER,
-  ICON_PRINTING_ZLAYER,
-  ICON_PRINTING_SPEED,
-  ICON_PRINTING_FLOW,
-
-//add new icons above this line  only
-//  ICON_RESERVE
-
- #else
-  ICON_HEAT = 0,
-  ICON_MOVE,
-  ICON_HOME,
-  ICON_PRINT,
-  ICON_EXTRUDE,
-  ICON_FAN,
-  ICON_SETTINGS,
-  ICON_LEVELING,
-  ICON_INC,
-  ICON_DEC,
-  ICON_NOZZLE,
-  ICON_BED,
-  ICON_1_DEGREE,
-  ICON_5_DEGREE,
-  ICON_10_DEGREE,
-  ICON_STOP,
-  ICON_BACK,
-  ICON_X_INC,
-  ICON_Y_INC,
-  ICON_Z_INC,
-  ICON_01_MM,
-  ICON_1_MM,
-  ICON_10_MM,
-  ICON_X_DEC,
-  ICON_Y_DEC,
-  ICON_Z_DEC,
-  ICON_X_HOME,
-  ICON_Y_HOME,
-  ICON_Z_HOME,
-  ICON_FOLDER,
-  ICON_FILE,
-  ICON_PAGE_UP,
-  ICON_PAGE_DOWN,
-  ICON_PAUSE,
-  ICON_RESUME,
-  ICON_LOAD,
-  ICON_UNLOAD,
-  ICON_SLOW_SPEED,
-  ICON_NORMAL_SPEED,
-  ICON_FAST_SPEED,
-  ICON_E_1_MM,
-  ICON_E_5_MM,
-  ICON_E_10_MM,
-  ICON_FAN_FULL_SPEED,
-  ICON_FAN_HALF_SPEED,
-  ICON_ROTATE_UI,
-  ICON_LANGUAGE,
-  ICON_TOUCHSCREEN_ADJUST,
-  ICON_MORE,
-  ICON_SCREEN_INFO,
-  ICON_BKCOLOR,
-  ICON_FONTCOLOR,
-  ICON_DISCONNECT,
-  ICON_BAUDRATE,
-  ICON_PERCENTAGE,
-  ICON_BABYSTEP,
-  ICON_001_MM,
-  ICON_BSD_SOURCE,
-  ICON_SD_SOURCE,
-  ICON_U_DISK,
-  ICON_POINT_1,
-  ICON_POINT_2,
-  ICON_POINT_3,
-  ICON_POINT_4,
-  ICON_MARLIN,
-  ICON_BIGTREE,
-  ICON_GCODE,
-  ICON_BLTOUCH,
-  ICON_BLTOUCH_DEPLOY,
-  ICON_BLTOUCH_STOW,
-  ICON_BLTOUCH_TEST,
-  ICON_BLTOUCH_REPEAT,
-  ICON_SCREEN_SETTINGS,
-  ICON_MACHINE_SETTINGS,
-  ICON_FEATURE_SETTINGS,
-  ICON_PROBE_OFFSET,
-  ICON_EEPROM_SAVE,
-  ICON_SILENT_ON,
-  ICON_SHUT_DOWN,
-  ICON_RGB_SETTINGS,
-  ICON_RGB_RED,
-  ICON_RGB_GREEN,
-  ICON_RGB_BLUE,
-  ICON_RGB_WHITE,
-  ICON_RGB_OFF,
-  ICON_PREHEAT_BOTH,
-  ICON_PREHEAT_PLA,
-  ICON_PREHEAT_PETG,
-  ICON_PREHEAT_ABS,
-  ICON_CUSTOM,
-  ICON_HOME_MOVE,
-  ICON_HEAT_FAN,
-  ICON_MANUAL_LEVEL,
-  ICON_COOLDOWN,
-  ICON_SILENT_OFF,
-  ICON_STATUSNOZZLE,
-  ICON_STATUSBED,
-  ICON_STATUSFAN,
-  ICON_MAINMENU,
-  ICON_STATUS_SPEED,
-  ICON_STATUS_FLOW,
-  ICON_PARAMETER,
-  ICON_GLOBAL_NOZZLE0,
-  ICON_GLOBAL_BED,
-  ICON_PRINTING_NOZZLE,
-  ICON_PRINTING_BED,
-  ICON_PRINTING_FAN,
-  ICON_PRINTING_TIMER,
-  ICON_PRINTING_ZLAYER,
-  ICON_PRINTING_SPEED,
-  ICON_PRINTING_FLOW,
-
-//add new icons above this line  only
-//  ICON_RESERVE
-
+#define X_ICON(NAME) ICON_##NAME ,
+#if defined (MKS_32_V1_1) && defined (UNIFIED_MENU)
+#include "icon_listv1.inc"
+#elif defined (MKS_32_V1_2) && defined (UNIFIED_MENU)
+#include "icon_listv2.inc"
+#else
+#include "icon_list.inc"
 #endif
+#undef  X_ICON
+//add new icons in icon_list.inc only
+//  ICON_RESERVE
+
 // Preview should be in the last place before ICON_BACKGROUND to save flash storage space
   ICON_PREVIEW,
 // Back ground sign
   ICON_BACKGROUND
 };
 
+typedef enum{
+BMP_SUCCESS,
+BMP_NOTFOUND,
+BMP_NOT24BIT,
+BMP_INVALIDFILE
+}BMPUPDATE_STAT;
+
 typedef union
 {
-	u16 color;
-	struct{
-	u16  b:5;
-	u16  g:6;
-	u16  r:5;
+  u16 color;
+  struct{
+  u16  b:5;
+  u16  g:6;
+  u16  r:5;
  }RGB;
 }GUI_COLOR;
 
 void scanUpdates(void);
+void dispIconFail(u8 *lbl);
 bool bmpDecode(char *bmp, u32 addr);
 
 #endif

@@ -8,7 +8,7 @@ GUI_NUM_MODE guiNumMode = GUI_NUMMODE_SPACE;
 
 void LCD_SetWindow(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey)
 {
-#if defined  (MKS_32_V1_3) || defined(MKS_32_V1_1) 
+#if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1) 
     LCD_WR_REG(0x50);
     LCD_WR_DATA(sy);
 	  LCD_WR_REG(0x52);
@@ -22,7 +22,6 @@ void LCD_SetWindow(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey)
 	  LCD_WR_REG(0x21);
     LCD_WR_DATA(sx);
 #else
-
     LCD_WR_REG(0x2A); 
     LCD_WR_DATA(sx>>8);LCD_WR_DATA(sx&0xFF);
     LCD_WR_DATA(ex>>8);LCD_WR_DATA(ex&0xFF);
@@ -39,7 +38,7 @@ void GUI_SetColor(uint16_t color)
 
 uint16_t GUI_GetColor(void)
 {
-  return foreGroundColor;
+  return lcd_colors[infoSettings.font_color];
 }
 
 void GUI_SetBkColor(uint16_t bkcolor)
@@ -75,7 +74,7 @@ void GUI_Clear(uint16_t color)
 {
   uint32_t index=0;
   LCD_SetWindow(0, 0, LCD_WIDTH-1, LCD_HEIGHT-1);
-#if defined MKS_32_V1_3 || defined(MKS_32_V1_1) 
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
 #else
   LCD_WR_REG(0x2C);
@@ -113,7 +112,7 @@ void GUI_DrawPixel(int16_t x, int16_t y, uint16_t color)
     return ;
 
   LCD_SetWindow(x, y, x, y);
-#if defined MKS_32_V1_3 || defined(MKS_32_V1_1) 
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
 #else
   LCD_WR_REG(0x2C);
@@ -124,7 +123,7 @@ void GUI_DrawPixel(int16_t x, int16_t y, uint16_t color)
 void GUI_DrawPoint(uint16_t x, uint16_t y)
 {
   LCD_SetWindow(x, y, x, y);
-#if defined MKS_32_V1_3 || defined(MKS_32_V1_1) 
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
 #else
   LCD_WR_REG(0x2C);
@@ -136,7 +135,7 @@ void GUI_FillRect(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey)
 {
   uint16_t i=0, j=0;
   LCD_SetWindow( sx, sy, ex-1, ey-1);
-#if defined MKS_32_V1_3 || defined(MKS_32_V1_1) 
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
 #else
   LCD_WR_REG(0x2C);
@@ -159,7 +158,7 @@ void GUI_ClearRect(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey)
 {
   uint16_t i=0, j=0;
   LCD_SetWindow( sx, sy, ex-1, ey-1);
-#if defined MKS_32_V1_3 || defined(MKS_32_V1_1) 
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
 #else
   LCD_WR_REG(0x2C);
@@ -182,7 +181,7 @@ void GUI_FillRectColor(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint1
 {
   uint16_t i=0, j=0;
   LCD_SetWindow(sx, sy, ex-1, ey-1);
-#if defined MKS_32_V1_3 || defined(MKS_32_V1_1) 
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
 #else
   LCD_WR_REG(0x2C);
@@ -199,7 +198,7 @@ void GUI_FillRectArry(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint8_
 {
   uint16_t i=0, j=0, color;
   LCD_SetWindow(sx, sy, ex-1, ey-1);
-#if defined MKS_32_V1_3 || defined(MKS_32_V1_1) 
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
 #else
   LCD_WR_REG(0x2C);
@@ -279,7 +278,7 @@ void GUI_HLine(uint16_t x1, uint16_t y, uint16_t x2)
 {
   uint16_t i=0;
   LCD_SetWindow(x1, y, x2-1, y);
-#if defined MKS_32_V1_3 || defined(MKS_32_V1_1) 
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
 #else
   LCD_WR_REG(0x2C);
@@ -293,7 +292,7 @@ void GUI_VLine(uint16_t x, uint16_t y1, uint16_t y2)
 {
   uint16_t i=0;
   LCD_SetWindow(x, y1, x, y2-1);
-#if defined MKS_32_V1_3 || defined(MKS_32_V1_1) 
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
 #else
   LCD_WR_REG(0x2C);
@@ -569,7 +568,7 @@ CHAR_INFO GUI_DispOne(int16_t sx, int16_t sy, const uint8_t *p)
           j = 0,
           i = 0;
   uint16_t bitMapSize = (info.pixelHeight * info.pixelWidth / 8);
-  uint8_t  font[bitMapSize];
+  uint8_t  font[BYTE_HEIGHT * BYTE_HEIGHT / 8]; // TODO: match bitMapSize
   uint32_t temp = 0;
 
   W25Qxx_ReadBuffer(font, info.bitMapAddr, bitMapSize);
@@ -863,9 +862,9 @@ void Scroll_DispString(SCROLL * para, uint8_t align)
   if(para->text == NULL) return;
   if(para->totalPixelWidth > para->maxPixelWidth)
   {
-    if(OS_GetTime() - para->time > 5) // 50ms
+    if(OS_GetTimeMs() > para->time)
     {
-      para->time = OS_GetTime();
+      para->time = OS_GetTimeMs() + 50; // 50ms
       GUI_SetRange(para->rect->x0, para->rect->y0, para->rect->x1, para->rect->y1);
       if(para->curByte < para->maxByte)
       {
@@ -1024,7 +1023,7 @@ void GUI_DrawWindow(const WINDOW *window, const uint8_t *title, const uint8_t *i
   //    GUI_DispStringInRect(rect.x0, rect.y0, rect.x1, rect.y0+titleHeight,title,0);
   GUI_DispString(sx+radius, sy+8, title);
   GUI_SetColor(window->info.fontColor);
-  GUI_DispStringInRect(sx+lineWidth+BYTE_WIDTH, sy+titleHeight, ex-lineWidth-BYTE_WIDTH, sy+titleHeight+infoHeight, inf);
+  GUI_DispStringInRectEOL(sx+lineWidth+BYTE_WIDTH, sy+titleHeight, ex-lineWidth-BYTE_WIDTH, sy+titleHeight+infoHeight, inf);
 
   GUI_SetBkColor(nowBackColor);
   GUI_SetColor(nowFontColor);

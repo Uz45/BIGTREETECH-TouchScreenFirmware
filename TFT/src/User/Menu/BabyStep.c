@@ -10,9 +10,9 @@ MENUITEMS babyStepItems = {
   {ICON_BACKGROUND,           LABEL_BACKGROUND},
   {ICON_BACKGROUND,           LABEL_BACKGROUND},
   {ICON_INC,                  LABEL_INC},
-  {ICON_EEPROM_SAVE,          LABEL_EEPROM_SAVE},
+  {ICON_BACKGROUND,           LABEL_BACKGROUND},
   {ICON_01_MM,                LABEL_01_MM},
-  {ICON_NORMAL_SPEED,         LABEL_VALUE_ZERO},
+  {ICON_RESET_VALUE,          LABEL_RESET},
   {ICON_BACK,                 LABEL_BACK},}
 };
 
@@ -51,7 +51,12 @@ static void initElements(u8 position)
   }
 }
 
-static float baby_step_value=0.0;
+static float baby_step_value = 0.0f;
+
+void babyStepReset(void)
+{
+  baby_step_value = 0.0f;
+}
 
 #define BABYSTEP_MAX_VALUE 5.0f
 #define BABYSTEP_MIN_VALUE -5.0f
@@ -76,7 +81,7 @@ void menuBabyStep(void)
   showBabyStep();
 
   #if LCD_ENCODER_SUPPORT
-    encoderPosition = 0;    
+    encoderPosition = 0;
   #endif
 
   while(infoMenu.menu[infoMenu.cur] == menuBabyStep)
@@ -87,19 +92,16 @@ void menuBabyStep(void)
       case KEY_ICON_0:
         if(baby_step_value - elementsUnit.ele[elementsUnit.cur] > BABYSTEP_MIN_VALUE)
         {
-          if(storeCmd("M290 Z-%.2f\n",elementsUnit.ele[elementsUnit.cur]))
+            mustStoreCmd("M290 Z-%.2f\n",elementsUnit.ele[elementsUnit.cur]);
             baby_step_value -= elementsUnit.ele[elementsUnit.cur];
         }
         break;
       case KEY_ICON_3:
         if(baby_step_value + elementsUnit.ele[elementsUnit.cur] < BABYSTEP_MAX_VALUE)
         {
-          if(storeCmd("M290 Z%.2f\n",elementsUnit.ele[elementsUnit.cur]))
+            mustStoreCmd("M290 Z%.2f\n",elementsUnit.ele[elementsUnit.cur]);
             baby_step_value += elementsUnit.ele[elementsUnit.cur];
         }
-        break;
-      case KEY_ICON_4:
-        storeCmd("M500\n");
         break;
       case KEY_ICON_5:
         elementsUnit.cur = (elementsUnit.cur + 1) % elementsUnit.totaled;
@@ -107,7 +109,7 @@ void menuBabyStep(void)
         menuDrawItem(&babyStepItems.items[key_num], key_num);
         break;
       case KEY_ICON_6:
-        if(storeCmd("M290 Z%.2f\n",-baby_step_value))
+          mustStoreCmd("M290 Z%.2f\n",-baby_step_value);
           baby_step_value = 0.0f;
         break;
       case KEY_ICON_7:
@@ -117,10 +119,10 @@ void menuBabyStep(void)
         #if LCD_ENCODER_SUPPORT
           if(encoderPosition)
           {
+            mustStoreCmd("M290 Z%.2f\n",elementsUnit.ele[elementsUnit.cur]*encoderPosition);
             baby_step_value += elementsUnit.ele[elementsUnit.cur]*encoderPosition;
-            encoderPosition = 0;    
+            encoderPosition = 0;
           }
-          LCD_LoopEncoder();
         #endif
         break;
       }

@@ -33,7 +33,7 @@ typedef enum
 typedef union
 {
   uint32_t index;    // language index, address = textSelect(index);
-  uint8_t *address;
+  void *address;
 }LABEL;
 
 typedef struct
@@ -90,12 +90,14 @@ typedef struct
 }LISTITEMS;
 
 extern const GUI_RECT exhibitRect;
+extern const GUI_RECT rect_of_key[ITEM_PER_PAGE*2];
 #define CENTER_Y  ((exhibitRect.y1 - exhibitRect.y0)/2 + exhibitRect.y0)
 #define CENTER_X  ((exhibitRect.x1 - exhibitRect.x0 - BYTE_WIDTH)/2 + exhibitRect.x0)
 #define LISTITEM_WIDTH (LCD_WIDTH-(3*START_X)-LIST_ICON_WIDTH)
 #define LISTITEM_HEIGHT ((LCD_HEIGHT-ICON_START_Y-START_X)/5)
 #define LISTICON_SPACE_Y ((LCD_HEIGHT-ICON_START_Y-START_X-(3*LIST_ICON_HEIGHT))/ 2)
 
+void reminderSetUnConnected(void);
 void reminderMessage(int16_t inf, SYS_STATUS status);
 void volumeReminderMessage(int16_t inf, SYS_STATUS status);
 

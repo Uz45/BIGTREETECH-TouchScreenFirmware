@@ -85,12 +85,42 @@ void menuPopup(void)
 
 void popupReminder(u8* info, u8* context)
 {
-  #ifdef CLEAN_MODE_SWITCHING_SUPPORT
-    if (infoSettings.mode == LCD12864) return;
-  #endif
+  if (infoSettings.serial_alwaysOn == 1 && infoSettings.mode == LCD12864) return;
+
   popupDrawPage(&bottomSingleBtn , info, context, textSelect(LABEL_CONFIRM), NULL);
   if(infoMenu.menu[infoMenu.cur] != menuPopup)
   {
     infoMenu.menu[++infoMenu.cur] = menuPopup;
+  }
+}
+
+void menuPopupPauseForUser(void)
+{
+  u16 key_num = IDLE_TOUCH;
+
+  while(infoMenu.menu[infoMenu.cur] == menuPopupPauseForUser)
+  {
+    key_num = KEY_GetValue(BUTTON_NUM, &popupMenuRect);
+    switch(key_num)
+    {
+      case KEY_POPUP_CONFIRM:
+        infoMenu.cur--;
+        Serial_Puts(SERIAL_PORT, "M108\n");
+        break;
+
+      default:
+        break;
+    }
+    loopProcess();
+  }
+}
+
+void popupPauseForUser(void) {
+  if (infoSettings.serial_alwaysOn == 1 && infoSettings.mode == LCD12864) return;
+
+  popupDrawPage(&bottomSingleBtn , (u8*)"Printer Paused", (u8*)"OK to continue", textSelect(LABEL_CONFIRM), NULL);
+  if(infoMenu.menu[infoMenu.cur] != menuPopupPauseForUser)
+  {
+    infoMenu.menu[++infoMenu.cur] = menuPopupPauseForUser;
   }
 }

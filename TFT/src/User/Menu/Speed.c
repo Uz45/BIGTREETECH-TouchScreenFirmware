@@ -11,7 +11,7 @@ LABEL_PERCENTAGE_SPEED,
   {ICON_BACKGROUND,           LABEL_BACKGROUND},
   {ICON_INC,                  LABEL_INC},
   {ICON_MOVE,                 LABEL_PERCENTAGE_SPEED},
-  {ICON_E_5_MM,               LABEL_5_PERCENT},
+  {ICON_E_5_PERCENT,          LABEL_5_PERCENT},
   {ICON_NORMAL_SPEED,         LABEL_NORMAL_SPEED},
   {ICON_BACK,                 LABEL_BACK},}
 };
@@ -32,9 +32,9 @@ static u8 item_percentage_i = 0;
 #define ITEM_PERCENT_UNIT_NUM 3
 const ITEM itemPercentUnit[ITEM_PERCENT_UNIT_NUM] = {
 // icon                       label
-  {ICON_E_1_MM,               LABEL_1_PERCENT},
-  {ICON_E_5_MM,               LABEL_5_PERCENT},
-  {ICON_E_10_MM,              LABEL_10_PERCENT},
+  {ICON_E_1_PERCENT,          LABEL_1_PERCENT},
+  {ICON_E_5_PERCENT,          LABEL_5_PERCENT},
+  {ICON_E_10_PERCENT,         LABEL_10_PERCENT},
 };
 const  u8 item_percent_unit[ITEM_PERCENT_UNIT_NUM] = {1, 5, 10};
 static u8 item_percent_unit_i = 1;
@@ -51,7 +51,7 @@ void speedSetPercent(u8 tool, u16 per)
 {
   percentage[tool]=limitValue(10, per, 999);
 }
-/* ��õ�ǰ�İٷֱ�? */
+/* ��õ�ǰ�İٷֱ�? */
 u16 speedGetPercent(u8 tool)
 {
   return percentage[tool];
@@ -69,6 +69,7 @@ void percentageReDraw(void)
 
 void menuSpeed(void)
 {
+  storeCmd("M220\nM221\n");
   KEY_VALUES  key_num=KEY_IDLE;
   u16         now[ITEM_PERCENTAGE_NUM];
 
@@ -79,7 +80,7 @@ void menuSpeed(void)
   showPercentage();
 
   #if LCD_ENCODER_SUPPORT
-    encoderPosition = 0;    
+    encoderPosition = 0;
   #endif
 
   while(infoMenu.menu[infoMenu.cur] == menuSpeed)
@@ -133,21 +134,20 @@ void menuSpeed(void)
           {
             if(percentage[item_percentage_i] < 999 && encoderPosition > 0)
             {
-              percentage[item_percentage_i] = 
-                limitValue( 10, 
-                            percentage[item_percentage_i] + item_percent_unit[item_percent_unit_i], 
+              percentage[item_percentage_i] =
+                limitValue( 10,
+                            percentage[item_percentage_i] + item_percent_unit[item_percent_unit_i],
                             999);
             }
             if(percentage[item_percentage_i] > 10 && encoderPosition < 0)
             {
-              percentage[item_percentage_i] = 
-                limitValue( 10, 
-                            percentage[item_percentage_i] - item_percent_unit[item_percent_unit_i], 
+              percentage[item_percentage_i] =
+                limitValue( 10,
+                            percentage[item_percentage_i] - item_percent_unit[item_percent_unit_i],
                             999);
             }
-            encoderPosition = 0; 
+            encoderPosition = 0;
           }
-          LCD_LoopEncoder();
         #endif
       break;
     }
