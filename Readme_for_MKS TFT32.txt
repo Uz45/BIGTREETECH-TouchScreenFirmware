@@ -91,14 +91,16 @@ V1.0
 #define ENCODER_PULSES_PER_STEP 3
 
 	Вход в режим эмуляции 12864 осуществляется долгим нажатием на экран.
-Управление курсором и изменения параметров осуществляется свайпами вверх-вниз по правому краю экрана, кнопка ОК находится в верхнем правом углу экрана.
+Управление курсором и изменения параметров осуществляется свайпами вверх-вниз по правому краю экрана, 
+кнопка ОК находится в верхнем правом углу экрана.
 
 
 
 
 
 
-To use this firmware, you need to put on your SD card your bin file, your folder with resources corresponding to your screen version, and a "config.ini" file containing the settings of the screen and your machine.
+To use this firmware, you need to put on your SD card your bin file, your folder with resources 
+corresponding to your screen version, and a "config.ini" file containing the settings of the screen and your machine.
 
 Features of using this firmware with MKS TFT32L
 
@@ -109,7 +111,8 @@ Bin file - " MKS_32_V1_4.xx.x.bin"
 V3.0
 The resource folder is - "MKS" copy the entire folder to the SD root.
 Bin file - " MKS_32_V1_3.xx.x.bin"
- On some screens in this version, the screen is mirrored, in the "config.ini" file, find the "rotate_ui:0" parameter "0" and change its value to "1".
+ On some screens in this version, the screen is mirrored, in the "config.ini" file, find the "rotate_ui:0" 
+ parameter "0" and change its value to "1".
 
 V2.0
 The resource folder is - "MKSV2", copy the entire folder to the SD root.
@@ -189,4 +192,5 @@ In the file "pins_BTT_SKR_V1_3.h" define pins:
 #define ENCODER_PULSES_PER_STEP 3
 
 You can enter 12864 emulation mode by long tapping on the screen.
-	Cursor control and parameter changes are performed by swiping up and down on the right edge of the screen. the OK button is located in the upper-right corner of the screen.
+	Cursor control and parameter changes are performed by swiping up and down on the right edge of the screen.
+	The OK button is located in the upper-right corner of the screen.
