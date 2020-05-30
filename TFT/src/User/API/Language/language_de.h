@@ -181,5 +181,6 @@
     #define DE_300_SECONDS              "5 Min."
     #define DE_CUSTOM_SECONDS           "Benutz."
     #define DE_ST7920_FULLSCREEN        "Marlin mode in fullscreen"
+    #define DE_UNIFIDE_MENU             "Unified menu (need reboot)"
 
 #endif

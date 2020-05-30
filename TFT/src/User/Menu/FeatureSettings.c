@@ -74,6 +74,7 @@ typedef enum
   #ifdef ST7920_SPI
     SKEY_ST7920_FULLSCREEN,
   #endif
+  SKEY_UNIFIDE_MENU,
   SKEY_RESET_SETTINGS, // Keep reset always at the bottom of the settings menu list.
   SKEY_COUNT //keep this always at the end
 }SKEY_LIST;
@@ -111,7 +112,9 @@ LISTITEM settingPage[SKEY_COUNT] = {
   #endif
   #ifdef ST7920_SPI
   {ICONCHAR_BLANK,      LIST_TOGGLE,        LABEL_ST7920_FULLSCREEN,        LABEL_OFF         },
+  {ICONCHAR_TOGGLE_ON,  LIST_TOGGLE,        LABEL_UNIFIDE_MENU,            LABEL_BACKGROUND  },
   #endif
+  {ICONCHAR_TOGGLE_ON,  LIST_TOGGLE,        LABEL_UNIFIDE_MENU,            LABEL_BACKGROUND  },  
   {ICONCHAR_BLANK,      LIST_CUSTOMVALUE,   LABEL_SETTINGS,                 LABEL_RESET       }   // Keep reset always at the bottom of the settings menu list.
 };
 
@@ -258,6 +261,14 @@ void updateFeatureSettings(uint8_t key_val)
         break;
     #endif
 
+    case SKEY_UNIFIDE_MENU:
+      infoSettings.unified_menu = (infoSettings.unified_menu + 1) % TOGGLE_NUM;
+      settingPage[item_index].icon = toggleitem[infoSettings.unified_menu];
+      featureSettingsItems.items[key_val] = settingPage[item_index];
+
+      menuDrawListItem(&featureSettingsItems.items[key_val], key_val);
+      break;
+
     case SKEY_RESET_SETTINGS:
       infoMenu.menu[++infoMenu.cur] = menuResetSettings;
 
@@ -383,6 +394,12 @@ void loadFeatureSettings(){
         settingPage[item_index].icon  = toggleitem[infoSettings.file_listmode];
         featureSettingsItems.items[i] = settingPage[item_index];
         break;
+
+      case SKEY_UNIFIDE_MENU:
+        settingPage[item_index].icon  = toggleitem[infoSettings.unified_menu ];
+        featureSettingsItems.items[i] = settingPage[item_index];
+        break;
+
       case SKEY_RESET_SETTINGS:
         featureSettingsItems.items[i] = settingPage[item_index];
         break;

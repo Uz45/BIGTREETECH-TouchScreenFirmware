@@ -133,7 +133,7 @@ void menuRGBSettings(void)
   MENUITEMS RGBItems = {
   // title
   LABEL_RGB_SETTINGS,
-#if defined (MKS_32_V1_1) && defined (UNIFIED_MENU)
+#if defined (MKS_32_V1_1) 
 // icon                       label
  {{ICON_RGB_SETTINGS,         LABEL_RED},
   {ICON_RGB_SETTINGS,         LABEL_GREEN},
