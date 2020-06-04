@@ -112,7 +112,6 @@ LISTITEM settingPage[SKEY_COUNT] = {
   #endif
   #ifdef ST7920_SPI
   {ICONCHAR_BLANK,      LIST_TOGGLE,        LABEL_ST7920_FULLSCREEN,        LABEL_OFF         },
-  {ICONCHAR_TOGGLE_ON,  LIST_TOGGLE,        LABEL_UNIFIDE_MENU,            LABEL_BACKGROUND  },
   #endif
   {ICONCHAR_TOGGLE_ON,  LIST_TOGGLE,        LABEL_UNIFIDE_MENU,            LABEL_BACKGROUND  },  
   {ICONCHAR_BLANK,      LIST_CUSTOMVALUE,   LABEL_SETTINGS,                 LABEL_RESET       }   // Keep reset always at the bottom of the settings menu list.
