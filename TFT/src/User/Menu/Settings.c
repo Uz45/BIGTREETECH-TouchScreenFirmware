@@ -197,7 +197,11 @@ void menuInfo(void)
                              {0 * LCD_WIDTH / 3, 1 * BYTE_HEIGHT},
                              {1 * LCD_WIDTH / 3, 1 * BYTE_HEIGHT},
                              {2 * LCD_WIDTH / 3, 1 * BYTE_HEIGHT},};
+  #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+  const char* hardware = "Board   : MKS_" HARDWARE_VERSION;
+  #else
   const char* hardware = "Board   : BIGTREETECH_" HARDWARE_VERSION;
+  #endif
   const char* firmware = "Firmware: "HARDWARE_VERSION"." STRINGIFY(SOFTWARE_VERSION) " " __DATE__;
 
   u16 HW_X = (LCD_WIDTH - GUI_StrPixelWidth((u8 *)hardware))/2;
