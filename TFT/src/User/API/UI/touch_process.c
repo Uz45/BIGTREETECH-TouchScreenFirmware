@@ -27,7 +27,7 @@
 #define K TSC_Para[6]
 
 
-u32 TSC_Para[7];//У׼ϵ��
+int32_t TSC_Para[7];
 static volatile bool touchScreenIsPress=false;
 bool touchSound = true;
 
@@ -47,7 +47,7 @@ void TS_Get_Coordinates(u16 *x, u16 *y)
  }
 #else
   *x = (A*tp_x+B*tp_y+C)/K;
-#endif  
+#endif 
   *y = (D*tp_x+E*tp_y+F)/K;
 }
 
@@ -55,7 +55,7 @@ void TS_Get_Coordinates(u16 *x, u16 *y)
 u8 calibrationEnsure(u16 x,u16 y)
 {
   u32 i;
-  u16 tp_x,tp_y,x_offset;
+  u16 tp_x,tp_y;
   int lcd_x,lcd_y;
   GUI_SetColor(BLACK);
   GUI_FillCircle(x,y,5);
@@ -77,18 +77,16 @@ u8 calibrationEnsure(u16 x,u16 y)
 
   if(lcd_x < x+TS_ERR_RANGE && lcd_x>x-TS_ERR_RANGE  && lcd_y > y-TS_ERR_RANGE && lcd_y<y+TS_ERR_RANGE)
   {
-    x_offset=(LCD_WIDTH - GUI_StrPixelWidth(textSelect(LABEL_ADJUST_OK))) >> 1;
-    GUI_DispString(x_offset, LCD_HEIGHT-40, textSelect(LABEL_ADJUST_OK));
+    GUI_DispStringCenter(LCD_WIDTH/2, LCD_HEIGHT-40, (int32_t)LABEL_ADJUST_OK);
     Delay_ms(1000);
   }
   else
   {
     while(isPress());
     GUI_SetColor(RED);
-    x_offset=(LCD_WIDTH - GUI_StrPixelWidth(textSelect(LABEL_ADJUST_FAILED))) >> 1;
-    GUI_DispString(x_offset, LCD_HEIGHT-40, textSelect(LABEL_ADJUST_FAILED));
-    GUI_DispDec(0,0,lcd_x,3,0);
-    GUI_DispDec(0,20,lcd_y,3,0);
+    GUI_DispStringCenter(LCD_WIDTH / 2, LCD_HEIGHT - 40, (int32_t)LABEL_ADJUST_FAILED);
+    GUI_DispDec(0, 0, lcd_x, 3, 0);
+    GUI_DispDec(0, 20, lcd_y, 3, 0);
     Delay_ms(1000);
     return 0;
   }
@@ -97,7 +95,6 @@ u8 calibrationEnsure(u16 x,u16 y)
 
 void TSC_Calibration(void)
 {
-  u16 x_offset;
   u32 LCD_X[3] = {40, LCD_WIDTH-40, LCD_WIDTH-40};
   u32 LCD_Y[3] = {40, 40, LCD_HEIGHT-40};
   u16 TP_X[3],TP_Y[3];
@@ -109,14 +106,12 @@ void TSC_Calibration(void)
     GUI_Clear(WHITE);
     GUI_SetColor(BLACK);
     GUI_SetBkColor(WHITE);
-    x_offset=(LCD_WIDTH - GUI_StrPixelWidth(textSelect(LABEL_ADJUST_TITLE))) >> 1;
-    GUI_DispString(x_offset, 5, textSelect(LABEL_ADJUST_TITLE));
-    x_offset=(LCD_WIDTH - GUI_StrPixelWidth(textSelect(LABEL_ADJUST_INFO))) >> 1;
-    GUI_DispString(x_offset, 25, textSelect(LABEL_ADJUST_INFO));
+    GUI_DispStringCenter(LCD_WIDTH/2, 5, (int32_t)LABEL_ADJUST_TITLE);
+    GUI_DispStringCenter(LCD_WIDTH/2, 25, (int32_t)LABEL_ADJUST_INFO);
     GUI_SetColor(RED);
     for(tp_num = 0;tp_num<3;tp_num++)
     {
-#if LCD_DRIVER_IS (MKSTFTV3)
+      #if LCD_DRIVER_IS (MKSTFTV3)
   if(infoSettings.rotate_ui)
   {
       GUI_FillCircle(LCD_WIDTH-LCD_X[tp_num],LCD_Y[tp_num],3);
@@ -194,9 +189,6 @@ void loopTouchScreen(void) // Handle in interrupt
     if(touch >= 20) // 20ms
     {
       touchScreenIsPress = true;
-      #ifdef LCD_LED_PWM_CHANNEL
-        LCD_Dim_Idle_Timer_Reset();
-      #endif
     }
     else
     {
@@ -207,9 +199,6 @@ void loopTouchScreen(void) // Handle in interrupt
   {
     touchScreenIsPress = false;
     touch = 0;
-    #ifdef LCD_LED_PWM_CHANNEL
-      LCD_Dim_Idle_Timer();
-    #endif
   }
 }
 
@@ -219,14 +208,14 @@ u8 isPress(void)
 }
 
 
-void (*TSC_ReDrawIcon)(u8 positon, u8 is_press) = NULL;
+void (*TSC_ReDrawIcon)(u8 position, u8 is_press) = NULL;
 
 u16 KEY_GetValue(u8 total_rect,const GUI_RECT* menuRect)
 {
-  static u16   key_num = IDLE_TOUCH;
-  static bool  firstPress = true;
+  static u16 key_num = IDLE_TOUCH;
+  static bool firstPress = true;
 
-  u16 key_return=IDLE_TOUCH;
+  u16 key_return = IDLE_TOUCH;
 
   if (touchScreenIsPress)
   {

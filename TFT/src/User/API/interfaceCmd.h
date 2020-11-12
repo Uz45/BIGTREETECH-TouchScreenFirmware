@@ -1,6 +1,10 @@
 #ifndef _INTERFACECMD_H_
 #define _INTERFACECMD_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "stdint.h"
 #include "stdbool.h"
 
@@ -19,19 +23,24 @@ typedef struct
   uint8_t index_r; // Ring buffer read position
   uint8_t index_w; // Ring buffer write position
   uint8_t count;   // Count of commands in the queue
-}QUEUE;
+}GCODE_QUEUE;
 
-extern QUEUE infoCmd;
-extern QUEUE infoCacheCmd;
+extern GCODE_QUEUE infoCmd;
+extern GCODE_QUEUE infoCacheCmd;
 
 
 bool storeCmd(const char * format,...);
 void mustStoreCmd(const char * format,...);
+void mustStoreScript(const char * format,...);
 bool storeCmdFromUART(uint8_t port, const char * gcode);
 void mustStoreCacheCmd(const char * format,...);
 bool moveCacheToCmd(void);
 void clearCmdQueue(void);
 void parseQueueCmd(void);
 void sendQueueCmd(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

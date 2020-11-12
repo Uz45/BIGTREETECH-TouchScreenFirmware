@@ -67,7 +67,7 @@ void LCD_FSMC_Config(void)
 
   writeTiming.FSMC_AddressSetupTime = 0x00;
   writeTiming.FSMC_AddressHoldTime = 0x00;
-  writeTiming.FSMC_DataSetupTime = 0x03;
+  writeTiming.FSMC_DataSetupTime = TFTLCD_DRIVER_SPEED;
   writeTiming.FSMC_BusTurnAroundDuration = 0x00;
   writeTiming.FSMC_CLKDivision = 0x00;
   writeTiming.FSMC_DataLatency = 0x00;
@@ -127,7 +127,7 @@ void LCD_WR_DATA(u16 data)
 
 u16 LCD_RD_DATA(void)
 {
-#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+  #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2)
   LCD_RS_SET;
 	LCD_CS_CLR;
 	LCD_RD_CLR;
@@ -167,7 +167,7 @@ u16 LCD_RD_DATA(void)
 void LCD_GPIO_Config(void)
 {
 
-#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1)
+ #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2)
 
  GPIO_InitTypeDef GPIO_InitStructure;
   /* GPIO Ports Clock Enable */

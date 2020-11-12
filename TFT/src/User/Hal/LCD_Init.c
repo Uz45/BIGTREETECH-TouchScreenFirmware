@@ -22,8 +22,9 @@ void LCD_LED_Off()
 }
 
 #ifdef LCD_LED_PWM_CHANNEL
-LCD_AUTO_DIM lcd_dim;
+LCD_AUTO_DIM lcd_dim = {0, 0};
 const uint32_t LCD_BRIGHTNESS[ITEM_BRIGHTNESS_NUM] = {
+  LCD_0_PERCENT,
   LCD_5_PERCENT,
   LCD_10_PERCENT,
   LCD_20_PERCENT,
@@ -60,43 +61,64 @@ const uint32_t LCD_DIM_IDLE_TIME[ITEM_SECONDS_NUM] = {
   LCD_DIM_CUSTOM_SECONDS
 };
 
-void LCD_Dim_Idle_Timer_init()
+void loopDimTimer(void)
 {
-  lcd_dim.idle_time_counter  = 0;
-  lcd_dim._last_dim_state    = false;
-  lcd_dim.idle_timer_reset   = false;
-}
+  if (infoSettings.lcd_idle_timer == LCD_DIM_OFF)
+    return;
 
-void LCD_Dim_Idle_Timer_Reset()
-{
-  if(infoSettings.lcd_idle_timer > LCD_DIM_OFF) {
-    lcd_dim.idle_timer_reset= true;
-  }
-}
-
-void LCD_Dim_Idle_Timer()
-{
-  if(infoSettings.lcd_idle_timer > LCD_DIM_OFF)
+  if (isPress()
+    #if LCD_ENCODER_SUPPORT
+      || encoder_CheckState() || encoder_ReadBtn(LCD_BUTTON_INTERVALS)
+    #endif
+  )
   {
-    if(lcd_dim.idle_time_counter >= (LCD_DIM_IDLE_TIME[infoSettings.lcd_idle_timer] * 1000))
+    if (lcd_dim.dimmed)
     {
+      lcd_dim.dimmed = false;
+      Set_LCD_Brightness(LCD_BRIGHTNESS[infoSettings.lcd_brightness]);
+      #ifdef LED_COLOR_PIN
+        if(infoSettings.knob_led_idle)
+        {
+          WS2812_Send_DAT(led_color[infoSettings.knob_led_color]);
+        }
+      #endif
+    }
+    lcd_dim.idle_ms = OS_GetTimeMs();
+  }
+  else
+  {
+    if (OS_GetTimeMs() - lcd_dim.idle_ms < (LCD_DIM_IDLE_TIME[infoSettings.lcd_idle_timer] * 1000))
+      return;
+
+    if (!lcd_dim.dimmed)
+    {
+      lcd_dim.dimmed = true;
       Set_LCD_Brightness(LCD_BRIGHTNESS[infoSettings.lcd_idle_brightness]);
-      lcd_dim._last_dim_state= true;
-    } else lcd_dim.idle_time_counter++;
-
-    if(lcd_dim.idle_timer_reset)
-    {
-      if(lcd_dim._last_dim_state)
-      {
-        Set_LCD_Brightness(LCD_BRIGHTNESS[infoSettings.lcd_brightness]);
-        lcd_dim._last_dim_state = false;
-      }
-
-      lcd_dim.idle_timer_reset  = false;
-      lcd_dim.idle_time_counter = 0;
+      #ifdef LED_COLOR_PIN
+        if(infoSettings.knob_led_idle)
+        {
+          WS2812_Send_DAT(led_color[LED_OFF]);
+        }
+      #endif
     }
   }
 }
+
+void _wakeLCD(void)
+{
+  if (infoSettings.lcd_idle_timer != LCD_DIM_OFF)
+  {
+    //The LCD dim function is activated. First check if it's dimmed
+    if (lcd_dim.dimmed)
+    {
+      lcd_dim.dimmed = false;
+      Set_LCD_Brightness(LCD_BRIGHTNESS[infoSettings.lcd_brightness]);
+    }
+    //Set a new idle_ms time
+    lcd_dim.idle_ms = OS_GetTimeMs();
+  }
+}
+
 #endif
 
 void LCD_LED_Init(void)
@@ -104,7 +126,6 @@ void LCD_LED_Init(void)
   #ifdef LCD_LED_PWM_CHANNEL
     GPIO_InitSet(LCD_LED_PIN, MGPIO_MODE_AF_PP, LCD_LED_PIN_ALTERNATE);
     TIM_PWM_Init(LCD_LED_PWM_CHANNEL);
-    LCD_Dim_Idle_Timer_init();
   #else
     LCD_LED_Off();
     GPIO_InitSet(LCD_LED_PIN, MGPIO_MODE_OUT_PP, 0);
@@ -498,7 +519,70 @@ void LCD_init_RGB(void)
   LCD_WR_REG(0x2C);
 }
 
-#elif LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
+#elif LCD_DRIVER_IS(SSD1963)
+// SSD1963  resolution max:864*480
+#define SSD_HOR_RESOLUTION   LCD_WIDTH  // LCD width pixel
+#define SSD_VER_RESOLUTION   LCD_HEIGHT // LCD height pixel
+
+#define SSD_HT  (SSD_HOR_RESOLUTION+SSD_HOR_BACK_PORCH+SSD_HOR_FRONT_PORCH)
+#define SSD_HPS (SSD_HOR_BACK_PORCH)
+#define SSD_VT  (SSD_VER_RESOLUTION+SSD_VER_BACK_PORCH+SSD_VER_FRONT_PORCH)
+#define SSD_VPS (SSD_VER_BACK_PORCH)
+
+void LCD_init_RGB(void)
+{
+  uint32_t LCDC_FPR;
+  LCD_WR_REG(0xE2);  // Set PLL with OSC = 25MHz (hardware), 250Mhz < VC0 < 800Mhz
+  LCD_WR_DATA(0x17); // M = 0x17 = 23, VCO = 25Mhz * (M + 1) = 25 * 24 = 600Mhz
+  LCD_WR_DATA(0x04); // N = 0x04 = 4, PLL = VCO / (N + 1) = 600 / 5 = 120Mhz
+  LCD_WR_DATA(0x54); // C[2] = 1, Effectuate the multiplier and divider value
+  LCD_WR_REG(0xE0);  // Start PLL command
+  LCD_WR_DATA(0x01); // enable PLL
+  Delay_ms(10);
+  LCD_WR_REG(0xE0);  // Start PLL command again
+  LCD_WR_DATA(0x03); // now, use PLL output as system clock
+  Delay_ms(10);
+  LCD_WR_REG(0x01);  // Soft reset
+  Delay_ms(100);
+  LCDC_FPR = (SSD_DCLK_FREQUENCY * 1048576) / 120 -1; // DCLK Frequency = PLL * (LCDC_FPR + 1)/1048576, LCDC_FPR = (DCLK Frequency * 1048576) / PLL - 1
+  LCD_WR_REG(0xE6);  // 12Mhz = 120Mhz * (LCDC_FPR + 1)/1048576, LCDC_FPR = 104856.6 = 0x019998
+  LCD_WR_DATA((LCDC_FPR >> 16) & 0xFF);
+  LCD_WR_DATA((LCDC_FPR >> 8) & 0xFF);
+  LCD_WR_DATA(LCDC_FPR & 0xFF);
+  LCD_WR_REG(0xB0);  // Set LCD mode
+  LCD_WR_DATA(0x00); // 0x00: 16bits data, 0x20: 24bits data
+  LCD_WR_DATA(0x00); // 0x00: TFT Mode
+  LCD_WR_DATA((SSD_HOR_RESOLUTION - 1) >> 8); // LCD width pixel
+  LCD_WR_DATA((SSD_HOR_RESOLUTION - 1) & 0xFF);
+  LCD_WR_DATA((SSD_VER_RESOLUTION - 1) >> 8); // LCD height pixel
+  LCD_WR_DATA((SSD_VER_RESOLUTION - 1) & 0xFF);
+  LCD_WR_DATA(0x00); // RGB format
+  LCD_WR_REG(0xB4);  // Set horizontal period
+  LCD_WR_DATA((SSD_HT - 1) >> 8); // Horizontal total period (display + non-display) in pixel clock
+  LCD_WR_DATA(SSD_HT - 1);
+  LCD_WR_DATA(SSD_HPS >> 8); // Non-display period between the start of the horizontal sync (LLINE) signal and the first display data
+  LCD_WR_DATA(SSD_HPS);
+  LCD_WR_DATA(SSD_HOR_PULSE_WIDTH - 1); // horizontal sync pulse width (LLINE) in pixel clock
+  LCD_WR_DATA(0x00);
+  LCD_WR_DATA(0x00);
+  LCD_WR_DATA(0x00);
+  LCD_WR_REG(0xB6);  // Set vertical period
+  LCD_WR_DATA((SSD_VT - 1) >> 8);
+  LCD_WR_DATA(SSD_VT - 1);
+  LCD_WR_DATA(SSD_VPS >> 8);
+  LCD_WR_DATA(SSD_VPS);
+  LCD_WR_DATA(SSD_VER_FRONT_PORCH - 1);
+  LCD_WR_DATA(0x00);
+  LCD_WR_DATA(0x00);
+  LCD_WR_REG(0xF0);  // Set pixel data interface format
+  LCD_WR_DATA(0x03); // 16-bit(565 format) data for 16bpp
+  LCD_WR_REG(0x29);  // Set display on
+
+  LCD_WR_REG(0x36);  // Set address mode
+  LCD_WR_DATA(0x00);
+}
+
+#elif LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2)
   void LCD_init_RGB(void) 
 {	
 //  DisplayOrientation SwapXY mirror X		
@@ -531,7 +615,7 @@ u16 LCD_ReadID(void)
 
 void LCD_RefreshDirection(void)
 {
-#if  LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
+#if  LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2)
   if(infoSettings.rotate_ui)
   {
     #if LCD_DRIVER_IS(MKSTFTV3)		
@@ -595,7 +679,7 @@ void LCD_Init(void)
   LCD_HardwareConfig();
   LCD_init_RGB();
   GUI_Clear(BLACK);
-  Delay_ms(20);
+  Delay_ms(120);
 
 #ifdef LCD_LED_PIN
   LCD_LED_Init();

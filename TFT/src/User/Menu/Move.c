@@ -4,13 +4,9 @@
 
 //const GUI_RECT RecXYZ = {START_X + 1*ICON_WIDTH,        STATUS_GANTRY_YOFFSET,
 //                         4*ICON_WIDTH+3*SPACE_X+START_X,ICON_START_Y-STATUS_GANTRY_YOFFSET};
-#define X 0
-#define Y 1
-#define Z 2
-
-#define X_MOVE_GCODE "G1 X%.1f\n"
-#define Y_MOVE_GCODE "G1 Y%.1f\n"
-#define Z_MOVE_GCODE "G1 Z%.1f\n"
+#define X_MOVE_GCODE "G1 X%.2f F%d\n"
+#define Y_MOVE_GCODE "G1 Y%.2f F%d\n"
+#define Z_MOVE_GCODE "G1 Z%.2f F%d\n"
 
 
 //1 title, ITEM_PER_PAGE item
@@ -23,7 +19,7 @@ LABEL_MOVE,
     {ICON_Z_DEC,                LABEL_Z_DEC},
     {ICON_Y_INC,                LABEL_Y_INC},
     {ICON_Z_INC,                LABEL_Z_INC},
-    {ICON_1_MM,                 LABEL_1_MM},
+    {ICON_01_MM,                LABEL_01_MM},
     {ICON_X_DEC,                LABEL_X_DEC},
     {ICON_Y_DEC,                LABEL_Y_DEC},
     {ICON_X_INC,                LABEL_X_INC},
@@ -32,7 +28,7 @@ LABEL_MOVE,
     {ICON_X_INC,                LABEL_X_INC},
     {ICON_Y_INC,                LABEL_Y_INC},
     {ICON_Z_INC,                LABEL_Z_INC},
-    {ICON_1_MM,                 LABEL_1_MM},
+    {ICON_01_MM,                LABEL_01_MM},
     {ICON_X_DEC,                LABEL_X_DEC},
     {ICON_Y_DEC,                LABEL_Y_DEC},
     {ICON_Z_DEC,                LABEL_Z_DEC},
@@ -43,15 +39,17 @@ LABEL_MOVE,
 
 //const uint32_t item_move_speed[] = {DEFAULT_SPEED_MOVE, SPEED_MOVE_SLOW, SPEED_MOVE_FAST};
 
-#define ITEM_MOVE_LEN_NUM 3
+#define ITEM_MOVE_LEN_NUM 5
 const ITEM itemMoveLen[ITEM_MOVE_LEN_NUM] = {
 // icon                       label
+  {ICON_001_MM,               LABEL_001_MM},
   {ICON_01_MM,                LABEL_01_MM},
   {ICON_1_MM,                 LABEL_1_MM},
   {ICON_10_MM,                LABEL_10_MM},
+  {ICON_100_MM,               LABEL_100_MM},
 };
 
-const  float item_move_len[ITEM_MOVE_LEN_NUM] = {0.1f, 1, 10};
+const  float item_move_len[ITEM_MOVE_LEN_NUM] = {0.01f, 0.1f, 1, 10, 100};
 static u8    item_move_len_i = 1;
 
 static u32 nextTime = 0;
@@ -62,7 +60,7 @@ AXIS nowAxis = X_AXIS;
 void storeMoveCmd(AXIS xyz, int8_t direction) {
   const char *xyzMoveCmd[] = {X_MOVE_GCODE, Y_MOVE_GCODE, Z_MOVE_GCODE};
   // if invert is true, 'direction' multiplied by -1
-  storeCmd(xyzMoveCmd[xyz], (infoSettings.invert_axis[xyz] ? -direction : direction) * item_move_len[item_move_len_i]);
+  storeCmd(xyzMoveCmd[xyz], (infoSettings.invert_axis[xyz] ? -direction : direction) * item_move_len[item_move_len_i], infoSettings.axis_speed[infoSettings.move_speed]);
   // update now axis be selected
   nowAxis = xyz;
 }
@@ -74,7 +72,7 @@ void storeMoveCmd(AXIS xyz, int8_t direction) {
 
 void menuMove(void)
 {
-  KEY_VALUES  key_num = KEY_IDLE;
+  KEY_VALUES key_num;
 
   // postion table of key
   uint8_t table[TOTAL_AXIS][2] =
@@ -114,7 +112,6 @@ void menuMove(void)
 
   menuDrawPage(&moveItems);
   mustStoreCmd("G91\n");
-  mustStoreCmd("G1 F%d\n",infoSettings.axis_speed[infoSettings.move_speed]);
 
   mustStoreCmd("M114\n");
   drawXYZ();
@@ -181,29 +178,27 @@ void update_gantry(void)
 {
   if (OS_GetTimeMs() > nextTime)
   {
-    if (infoHost.connected == true && infoHost.wait == false){
-      storeCmd("M114\n");
-    }
+    coordinateQuery();
     drawXYZ();
     nextTime = OS_GetTimeMs() + update_time;
   }
 }
-void drawXYZ(void){
-  char tempstr[100];
-  //GUI_SetColor(GANTRYLBL_BKCOLOR);
-  //GUI_FillPrect(&RecXYZ);
-  my_sprintf(tempstr, "X:%.1f  ", getAxisLocation(0));
-  if (nowAxis == X_AXIS) GUI_SetColor(INFOBOX_ICON_COLOR);
-  GUI_DispString(START_X+1*SPACE_X+1*ICON_WIDTH,(ICON_START_Y-BYTE_HEIGHT)/2,(u8 *)tempstr);
-  GUI_SetColor(lcd_colors[infoSettings.font_color]);
-  my_sprintf(tempstr, "Y:%.1f  ", getAxisLocation(1));
-  if (nowAxis == Y_AXIS) GUI_SetColor(INFOBOX_ICON_COLOR);
-  GUI_DispString(START_X+2*SPACE_X+2*ICON_WIDTH,(ICON_START_Y-BYTE_HEIGHT)/2,(u8 *)tempstr);
-  GUI_SetColor(lcd_colors[infoSettings.font_color]);
-  my_sprintf(tempstr, "Z:%.1f  ", getAxisLocation(2));
-  if (nowAxis == Z_AXIS) GUI_SetColor(INFOBOX_ICON_COLOR);
-  GUI_DispString(START_X+3*SPACE_X+3*ICON_WIDTH,(ICON_START_Y-BYTE_HEIGHT)/2,(u8 *)tempstr);
 
-  //GUI_SetBkColor(lcd_colors[infoSettings.bg_color]);
-  GUI_SetColor(lcd_colors[infoSettings.font_color]);
+void drawXYZ(void){
+  char tempstr[20];
+  if (nowAxis == X_AXIS) GUI_SetColor(INFOBOX_ICON_COLOR);
+  sprintf(tempstr, "X:%.2f  ", coordinateGetAxisActual(X_AXIS));
+  GUI_DispString(START_X + 1 * SPACE_X + 1 * ICON_WIDTH, (ICON_START_Y - BYTE_HEIGHT) / 2, (u8 *)tempstr);
+  GUI_SetColor(infoSettings.font_color);
+
+  if (nowAxis == Y_AXIS) GUI_SetColor(INFOBOX_ICON_COLOR);
+  sprintf(tempstr, "Y:%.2f  ", coordinateGetAxisActual(Y_AXIS));
+  GUI_DispString(START_X + 2 * SPACE_X + 2 * ICON_WIDTH, (ICON_START_Y - BYTE_HEIGHT) / 2, (u8 *)tempstr);
+  GUI_SetColor(infoSettings.font_color);
+
+  if (nowAxis == Z_AXIS) GUI_SetColor(INFOBOX_ICON_COLOR);
+  sprintf(tempstr, "Z:%.2f  ", coordinateGetAxisActual(Z_AXIS));
+  GUI_DispString(START_X + 3 * SPACE_X + 3 * ICON_WIDTH, (ICON_START_Y - BYTE_HEIGHT) / 2, (u8 *)tempstr);
+
+  GUI_SetColor(infoSettings.font_color);
 }

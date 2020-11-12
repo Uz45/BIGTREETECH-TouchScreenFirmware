@@ -29,13 +29,20 @@ void infoMenuSelect(void)
     case SERIAL_TSC:
     {
       Serial_ReSourceInit();
-
       #ifdef BUZZER_PIN
         Buzzer_Config();
       #endif
-      GUI_SetColor(lcd_colors[infoSettings.font_color]);
-      GUI_SetBkColor(lcd_colors[infoSettings.bg_color]);
 
+      #ifdef LED_COLOR_PIN
+        #ifndef KEEP_KNOB_LED_COLOR_MARLIN_MODE
+          knob_LED_Init():
+        #endif
+      #endif
+
+      #if ENC_ACTIVE_SIGNAL
+        setEncActiveSignal(0);
+      #endif
+      GUI_RestoreColorDefault();
       if(infoSettings.unified_menu == 1) //if Unified menu is selected
         infoMenu.menu[infoMenu.cur] = menuStatus; //status screen as default screen on boot
       else
@@ -47,6 +54,7 @@ void infoMenuSelect(void)
           u32 startUpTime = OS_GetTimeMs();
           heatSetUpdateTime(TEMPERATURE_QUERY_FAST_DURATION);
           LOGO_ReadDisplay();
+          updateNextHeatCheckTime(); // send "M105" 1s later not now, because of mega2560 will be hanged when received data at startup
           while (OS_GetTimeMs() - startUpTime < 3000) //Display 3s logo
           {
             loopProcess();
@@ -58,9 +66,10 @@ void infoMenuSelect(void)
       break;
     }
 
-    #ifdef ST7920_SPI
-
-    case LCD12864:
+    case MARLIN:
+      #if ENC_ACTIVE_SIGNAL
+        setEncActiveSignal(1);
+      #endif
       if (infoSettings.serial_alwaysOn == 1)
       {
         Serial_ReSourceInit();
@@ -74,11 +83,10 @@ void infoMenuSelect(void)
           knob_LED_DeInit();
         #endif
       #endif
-      GUI_SetColor(lcd_colors[infoSettings.marlin_mode_font_color]);
-      GUI_SetBkColor(lcd_colors[infoSettings.marlin_mode_bg_color]);
-      infoMenu.menu[infoMenu.cur] = menuST7920;
-      break;
 
-    #endif
+      #if defined(ST7920_SPI) || defined(LCD2004_simulator)
+        infoMenu.menu[infoMenu.cur] = menuMarlinMode;
+      #endif
+      break;
   }
 }

@@ -1,6 +1,10 @@
-﻿
+
 #ifndef _COLORS_H_
 #define _COLORS_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "includes.h"
 #include "menu.h"
@@ -46,6 +50,11 @@ LCD_DARKGRAY,
 LCD_COLOR_COUNT
 }LCD_COLOR;
 
-extern const u32 lcd_colors[LCD_COLOR_COUNT];
+extern const u16 lcd_colors[LCD_COLOR_COUNT];
 extern const LABEL lcd_color_names[LCD_COLOR_COUNT];
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
