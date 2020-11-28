@@ -48,6 +48,7 @@ void TS_Get_Coordinates(u16 *x, u16 *y)
 #else
   *x = (A*tp_x+B*tp_y+C)/K;
 #endif 
+
   *y = (D*tp_x+E*tp_y+F)/K;
 }
 

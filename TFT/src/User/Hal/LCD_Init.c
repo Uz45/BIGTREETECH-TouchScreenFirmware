@@ -644,7 +644,7 @@ void LCD_RefreshDirection(void)
   }
   else
   {
-    #if LCD_DRIVER_IS (MKSTFTV3)	
+    #if LCD_DRIVER_IS(MKSTFTV3)	
 	    uint16_t R01h, R03h, R60h;
       R01h = (1 << 8) | (0 << 10);// SS = 1, SM = 0,  from S720 to S1 (see also  GS bit (R60h))
       R03h = (1 << 12) | (1 << 5) | (1 << 4) | (1 << 3);// TRI=0, DFM=0, BGR=1, ORG=0, I/D[1:0]=11, AM=1

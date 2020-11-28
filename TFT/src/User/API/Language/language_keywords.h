@@ -284,6 +284,7 @@ extern "C" {
 #define LANG_KEY_MESH_EDITOR                  "label_mesh_editor:"
 #define LANG_KEY_MESH_TUNER                   "label_mesh_tuner:"
 #define LANG_KEY_CASE_LIGHT                   "label_case_light:"
+#define LANG_KEY_UNIFIDE_MENU                 "label_UNIFIED_MENU:"
 
 #ifdef __cplusplus
 }

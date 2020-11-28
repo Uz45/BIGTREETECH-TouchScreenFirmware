@@ -277,5 +277,6 @@
     #define STRING_MESH_EDITOR            "Maillage"
     #define STRING_MESH_TUNER             "Edition du maillage"
     #define STRING_CASE_LIGHT             "Case light"
+    #define STRING_UNIFIDE_MENU           "Unified menu (need reboot)" 
 
 #endif

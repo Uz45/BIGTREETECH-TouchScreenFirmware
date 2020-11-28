@@ -47,9 +47,11 @@
 #elif defined(MKS_32_V1_2)
   #include "pin_MKS_TFT32_V1_2.h"
 #elif defined(MKS_32_V1_3)
-  #include "pin_MKS_TFT32_V1_3.h"
+  #include "pin_MKS_TFT32_V1_3.h"  
 #elif defined(MKS_32_V1_4)
   #include "pin_MKS_TFT32_V1_4.h"
+#elif defined(MKS_28_V1_0)
+  #include "pin_MKS_TFT28_V1_0.h"
 #endif
 
 #define LCD_ENCODER_SUPPORT (defined(LCD_ENCA_PIN) && defined(LCD_ENCB_PIN) && defined(LCD_BTN_PIN))

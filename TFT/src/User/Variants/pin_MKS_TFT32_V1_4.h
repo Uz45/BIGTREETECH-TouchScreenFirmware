@@ -180,7 +180,7 @@
 
 // Marlin mode + LCD Encoder support
 #ifdef ST7920_SPI
-  #define SPI3_PIN_SMART_USAGE         // if enabled, it avoids any SPI3 CS pin usage and free the MISO (PB4 pin) for encoder pins
+ #define SPI3_PIN_SMART_USAGE         // if enabled, it avoids any SPI3 CS pin usage and free the MISO (PB4 pin) for encoder pins
 
   #define LCD_ENCA_PIN  PA13           // map ENCA pin to JTAG DIO pin
   #define LCD_ENCB_PIN  PA14           // map ENCB pin to JTAG CLK pin

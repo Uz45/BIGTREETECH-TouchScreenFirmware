@@ -87,6 +87,7 @@ typedef enum
     SKEY_ST7920_FULLSCREEN,
   #endif
   SKEY_PLR_EN,
+  SKEY_UNIFIDE_MENU,
   SKEY_RESET_SETTINGS, // Keep reset always at the bottom of the settings menu list.
   SKEY_COUNT //keep this always at the end
 }SKEY_LIST;
@@ -130,6 +131,7 @@ LISTITEM settingPage[SKEY_COUNT] = {
     {ICONCHAR_BLANK,      LIST_TOGGLE,        LABEL_ST7920_FULLSCREEN,        LABEL_OFF},
   #endif
   {ICONCHAR_TOGGLE_ON,  LIST_TOGGLE,        LABEL_PLR_EN,                   LABEL_BACKGROUND},
+  {ICONCHAR_TOGGLE_ON,  LIST_TOGGLE,        LABEL_UNIFIDE_MENU,             LABEL_BACKGROUND}, 
   // Keep reset settings always at the bottom of the settings menu list.
   {ICONCHAR_BLANK,      LIST_MOREBUTTON,    LABEL_SETTING_RESET,            LABEL_BACKGROUND}
 };
@@ -232,6 +234,14 @@ void updateFeatureSettings(uint8_t key_val)
         break;
     #endif //LCD_LED_PWM_CHANNEL
     #endif
+
+    case SKEY_UNIFIDE_MENU:
+      infoSettings.unified_menu = (infoSettings.unified_menu + 1) % TOGGLE_NUM;
+      settingPage[item_index].icon = toggleitem[infoSettings.unified_menu];
+      featureSettingsItems.items[key_val] = settingPage[item_index];
+
+      menuDrawListItem(&featureSettingsItems.items[key_val], key_val);
+      break;
 
     case SKEY_RESET_SETTINGS:
       setDialogText(LABEL_SETTING_RESET, LABEL_RESET_SETTINGS_INFO, LABEL_CONFIRM, LABEL_CANCEL);
@@ -353,6 +363,11 @@ void loadFeatureSettings(){
         setDynamicTextValue(i, (char*)notificationType[infoSettings.ack_notification]);
         break;
 
+      case SKEY_UNIFIDE_MENU:
+        settingPage[item_index].icon  = toggleitem[infoSettings.unified_menu ];
+        featureSettingsItems.items[i] = settingPage[item_index];
+        break;
+        
       case SKEY_RESET_SETTINGS:
         break;
       #ifdef LED_COLOR_PIN

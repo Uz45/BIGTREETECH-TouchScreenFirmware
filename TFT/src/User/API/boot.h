@@ -45,7 +45,6 @@ extern "C" {
 
 //address in spiflash W25Qxx
 #define LOGO_ADDR               0x0
-
 #define WORD_UNICODE            LOGO_MAX_SIZE    // unicode (+0x480000 4.5M)
 #define BYTE_ASCII_ADDR         (WORD_UNICODE + WORD_UNICODE_SIZE)    // ascii (+0x1000 4K)
 #define LARGE_FONT_ADDR         (BYTE_ASCII_ADDR + BYTE_ASCII_SIZE)   // Large ascii font
@@ -61,6 +60,7 @@ extern "C" {
 #define SMALL_ICON_START_ADDR   (INFOBOX_ADDR + INFOBOX_MAX_SIZE)
 #define SMALL_ICON_ADDR(num)    ((num)*SMALL_ICON_MAX_SIZE + SMALL_ICON_START_ADDR)
 #define FLASH_USED              (INFOBOX_ADDR + INFOBOX_MAX_SIZE)   //currently small icons are not used
+
 
 #define ADMIN_MODE_FILE "0:admin.txt"
 #define FIRMWARE_NAME STRINGIFY(HARDWARE) "." STRINGIFY(SOFTWARE_VERSION)
