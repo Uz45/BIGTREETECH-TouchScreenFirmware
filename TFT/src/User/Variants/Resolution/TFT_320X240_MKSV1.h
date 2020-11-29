@@ -53,8 +53,8 @@
 
 //Heating Menu
 #define PREHEAT_TITLE_Y   3
-#define PREHEAT_TOOL_Y    32
-#define PREHEAT_BED_Y     55
+#define PREHEAT_TOOL_Y    29
+#define PREHEAT_BED_Y     50
 
 // Printing menu
 #define PICON_LG_WIDTH     106
