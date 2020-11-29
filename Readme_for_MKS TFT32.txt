@@ -18,6 +18,11 @@ V2.0
 Файл bin - "MKS_32_V1_2.xx.x.bin"
 Из за малого объема флэш памяти - 4MB, шрифт word_unicode.fon не должен превышать 208KB.
 
+V1.0
+Папка с ресурсами - "MKSV1", скопировать целиком в корень SD.
+Файл bin - "MKS_32_V1_1.xx.x.bin"
+Из за малого объема флэш памяти - 2MB, шрифт word_unicode.fon не должен превышать 208KB.
+Картинки имеют уменьшенный размер 63х63 для экономии памяти.
 
 Использование режима эмуляции 12864.
 Для использования режима эмуляции необходимо припаять один провод к 89 ножке STM32, это PB3 pin для SPI3.
@@ -114,6 +119,11 @@ The resource folder is - "MKSV2", copy the entire folder to the SD root.
 Bin file - " MKS_32_V1_2.xx.x.bin"
 The font word_unicode.fon must not exceed 208KB, due to a small amount of flash memory - 4MB.
 
+V1.0
+The resource folder is - "MKSV1", copy the entire folder to the SD root.
+Bin file - " MKS_32_V1_1.xx.x.bin"
+The font word_unicode.fon must not exceed 208KB, due to a small amount of flash memory - 2MB.
+Images have a reduced size of 63x63 to save memory.
 
 The use of emulation mode 12864.
  To use the emulation mode, you need to solder one wire to the STM32 89 pin, this is the PB3 pin for SPI3.

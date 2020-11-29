@@ -14,7 +14,7 @@ void lcd_frame_display(u16 sx,u16 sy,u16 w,u16 h, u32 addr)
   u32 address = addr;
 
   LCD_SetWindow(sx,sy,sx+w-1,sy+h-1);
-  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2)
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
   #else
   LCD_WR_REG(0x2C);
@@ -53,7 +53,12 @@ void LOGO_ReadDisplay(void)
 {
   uint16_t w, h;
   uint32_t addr = getBMPsize((u8 *)&w, (u8 *)&h, LOGO_ADDR);
+  
+  #if defined (MKS_32_V1_1)
+  lcd_frame_display((LCD_WIDTH/2-(w/2)), (LCD_HEIGHT/2-(h/2)), w, h, addr);
+  #else  
   lcd_frame_display(0, 0, w, h, addr);
+  #endif  
 }
 
 void ICON_ReadDisplay(u16 sx,u16 sy, u8 icon)
@@ -85,7 +90,7 @@ bool model_DirectDisplay(GUI_POINT pos, char *gcode)
   f_lseek(&gcodeFile, gcodeFile.fptr + 3);
 
   LCD_SetWindow(pos.x, pos.y, pos.x+ICON_WIDTH-1, pos.y+ICON_HEIGHT-1);
-  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2)
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
   #else
   LCD_WR_REG(0x2C);
@@ -172,7 +177,7 @@ void ICON_PressedDisplay(u16 sx,u16 sy, u8 icon)
   u32 address = getBMPsize((u8 *)&w, (u8 *)&h, ICON_ADDR(icon));
 
   LCD_SetWindow(sx, sy, sx+w-1, sy+h-1);
-  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2)
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
   #else
   LCD_WR_REG(0x2C);

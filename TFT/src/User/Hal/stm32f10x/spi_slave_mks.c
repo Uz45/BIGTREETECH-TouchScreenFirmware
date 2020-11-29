@@ -4,7 +4,7 @@
 #include "stdlib.h"
 #include "stm32f10x_conf.h"
 
-#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || (defined MKS_28_V1_0)
+#if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) || (defined MKS_28_V1_0)
 
 #if defined(ST7920_SPI)
 //TODO:

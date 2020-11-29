@@ -17,8 +17,9 @@
 #define ST7789  3
 #define HX8558  4
 #define SSD1963 5
-#define MKSTFTV2 6
-#define MKSTFTV3 7
+#define MKSTFTV1 6
+#define MKSTFTV2 7
+#define MKSTFTV3 8
 
 #if defined(TFT24_V1_1)
   #include "pin_TFT24_V1_1.h"
@@ -44,6 +45,8 @@
   #include "pin_TFT70_V3_0.h"
 #elif defined(TFT35_E3_V3_0)
   #include "pin_TFT35_E3_V3_0.h"
+#elif defined(MKS_32_V1_1)
+  #include "pin_MKS_TFT32_V1_1.h"  
 #elif defined(MKS_32_V1_2)
   #include "pin_MKS_TFT32_V1_2.h"
 #elif defined(MKS_32_V1_3)

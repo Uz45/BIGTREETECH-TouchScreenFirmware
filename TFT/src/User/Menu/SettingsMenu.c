@@ -39,7 +39,7 @@ void menuInfo(void)
     {1 * LCD_WIDTH / 3, 1 * BYTE_HEIGHT},
     {2 * LCD_WIDTH / 3, 1 * BYTE_HEIGHT},};
   
-    #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || (defined MKS_28_V1_0)
+    #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) || (defined MKS_28_V1_0)
   const char* hardware = "MKS_" HARDWARE_VERSION;
   #else
   const char* hardware = "BIGTREETECH_" HARDWARE_VERSION;

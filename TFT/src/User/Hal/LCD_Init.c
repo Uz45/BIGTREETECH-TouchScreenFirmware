@@ -582,7 +582,7 @@ void LCD_init_RGB(void)
   LCD_WR_DATA(0x00);
 }
 
-#elif LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2)
+#elif LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   void LCD_init_RGB(void) 
 {	
 //  DisplayOrientation SwapXY mirror X		
@@ -615,7 +615,7 @@ u16 LCD_ReadID(void)
 
 void LCD_RefreshDirection(void)
 {
-#if  LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2)
+#if  LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   if(infoSettings.rotate_ui)
   {
     #if LCD_DRIVER_IS(MKSTFTV3)		

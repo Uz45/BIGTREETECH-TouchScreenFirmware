@@ -8,7 +8,7 @@ GUI_NUM_MODE guiNumMode = GUI_NUMMODE_SPACE;
 
 void LCD_SetWindow(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey)
 {
-#if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) 
+#if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
     LCD_WR_REG(0x50);
     LCD_WR_DATA(sy);
 	  LCD_WR_REG(0x52);
@@ -74,7 +74,7 @@ void GUI_Clear(uint16_t color)
 {
   uint32_t index=0;
   LCD_SetWindow(0, 0, LCD_WIDTH-1, LCD_HEIGHT-1);
-  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2)
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
   #else
   LCD_WR_REG(0x2C);
@@ -112,7 +112,7 @@ void GUI_DrawPixel(int16_t x, int16_t y, uint16_t color)
     return ;
 
   LCD_SetWindow(x, y, x, y);
-  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2)
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
   #else
   LCD_WR_REG(0x2C);
@@ -123,7 +123,7 @@ void GUI_DrawPixel(int16_t x, int16_t y, uint16_t color)
 void GUI_DrawPoint(uint16_t x, uint16_t y)
 {
   LCD_SetWindow(x, y, x, y);
-  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2)
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
   #else
   LCD_WR_REG(0x2C);
@@ -135,7 +135,7 @@ void GUI_FillRect(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey)
 {
   uint16_t i=0, j=0;
   LCD_SetWindow( sx, sy, ex-1, ey-1);
-  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2)
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
   #else
   LCD_WR_REG(0x2C);
@@ -158,7 +158,7 @@ void GUI_ClearRect(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey)
 {
   uint16_t i=0, j=0;
   LCD_SetWindow( sx, sy, ex-1, ey-1);
-  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2)
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
   #else
   LCD_WR_REG(0x2C);
@@ -181,7 +181,7 @@ void GUI_FillRectColor(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint1
 {
   uint16_t i=0, j=0;
   LCD_SetWindow(sx, sy, ex-1, ey-1);
-  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2)
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
   #else
   LCD_WR_REG(0x2C);
@@ -198,7 +198,7 @@ void GUI_FillRectArry(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint8_
 {
   uint16_t i=0, j=0, color;
   LCD_SetWindow(sx, sy, ex-1, ey-1);
-  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2)
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
   #else
   LCD_WR_REG(0x2C);
@@ -278,7 +278,7 @@ void GUI_HLine(uint16_t x1, uint16_t y, uint16_t x2)
 {
   uint16_t i=0;
   LCD_SetWindow(x1, y, x2-1, y);
-  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2)
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
   #else
   LCD_WR_REG(0x2C);
@@ -292,7 +292,7 @@ void GUI_VLine(uint16_t x, uint16_t y1, uint16_t y2)
 {
   uint16_t i=0;
   LCD_SetWindow(x, y1, x, y2-1);
-  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2)
+  #if LCD_DRIVER_IS(MKSTFTV3) || LCD_DRIVER_IS(MKSTFTV2) || LCD_DRIVER_IS(MKSTFTV1)
   LCD_WR_REG(0x22); 
   #else
   LCD_WR_REG(0x2C);
