@@ -24,7 +24,7 @@ extern "C" {
   #define CUSTOM_GCODE_MAX_SIZE     0x5000    //custom gocdes max size
   #define ICON_MAX_SIZE             0x5000
   #define INFOBOX_MAX_SIZE          0xB000
-  #define SMALL_ICON_MAX_SIZE       0x2000
+  #define SMALL_ICON_MAX_SIZE       0x1000
 #endif
 #elif defined (MKS_32_V1_1)
 #ifndef LOGO_MAX_SIZE
@@ -39,7 +39,7 @@ extern "C" {
   #define CUSTOM_GCODE_MAX_SIZE     0x5000    //custom gocdes max size
   #define ICON_MAX_SIZE             0x3000
   #define INFOBOX_MAX_SIZE          0x8000
-  #define SMALL_ICON_MAX_SIZE       0x2000
+  #define SMALL_ICON_MAX_SIZE       0x1000
 #endif
 #else
 #ifndef LOGO_MAX_SIZE
@@ -54,7 +54,7 @@ extern "C" {
   #define CUSTOM_GCODE_MAX_SIZE     0x5000    //custom gocdes max size
   #define ICON_MAX_SIZE             0x5000
   #define INFOBOX_MAX_SIZE          0xB000
-  #define SMALL_ICON_MAX_SIZE       0x1000
+  #define SMALL_ICON_MAX_SIZE       0x2000
 #endif
 #endif
 
