@@ -236,7 +236,8 @@ void reDrawLayer(int icon_pos)
   if (OS_GetTimeMs() > nextDrawTime)
   {
     char tempstr[10];
-    sprintf(tempstr, "%.2fmm",coordinateGetAxisTarget(Z_AXIS));
+    //sprintf(tempstr, "%.2fmm",coordinateGetAxisTarget(Z_AXIS));
+    sprintf(tempstr, "%.2fmm", (infoFile.source == BOARD_SD) ? coordinateGetAxisActual(Z_AXIS) : coordinateGetAxisTarget(Z_AXIS));
 
     GUI_SetTextMode(GUI_TEXTMODE_TRANS);
 
@@ -272,7 +273,8 @@ void toggleinfo(void)
     rapid_serial_loop();   //perform backend printing loop before drawing to avoid printer idling
     reDrawSpeed(SPD_ICON_POS);
     speedQuery();
-    coordinateQuery();
+    //coordinateQuery();
+    if (infoFile.source == BOARD_SD) coordinateQuery();
   }
 }
 
@@ -382,8 +384,11 @@ void menuPrinting(void)
     }
 
     //Z_AXIS coordinate
-    if(curLayer != coordinateGetAxisActual(Z_AXIS)){
-      curLayer = coordinateGetAxisActual(Z_AXIS);
+    // if(curLayer != coordinateGetAxisActual(Z_AXIS)){
+    //   curLayer = coordinateGetAxisActual(Z_AXIS);
+    if(curLayer != (infoFile.source == BOARD_SD) ? coordinateGetAxisActual(Z_AXIS) : coordinateGetAxisTarget(Z_AXIS))
+    {
+      curLayer = (infoFile.source == BOARD_SD) ? coordinateGetAxisActual(Z_AXIS) : coordinateGetAxisTarget(Z_AXIS);
       rapid_serial_loop();  //perform backend printing loop before drawing to avoid printer idling
       reDrawLayer(Z_ICON_POS);
     }
