@@ -1,7 +1,7 @@
 #include "BedLeveling.h"
 #include "includes.h"
 
-void blUpdateState(MENUITEMS *menu)
+static inline void blUpdateState(MENUITEMS *menu)
 {
   if (getParameter(P_ABL_STATE, 0) == ENABLED)
   {
@@ -91,28 +91,22 @@ void menuBedLeveling(void)
         break;
 
       case KEY_ICON_5:
-        {
-          char tempstr[30];
+      {
+        char tempstr[30];
+        sprintf(tempstr, "%Min:%.2f | Max:%.2f", Z_FADE_MIN_VALUE, Z_FADE_MAX_VALUE);
 
-          sprintf(tempstr, "%Min:%.2f | Max:%.2f", Z_FADE_MIN_VALUE, Z_FADE_MAX_VALUE);
+        float val = numPadFloat((u8 *) tempstr, getParameter(P_ABL_STATE, 1), 0.0f, false);
+        storeCmd("M420 Z%.2f\n", NOBEYOND(Z_FADE_MIN_VALUE, val, Z_FADE_MAX_VALUE));
 
-          float val = numPadFloat((u8 *) tempstr, getParameter(P_ABL_STATE, 1), 0.0f, false);
-
-          storeCmd("M420 Z%.2f\n", NOBEYOND(Z_FADE_MIN_VALUE, val, Z_FADE_MAX_VALUE));
-
-          menuDrawPage(&bedLevelingItems);
-        }
+        menuDrawPage(&bedLevelingItems);
         break;
+      }
 
       case KEY_ICON_6:
         if (getParameter(P_ABL_STATE, 0) == ENABLED)
-        {
           storeCmd("M420 S0\n");
-        }
         else
-        {
           storeCmd("M420 S1\n");
-        }
         break;
 
       case KEY_ICON_7:

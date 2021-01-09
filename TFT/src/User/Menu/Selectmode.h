@@ -9,7 +9,6 @@ extern "C" {
 #include <stdbool.h>
 #include "GUI.h"
 
-#define IDLE_TOUCH	0xFFFF
 typedef enum
 {
   MKEY_0 = 0,
@@ -18,10 +17,11 @@ typedef enum
 }MKEY_VALUES;
 
 extern bool skipMode;
+extern bool freshBoot;
 
-MKEY_VALUES MKeyGetValue(void);
-void menuMode(void);
 void loopCheckMode(void);
+void menuMode(void);
+void switchMode(void);
 
 #ifdef __cplusplus
 }

@@ -7,17 +7,15 @@ CLOCKS mcuClocks; // system clocks: SYSCLK, AHB, APB1, APB2, APB1_Timer, APB2_Ti
 void mcu_GetClocksFreq(CLOCKS *clk)
 {
   RCC_GetClocksFreq(&clk->rccClocks);
-  if (clk->rccClocks.PCLK1_Frequency < clk->rccClocks.HCLK_Frequency) { // if (APBx presc = 1) x1 else x2
+  if (clk->rccClocks.PCLK1_Frequency < clk->rccClocks.HCLK_Frequency) // if (APBx presc = 1) x1 else x2
     clk->PCLK1_Timer_Frequency = clk->rccClocks.PCLK1_Frequency * 2;
-  } else {
+  else
     clk->PCLK1_Timer_Frequency = clk->rccClocks.PCLK1_Frequency;
-  }
 
-  if (clk->rccClocks.PCLK2_Frequency < clk->rccClocks.HCLK_Frequency) {
+  if (clk->rccClocks.PCLK2_Frequency < clk->rccClocks.HCLK_Frequency)
     clk->PCLK2_Timer_Frequency = clk->rccClocks.PCLK2_Frequency * 2;
-  } else {
+  else
     clk->PCLK2_Timer_Frequency = clk->rccClocks.PCLK2_Frequency;
-  }
 }
 
 void Hardware_GenericInit(void)
@@ -49,9 +47,14 @@ void Hardware_GenericInit(void)
   LCD_RefreshDirection();   // refresh display direction after reading settings
   scanUpdates();            // scan icon, fonts and config files
   checkflashSign();         // check font/icon/config signature in SPI flash for update
+  initMachineSetting();     // load default machine settings
 
   #ifdef LED_COLOR_PIN
     knob_LED_Init();
+  #endif
+
+  #ifdef BUZZER_PIN
+    Buzzer_Config();
   #endif
 
   #if !defined(MKS_32_V1_4) && !defined(MKS_32_V1_3) && !defined(MKS_32_V1_2) && !defined(MKS_32_V1_1) && (!defined MKS_28_V1_0)
@@ -91,9 +94,7 @@ void Hardware_GenericInit(void)
   #ifdef LCD_LED_PWM_CHANNEL
     Set_LCD_Brightness(LCD_BRIGHTNESS[infoSettings.lcd_brightness]);
   #endif
-  GUI_RestoreColorDefault();
-  infoMenuSelect();
-  fanControlInit();
+  switchMode();
 }
 
 int main(void)

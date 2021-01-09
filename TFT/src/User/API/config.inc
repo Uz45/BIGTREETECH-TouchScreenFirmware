@@ -7,7 +7,7 @@
 */
 //after changing/adding/removing a keyword, change the CONFIG_FLASH_SIGN in Settings.h
 
-X_CONFIG(UNIFIEDMENU)
+X_CONFIG(STATUS_SCREEN)
 X_CONFIG(UART_BAUDRATE)
 X_CONFIG(LANGUAGE)
 X_CONFIG(TITLE_BG)
@@ -63,6 +63,7 @@ X_CONFIG(LEVEL_EDGE)
 X_CONFIG(LEVEL_Z_POS)
 X_CONFIG(LEVEL_Z_RAISE)
 X_CONFIG(LEVEL_FEEDRATE)
+X_CONFIG(XY_OFFSET_PROBING)
 X_CONFIG(PREHEAT_NAME_1)
 X_CONFIG(PREHEAT_NAME_2)
 X_CONFIG(PREHEAT_NAME_3)
@@ -137,4 +138,4 @@ X_CONFIG(START_GCODE)
 X_CONFIG(END_GCODE)
 X_CONFIG(CANCEL_GCODE)
 
-//after changing/adding/removing a keyword, change the CONFIG_FLASH_SIGN in Settings.h
+//after changing/adding/removing a keyword, change the CONFIG_FLASH_SIGN in Settings.h and PARA_SIGN in flashStore.c

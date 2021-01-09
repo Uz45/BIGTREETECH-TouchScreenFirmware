@@ -21,7 +21,7 @@
 
 // LCD interface
 #ifndef TFTLCD_DRIVER
-  #define TFTLCD_DRIVER MKSTFTV3  //  Type of LCD driver, now support[RM68042, ILI9488, ILI9341, ST7789, HX8558].
+  #define TFTLCD_DRIVER MKSFTV3  // Type of LCD driver, now support[RM68042, ILI9488, ILI9341, ST7789, HX8558].
   #define TFTLCD_0_DEGREE_REG_VALUE   0xA4
   #define TFTLCD_180_DEGREE_REG_VALUE 0X64
 #endif
@@ -44,10 +44,10 @@
  * SERIAL_PORT_X: communicating with other controller(Octoprint, ESP3D, other UART Touch Screen, etc...)
  */
 #define SERIAL_PORT   _USART2
-#define USART2_TX_PIN PD5
-#define USART2_RX_PIN PD6
 #define SERIAL_PORT_2 _USART1
 #define SERIAL_PORT_3 _USART3
+#define USART2_TX_PIN PD5
+#define USART2_RX_PIN PD6
 #define USART3_TX_PIN PD8
 #define USART3_RX_PIN PD9
 //#define SERIAL_PORT_4 _UART4

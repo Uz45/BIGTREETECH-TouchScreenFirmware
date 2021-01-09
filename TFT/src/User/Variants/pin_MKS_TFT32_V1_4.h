@@ -44,10 +44,10 @@
  * SERIAL_PORT_X: communicating with other controller(Octoprint, ESP3D, other UART Touch Screen, etc...)
  */
 #define SERIAL_PORT   _USART2
-#define USART2_TX_PIN PD5
-#define USART2_RX_PIN PD6
 #define SERIAL_PORT_2 _USART1
 #define SERIAL_PORT_3 _USART3
+#define USART2_TX_PIN PD5
+#define USART2_RX_PIN PD6
 #define USART3_TX_PIN PD8
 #define USART3_RX_PIN PD9
 //#define SERIAL_PORT_4 _UART4
@@ -180,7 +180,7 @@
 
 // Marlin mode + LCD Encoder support
 #ifdef ST7920_SPI
- #define SPI3_PIN_SMART_USAGE         // if enabled, it avoids any SPI3 CS pin usage and free the MISO (PB4 pin) for encoder pins
+  #define SPI3_PIN_SMART_USAGE         // if enabled, it avoids any SPI3 CS pin usage and free the MISO (PB4 pin) for encoder pins
 
   #define LCD_ENCA_PIN  PA13           // map ENCA pin to JTAG DIO pin
   #define LCD_ENCB_PIN  PA14           // map ENCB pin to JTAG CLK pin

@@ -83,7 +83,8 @@ void mustStoreCmd(const char * format,...)
 
   GCODE_QUEUE *pQueue = &infoCmd;
 
-  if(pQueue->count >= CMD_MAX_LIST) reminderMessage(LABEL_BUSY, STATUS_BUSY);
+  if (pQueue->count >= CMD_MAX_LIST)
+    reminderMessage(LABEL_BUSY, STATUS_BUSY);
 
   while (pQueue->count >= CMD_MAX_LIST)
   {
@@ -226,14 +227,12 @@ void sendQueueCmd(void)
       switch(cmd)
       {
         case 0:
-          if (isPrinting()) {
+          if (isPrinting())
             setPrintPause(true,true);
-          }
           break;
         case 1:
-          if (isPrinting()) {
+          if (isPrinting())
             setPrintPause(true,true);
-          }
           break;
         case 18: //M18/M84 disable steppers
         case 84:
@@ -250,202 +249,214 @@ void sendQueueCmd(void)
           }
           break;
 
-#ifdef SERIAL_PORT_2
-        case 20: //M20
-          if (!fromTFT)
-          {
-            if (startsWith("M20 SD:", infoCmd.queue[infoCmd.index_r].gcode) ||startsWith("M20 U:", infoCmd.queue[infoCmd.index_r].gcode))   {
-            if(startsWith("M20 SD:", infoCmd.queue[infoCmd.index_r].gcode)) infoFile.source = TFT_SD;
-            else infoFile.source = TFT_UDISK;
-            strncpy(infoFile.title, &infoCmd.queue[infoCmd.index_r].gcode[cmd_index + 4], MAX_PATH_LEN);
-            // strip out any checksum that might be in the string
-            for (int i = 0; i < MAX_PATH_LEN && infoFile.title[i] !=0 ; i++)
-              {
-                if ((infoFile.title[i] == '*') || (infoFile.title[i] == '\n') ||(infoFile.title[i] == '\r'))
-                {
-                  infoFile.title[i] = 0;
-                  break;
-                }
-              }
-            Serial_Puts(SERIAL_PORT_2, "Begin file list\n");
-            if (mountFS() == true && scanPrintFiles() == true){
-              for (uint16_t i = 0; i < infoFile.f_num; i++) {
-                Serial_Puts(SERIAL_PORT_2,infoFile.file[i]);
-                Serial_Puts(SERIAL_PORT_2,"\n");
-              }
-              for (uint16_t i = 0; i < infoFile.F_num; i++) {
-                Serial_Puts(SERIAL_PORT_2,"/");
-                Serial_Puts(SERIAL_PORT_2,infoFile.folder[i]);
-                Serial_Puts(SERIAL_PORT_2,"/\n");
-              }
-            }
-            Serial_Puts(SERIAL_PORT_2, "End file list\nok\n");
-            purgeLastCmd();
-            return;
-            }
-          }
-          break;
-
-        case 23: //M23
-          if (!fromTFT)
-          {
-            if (startsWith("M23 SD:", infoCmd.queue[infoCmd.index_r].gcode) || startsWith("M23 U:", infoCmd.queue[infoCmd.index_r].gcode))
+        #ifdef SERIAL_PORT_2
+          case 20: //M20
+            if (!fromTFT)
             {
-              if(startsWith("M23 SD:", infoCmd.queue[infoCmd.index_r].gcode))
-                infoFile.source = TFT_SD;
-              else
-                infoFile.source = TFT_UDISK;
-              resetInfoFile();
-              strncpy(infoFile.title, &infoCmd.queue[infoCmd.index_r].gcode[cmd_index + 4], MAX_PATH_LEN);
-              // strip out any checksum that might be in the string
-              for (int i = 0; i < MAX_PATH_LEN && infoFile.title[i] !=0 ; i++)
+              if (startsWith("M20 SD:", infoCmd.queue[infoCmd.index_r].gcode) ||
+                  startsWith("M20 U:", infoCmd.queue[infoCmd.index_r].gcode))
+              {
+                if (startsWith("M20 SD:", infoCmd.queue[infoCmd.index_r].gcode))
+                  infoFile.source = TFT_SD;
+                else
+                  infoFile.source = TFT_UDISK;
+                strncpy(infoFile.title, &infoCmd.queue[infoCmd.index_r].gcode[cmd_index + 4], MAX_PATH_LEN);
+                // strip out any checksum that might be in the string
+                for (int i = 0; i < MAX_PATH_LEN && infoFile.title[i] != 0; i++)
                 {
-                  if ((infoFile.title[i] == '*') || (infoFile.title[i] == '\n') ||(infoFile.title[i] == '\r'))
+                  if ((infoFile.title[i] == '*') || (infoFile.title[i] == '\n') || (infoFile.title[i] == '\r'))
                   {
                     infoFile.title[i] = 0;
                     break;
                   }
                 }
-              Serial_Puts(SERIAL_PORT_2, "echo:Now fresh file: ");
-              Serial_Puts(SERIAL_PORT_2, infoFile.title);
-              Serial_Puts(SERIAL_PORT_2, "\n");
-              FIL tmp;
-              if (mountFS() && (f_open(&tmp, infoFile.title, FA_OPEN_EXISTING | FA_READ) == FR_OK) )
-              {
-                char buf[10];
-                sprintf(buf, "%d", f_size(&tmp));
-                Serial_Puts(SERIAL_PORT_2, "File opened: ");
-                Serial_Puts(SERIAL_PORT_2, infoFile.title);
-                Serial_Puts(SERIAL_PORT_2, " Size: ");
-                Serial_Puts(SERIAL_PORT_2, buf);
-                Serial_Puts(SERIAL_PORT_2, "\nFile selected\n");
-                f_close(&tmp);
+                Serial_Puts(SERIAL_PORT_2, "Begin file list\n");
+                if (mountFS() == true && scanPrintFiles() == true)
+                {
+                  for (uint16_t i = 0; i < infoFile.f_num; i++)
+                  {
+                    Serial_Puts(SERIAL_PORT_2, infoFile.file[i]);
+                    Serial_Puts(SERIAL_PORT_2, "\n");
+                  }
+                  for (uint16_t i = 0; i < infoFile.F_num; i++)
+                  {
+                    Serial_Puts(SERIAL_PORT_2, "/");
+                    Serial_Puts(SERIAL_PORT_2, infoFile.folder[i]);
+                    Serial_Puts(SERIAL_PORT_2, "/\n");
+                  }
+                }
+                Serial_Puts(SERIAL_PORT_2, "End file list\nok\n");
+                purgeLastCmd();
+                return;
               }
-              else
+            }
+            break;
+
+          case 23: //M23
+            if (!fromTFT)
+            {
+              if (startsWith("M23 SD:", infoCmd.queue[infoCmd.index_r].gcode) ||
+                  startsWith("M23 U:", infoCmd.queue[infoCmd.index_r].gcode))
               {
-                Serial_Puts(SERIAL_PORT_2, "open failed, File: ");
+                if(startsWith("M23 SD:", infoCmd.queue[infoCmd.index_r].gcode))
+                  infoFile.source = TFT_SD;
+                else
+                  infoFile.source = TFT_UDISK;
+                resetInfoFile();
+                strncpy(infoFile.title, &infoCmd.queue[infoCmd.index_r].gcode[cmd_index + 4], MAX_PATH_LEN);
+                // strip out any checksum that might be in the string
+                for (int i = 0; i < MAX_PATH_LEN && infoFile.title[i] !=0 ; i++)
+                  {
+                    if ((infoFile.title[i] == '*') || (infoFile.title[i] == '\n') ||(infoFile.title[i] == '\r'))
+                    {
+                      infoFile.title[i] = 0;
+                      break;
+                    }
+                  }
+                Serial_Puts(SERIAL_PORT_2, "echo:Now fresh file: ");
                 Serial_Puts(SERIAL_PORT_2, infoFile.title);
                 Serial_Puts(SERIAL_PORT_2, "\n");
-              }
-              Serial_Puts(SERIAL_PORT_2, "ok\n");
-              purgeLastCmd();
-              return;
-            }
-          }
-          break;
-
-        case 24: //M24
-          if (!fromTFT)
-          {
-            if ((infoFile.source == TFT_UDISK) || (infoFile.source == TFT_SD))
-            {
-              if (isPause())
-              {
-                setPrintPause(false, false);
-              }
-              else {
+                FIL tmp;
+                if (mountFS() && (f_open(&tmp, infoFile.title, FA_OPEN_EXISTING | FA_READ) == FR_OK) )
+                {
+                  char buf[10];
+                  sprintf(buf, "%d", f_size(&tmp));
+                  Serial_Puts(SERIAL_PORT_2, "File opened: ");
+                  Serial_Puts(SERIAL_PORT_2, infoFile.title);
+                  Serial_Puts(SERIAL_PORT_2, " Size: ");
+                  Serial_Puts(SERIAL_PORT_2, buf);
+                  Serial_Puts(SERIAL_PORT_2, "\nFile selected\n");
+                  f_close(&tmp);
+                }
+                else
+                {
+                  Serial_Puts(SERIAL_PORT_2, "open failed, File: ");
+                  Serial_Puts(SERIAL_PORT_2, infoFile.title);
+                  Serial_Puts(SERIAL_PORT_2, "\n");
+                }
                 Serial_Puts(SERIAL_PORT_2, "ok\n");
                 purgeLastCmd();
-                infoMenu.cur = 1;
-                menuBeforePrinting();
+                return;
               }
-              return;
             }
-          }
-          break;
+            break;
 
-        case 25: //M25
-          if (!fromTFT)
-          {
-            if (isPrinting() && !infoHost.printing)
+          case 24: //M24
+            if (!fromTFT)
             {
-              setPrintPause(true, false);
-              Serial_Puts(SERIAL_PORT_2, "ok\n");
-              purgeLastCmd();
-              return;
-            }
-          }
-          break;
-
-        case 27: //M27
-          if (!fromTFT)
-          {
-            if (isPrinting() && !infoHost.printing)
-            {
-              if (cmd_seen('C')){
-                Serial_Puts(SERIAL_PORT_2, "Current file: ");
-                Serial_Puts(SERIAL_PORT_2, infoFile.title);
-                Serial_Puts(SERIAL_PORT_2, ".\n");
+              if ((infoFile.source == TFT_UDISK) || (infoFile.source == TFT_SD))
+              {
+                if (isPause())
+                {
+                  setPrintPause(false, false);
+                }
+                else {
+                  Serial_Puts(SERIAL_PORT_2, "ok\n");
+                  purgeLastCmd();
+                  infoMenu.cur = 1;
+                  menuBeforePrinting();
+                }
+                return;
               }
+            }
+            break;
+
+          case 25: //M25
+            if (!fromTFT)
+            {
+              if (isPrinting() && !infoHost.printing)
+              {
+                setPrintPause(true, false);
+                Serial_Puts(SERIAL_PORT_2, "ok\n");
+                purgeLastCmd();
+                return;
+              }
+            }
+            break;
+
+          case 27: //M27
+            if (!fromTFT)
+            {
+              if (isPrinting() && !infoHost.printing)
+              {
+                if (cmd_seen('C'))
+                {
+                  Serial_Puts(SERIAL_PORT_2, "Current file: ");
+                  Serial_Puts(SERIAL_PORT_2, infoFile.title);
+                  Serial_Puts(SERIAL_PORT_2, ".\n");
+                }
                 char buf[55];
                 sprintf(buf, "%s printing byte %d/%d\n",(infoFile.source==TFT_SD)?"TFT SD":"TFT USB", getPrintCur(),getPrintSize());
                 Serial_Puts(SERIAL_PORT_2, buf);
                 Serial_Puts(SERIAL_PORT_2, "ok\n");
                 purgeLastCmd();
                 return;
+              }
             }
-          }
-          else
-          {
-            printSetUpdateWaiting(false);
-          }
-          break;
-
-        case 28: //M28
-          if (!fromTFT)
-            ispolling = false;
-          break;
-
-        case 29: //M29
-          if (!fromTFT)
-          {
-            storeCmd("M105\nM114\nM220\nM221\n");
-            ispolling = true;
-          }
+            else
+            {
+              printSetUpdateWaiting(false);
+            }
             break;
 
-        case 30: //M30
-          if (!fromTFT)
-          {
-            if (startsWith("M30 SD:", infoCmd.queue[infoCmd.index_r].gcode) || startsWith("M30 U:", infoCmd.queue[infoCmd.index_r].gcode))
+          case 28: //M28
+            if (!fromTFT)
+              ispolling = false;
+            break;
+
+          case 29: //M29
+            if (!fromTFT)
             {
-              if(startsWith("M30 SD:", infoCmd.queue[infoCmd.index_r].gcode)) infoFile.source = TFT_SD;
-              else infoFile.source = TFT_UDISK;
-              TCHAR filepath[MAX_PATH_LEN];
-              strncpy(filepath, &infoCmd.queue[infoCmd.index_r].gcode[cmd_index + 4], MAX_PATH_LEN);
-              // strip out any checksum that might be in the string
-              for (int i = 0; i < MAX_PATH_LEN && filepath[i] !=0 ; i++)
-                {
-                  if ((filepath[i] == '*') || (filepath[i] == '\n') ||(filepath[i] == '\r'))
-                  {
-                    filepath[i] = 0;
-                    break;
-                  }
-                }
-              if ((mountFS() == true) && (f_unlink (filepath)== FR_OK))
-              {
-                Serial_Puts(SERIAL_PORT_2, "File deleted: ");
-                Serial_Puts(SERIAL_PORT_2, filepath);
-                Serial_Puts(SERIAL_PORT_2, ".\nok\n");
-              }
-              else
-              {
-                Serial_Puts(SERIAL_PORT_2, "Deletion failed, File: ");
-                Serial_Puts(SERIAL_PORT_2, filepath);
-                Serial_Puts(SERIAL_PORT_2, ".\nok\n");
-              }
-
-              purgeLastCmd();
-              return;
+              mustStoreScript("M105\nM114\nM220\n");
+              storeCmd("M221 D%d\n",heatGetCurrentTool());
+              ispolling = true;
             }
-          }
-          break;
+              break;
 
-        case 115: //M115 TFT
-          if (!fromTFT && startsWith("M115 TFT", infoCmd.queue[infoCmd.index_r].gcode))
+          case 30: //M30
+            if (!fromTFT)
+            {
+              if (startsWith("M30 SD:", infoCmd.queue[infoCmd.index_r].gcode) ||
+                  startsWith("M30 U:", infoCmd.queue[infoCmd.index_r].gcode))
+              {
+                if(startsWith("M30 SD:", infoCmd.queue[infoCmd.index_r].gcode)) infoFile.source = TFT_SD;
+                else infoFile.source = TFT_UDISK;
+                TCHAR filepath[MAX_PATH_LEN];
+                strncpy(filepath, &infoCmd.queue[infoCmd.index_r].gcode[cmd_index + 4], MAX_PATH_LEN);
+                // strip out any checksum that might be in the string
+                for (int i = 0; i < MAX_PATH_LEN && filepath[i] !=0 ; i++)
+                  {
+                    if ((filepath[i] == '*') || (filepath[i] == '\n') ||(filepath[i] == '\r'))
+                    {
+                      filepath[i] = 0;
+                      break;
+                    }
+                  }
+                if ((mountFS() == true) && (f_unlink (filepath)== FR_OK))
+                {
+                  Serial_Puts(SERIAL_PORT_2, "File deleted: ");
+                  Serial_Puts(SERIAL_PORT_2, filepath);
+                  Serial_Puts(SERIAL_PORT_2, ".\nok\n");
+                }
+                else
+                {
+                  Serial_Puts(SERIAL_PORT_2, "Deletion failed, File: ");
+                  Serial_Puts(SERIAL_PORT_2, filepath);
+                  Serial_Puts(SERIAL_PORT_2, ".\nok\n");
+                }
+                purgeLastCmd();
+                return;
+              }
+            }
+            break;
+
+          case 115: //M115 TFT
+            if (!fromTFT && startsWith("M115 TFT", infoCmd.queue[infoCmd.index_r].gcode))
             {
               char buf[50];
-              Serial_Puts(SERIAL_PORT_2, "FIRMWARE_NAME: " FIRMWARE_NAME " SOURCE_CODE_URL:https://github.com/bigtreetech/BIGTREETECH-TouchScreenFirmware\n");
+              Serial_Puts(SERIAL_PORT_2,
+                          "FIRMWARE_NAME: " FIRMWARE_NAME
+                          " SOURCE_CODE_URL:https://github.com/bigtreetech/BIGTREETECH-TouchScreenFirmware\n");
               sprintf(buf, "Cap:HOTEND_NUM:%d\n", infoSettings.hotend_count);
               Serial_Puts(SERIAL_PORT_2, buf);
               sprintf(buf, "Cap:EXTRUDER_NUM:%d\n", infoSettings.ext_count);
@@ -458,22 +469,22 @@ void sendQueueCmd(void)
               purgeLastCmd();
               return;
             }
-          break;
+            break;
 
-        case 524: //M524
-          if (!fromTFT && isPrinting() && !infoHost.printing)
+          case 524: //M524
+            if (!fromTFT && isPrinting() && !infoHost.printing)
             {
               abortPrinting();
               Serial_Puts(SERIAL_PORT_2, "ok\n");
               purgeLastCmd();
               return;
             }
-          break;
-#else
-        case 27: //M27
+            break;
+        #else // SERIAL_PORT_2
+          case 27: //M27
             printSetUpdateWaiting(false);
-        break;
-#endif
+            break;
+        #endif //SERIAL_PORT_2
 
         case 80: //M80
           #ifdef PS_ON_PIN
@@ -530,9 +541,9 @@ void sendQueueCmd(void)
         case 106: //M106
         {
           uint8_t i = cmd_seen('P') ? cmd_value() : 0;
-          if(cmd_seen('S') && fanIsType(i, FAN_TYPE_F) ) {
+          if(cmd_seen('S') && fanIsType(i, FAN_TYPE_F) )
+          {
             fanSetCurSpeed(i, cmd_value());
-            fanSetSendWaiting(i, false);
           }
           else if (!cmd_seen('\n'))
           {
@@ -556,7 +567,6 @@ void sendQueueCmd(void)
           if(cmd_seen('S')) i = fanGetTypID(i,FAN_TYPE_CTRL_S);
           if(cmd_seen('I')) i = fanGetTypID(i=0,FAN_TYPE_CTRL_I);
           fanSetCurSpeed(i, cmd_value());
-          fanSetSendWaiting(i, false);
           break;
         }
 
@@ -728,11 +738,11 @@ void sendQueueCmd(void)
           break;
         case 220: //M220
           if(cmd_seen('S'))
-            speedSetPercent(0,cmd_value());
+            speedSetCurPercent(0,cmd_value());
           break;
         case 221: //M221
           if(cmd_seen('S'))
-            speedSetPercent(1,cmd_value());
+            speedSetCurPercent(1,cmd_value());
           break;
 
         #ifdef BUZZER_PIN
@@ -755,11 +765,13 @@ void sendQueueCmd(void)
         #endif
         case 355: //M355
         {
-          if(cmd_seen('S')) {
+          if(cmd_seen('S'))
+          {
             caseLightSetState(cmd_value() > 0);
             caseLightSendWaiting(false);
           }
-          if(cmd_seen('P')){
+          if(cmd_seen('P'))
+          {
             caseLightSetBrightness(cmd_value());
             caseLightSendWaiting(false);
           }
@@ -784,6 +796,14 @@ void sendQueueCmd(void)
             }
             break;
         #endif
+
+        #ifdef LOAD_UNLOAD_M701_M702
+          case 701:  // M701 Load filament
+          case 702:  // M702 Unload filament
+            infoHost.wait = true;
+            break;
+        #endif
+
         case 851: //M851 Z probe offset
           if(cmd_seen('X')) setParameter(P_PROBE_OFFSET, X_AXIS, cmd_float());
           if(cmd_seen('Y')) setParameter(P_PROBE_OFFSET, Y_AXIS, cmd_float());
@@ -833,6 +853,8 @@ void sendQueueCmd(void)
       {
         case 0: //G0
         case 1: //G1
+        case 2: //G2
+        case 3: //G3
         {
           AXIS i;
           for(i=X_AXIS;i<TOTAL_AXIS;i++)
@@ -882,17 +904,23 @@ void sendQueueCmd(void)
 
         case 92: //G92
         {
-          AXIS i;
           bool coorRelative = coorGetRelative();
           bool eRelative = eGetRelative();
           // Set to absolute mode
           coorSetRelative(false);
           eSetRelative(false);
-          for(i=X_AXIS;i<TOTAL_AXIS;i++)
+          for(AXIS i = X_AXIS; i < TOTAL_AXIS; i++)
           {
             if(cmd_seen(axis_id[i]))
             {
-              coordinateSetAxisTarget(i,cmd_float());
+              coordinateSetAxisTarget(i, cmd_float());
+              #ifdef FIL_RUNOUT_PIN
+                if (i == E_AXIS)
+                {
+                  // Reset SFS status, Avoid false Filament runout caused by G92 resetting E-axis position
+                  FIL_SFS_SetAlive(true);
+                }
+              #endif
             }
           }
           // Restore mode
@@ -912,9 +940,10 @@ void sendQueueCmd(void)
 
   setCurrentAckSrc(infoCmd.queue[infoCmd.index_r].src);
   Serial_Puts(SERIAL_PORT, infoCmd.queue[infoCmd.index_r].gcode);
-  if (avoid_terminal != true){
+
+  if (avoid_terminal != true)
     sendGcodeTerminalCache(infoCmd.queue[infoCmd.index_r].gcode, TERMINAL_GCODE);
-  }
+
   purgeLastCmd();
 
   infoHost.wait = infoHost.connected;

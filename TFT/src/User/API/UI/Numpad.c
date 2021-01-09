@@ -50,7 +50,8 @@ void Draw_keyboard(u8 * title, bool NumberOnly, bool negative)
 
     GUI_SetColor(infoSettings.list_border_color);
      //draw button borders
-    for (int i = 0;i<3;i++){
+    for (int i = 0; i < 3; i++)
+    {
       GUI_DrawLine(rect_of_numkey[i].x1,rect_of_numkey[i].y0,rect_of_numkey[12+i].x1,rect_of_numkey[12+i].y1);
       GUI_DrawLine(rect_of_numkey[i*4].x0,rect_of_numkey[i*4].y1,rect_of_numkey[3+i*4].x1,rect_of_numkey[3+i*4].y1);
     }
@@ -102,7 +103,7 @@ float numPadFloat(u8* title, float old_val, float reset_val, bool negative)
       sprintf(tempstr, "%.*f", prec, old_val);
       title = (u8 *)tempstr;
     }
-    setMenu(MENU_TYPE_FULLSCREEN, NULL, COUNT(rect_of_numkey), rect_of_numkey, keyPress);
+    setMenu(MENU_TYPE_FULLSCREEN, NULL, COUNT(rect_of_numkey), rect_of_numkey, keyPress, NULL);
     Draw_keyboard(title, false, negative);
 
     while (1)
@@ -236,7 +237,7 @@ int32_t numPadInt(u8* title, int32_t old_val, int32_t reset_val, bool negative)
       sprintf(tempstr, "%i", old_val);
       title = (u8 *)tempstr;
     }
-    setMenu(MENU_TYPE_FULLSCREEN, NULL, COUNT(rect_of_numkey), rect_of_numkey, keyPress);
+    setMenu(MENU_TYPE_FULLSCREEN, NULL, COUNT(rect_of_numkey), rect_of_numkey, keyPress, NULL);
     Draw_keyboard(title, true, negative);
 
     sprintf(ParameterBuf,"%i",val);

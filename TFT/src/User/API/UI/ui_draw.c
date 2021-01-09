@@ -53,12 +53,11 @@ void LOGO_ReadDisplay(void)
 {
   uint16_t w, h;
   uint32_t addr = getBMPsize((u8 *)&w, (u8 *)&h, LOGO_ADDR);
-  
   #if defined (MKS_32_V1_1)
   lcd_frame_display((LCD_WIDTH/2-(w/2)), (LCD_HEIGHT/2-(h/2)), w, h, addr);
-  #else  
+  #else
   lcd_frame_display(0, 0, w, h, addr);
-  #endif  
+  #endif 
 }
 
 void ICON_ReadDisplay(u16 sx,u16 sy, u8 icon)
@@ -95,8 +94,10 @@ bool model_DirectDisplay(GUI_POINT pos, char *gcode)
   #else
   LCD_WR_REG(0x2C);
   #endif
-  for (uint16_t y = 0; y < ICON_HEIGHT; y++) {
-    for (uint16_t x = 0; x < ICON_WIDTH; x++) {
+  for (uint16_t y = 0; y < ICON_HEIGHT; y++)
+  {
+    for (uint16_t x = 0; x < ICON_WIDTH; x++)
+    {
       LCD_WR_16BITS_DATA(modelFileReadHalfword(&gcodeFile));
     }
     // Move to next line
@@ -124,7 +125,8 @@ bool model_DecodeToFlash(char *gcode)
   // Move to next line
   f_lseek(&gcodeFile, gcodeFile.fptr + 3);
 
-  for(bnum = 0; bnum < (w*h*2+W25QXX_SECTOR_SIZE-1)/W25QXX_SECTOR_SIZE; bnum++) {
+  for(bnum = 0; bnum < (w*h*2+W25QXX_SECTOR_SIZE-1)/W25QXX_SECTOR_SIZE; bnum++)
+  {
     W25Qxx_EraseSector(addr + bnum*W25QXX_SECTOR_SIZE);
   }
   bnum=0;
@@ -134,8 +136,10 @@ bool model_DecodeToFlash(char *gcode)
   memcpy(buf + bnum, (uint8_t *)&h, sizeof(uint16_t));
   bnum += sizeof(uint16_t);
 
-  for (uint16_t y = 0; y < h; y++) {
-    for (uint16_t x = 0; x < w; x++) {
+  for (uint16_t y = 0; y < h; y++)
+  {
+    for (uint16_t x = 0; x < w; x++)
+    {
       uint16_t color = modelFileReadHalfword(&gcodeFile);
       buf[bnum++]=(uint8_t)(color >> 8);
       buf[bnum++]=(uint8_t)(color & 0xFF);

@@ -36,7 +36,7 @@ void TS_Get_Coordinates(u16 *x, u16 *y)
   u16 tp_x = XPT2046_Repeated_Compare_AD(CMD_RDX);
   u16 tp_y = XPT2046_Repeated_Compare_AD(CMD_RDY);
 
-#if LCD_DRIVER_IS (MKSTFTV3)
+ #if LCD_DRIVER_IS (MKSTFTV3)
  if(infoSettings.rotate_ui)
  {
   *x = LCD_WIDTH-(A*tp_x+B*tp_y+C)/K;
@@ -48,7 +48,6 @@ void TS_Get_Coordinates(u16 *x, u16 *y)
 #else
   *x = (A*tp_x+B*tp_y+C)/K;
 #endif 
-
   *y = (D*tp_x+E*tp_y+F)/K;
 }
 

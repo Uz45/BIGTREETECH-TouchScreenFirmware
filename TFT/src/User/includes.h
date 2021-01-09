@@ -15,6 +15,7 @@
 #include "delay.h"
 
 #include "boot.h"
+#include "ScreenShot.h"
 
 #include "Colors.h"
 #include "lcd.h"
@@ -46,6 +47,7 @@
 #include "HD44780_Simulator.h"
 #include "ui_draw.h"
 #include "touch_process.h"
+#include "serialConnection.h"
 #include "interfaceCmd.h"
 #include "coordinate.h"
 #include "ff.h"
@@ -73,6 +75,7 @@
 #include "menu.h"
 #include "list_item.h"
 #include "list_widget.h"
+#include "common.h"
 #include "Popup.h"
 #include "Numpad.h"
 #include "Notification.h"
@@ -109,8 +112,6 @@
 #include "BLTouch.h"
 #include "ProbeOffset.h"
 #include "PowerFailed.h"
-
-#include "Mode.h"
 
 #include "UnifiedMove.h"
 #include "UnifiedHeat.h"

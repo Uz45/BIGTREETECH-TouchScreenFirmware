@@ -50,7 +50,8 @@ bool bmpDecode(char *bmp, u32 addr)
     return false;
   }
   f_read(&bmpFile, magic, 2 ,&mybr);
-  if (memcmp(magic, "BM", 2)){
+  if (memcmp(magic, "BM", 2))
+  {
     f_close(&bmpFile);
     bmp_stat = BMP_INVALIDFILE;
     return false;
@@ -66,7 +67,8 @@ bool bmpDecode(char *bmp, u32 addr)
   bmp_size.y = h;
   f_lseek(&bmpFile, 28);
   f_read(&bmpFile, &bpp, sizeof(short),&mybr);
-  if(bpp<24){
+  if(bpp<24)
+  {
     f_close(&bmpFile);
     bmp_stat = BMP_NOT24BIT;
     return false;
@@ -267,9 +269,12 @@ bool updateFont(char *font, u32 addr)
   return true;
 }
 
-void scanResetDir(void) {
-  if (f_file_exists(TFT_RESET_FILE)) {
-    if (f_file_exists(TFT_RESET_FILE ".DONE")) {
+static inline void scanResetDir(void)
+{
+  if (f_file_exists(TFT_RESET_FILE))
+  {
+    if (f_file_exists(TFT_RESET_FILE ".DONE"))
+    {
       f_unlink(TFT_RESET_FILE ".DONE");
     }
     infoSettingsReset();
@@ -280,7 +285,8 @@ void scanResetDir(void) {
   }
 }
 
-void scanRenameUpdate(void) {
+static inline void scanRenameUpdate(void)
+{
   if (f_file_exists(ADMIN_MODE_FILE)) return; // admin mode, need not rename
 
   if (f_dir_exists(ROOT_DIR))
@@ -304,8 +310,10 @@ void scanRenameUpdate(void) {
     f_rename(FIRMWARE_NAME ".bin", FIRMWARE_NAME ".CUR");
   }
 
-  if (f_file_exists(FIRMWARE_NAME_SHORT ".NEW")) { // firmware exists
-    if (f_file_exists(FIRMWARE_NAME ".bin")) { // long firmware also exists ? should not be
+  if (f_file_exists(FIRMWARE_NAME_SHORT ".NEW"))
+  { // firmware exists
+    if (f_file_exists(FIRMWARE_NAME ".bin"))
+    { // long firmware also exists ? should not be
       f_unlink(FIRMWARE_NAME ".bin");
     }
     f_rename(FIRMWARE_NAME_SHORT ".NEW", FIRMWARE_NAME ".bin");
@@ -322,19 +330,21 @@ void scanRenameUpdate(void) {
 
 }
 
-void saveflashSign(u8* buf, uint32_t size)
+static inline void saveflashSign(u8* buf, uint32_t size)
 {
   W25Qxx_EraseSector(FLASH_SIGN_ADDR);
   Delay_ms(100); //give time for spi flash to settle
   W25Qxx_WriteBuffer(buf, FLASH_SIGN_ADDR, size);
 }
+
 void scanUpdates(void)
 {
   //bool flashUpdate[sign_count] = {true, true, true, true};
   uint32_t cur_flash_sign[sign_count];
   W25Qxx_ReadBuffer((uint8_t*)&cur_flash_sign, FLASH_SIGN_ADDR, sizeof(cur_flash_sign));
 
-  if(mountSDCard()) {
+  if(mountSDCard())
+  {
     if (f_dir_exists(FONT_ROOT_DIR))
     {
       if (updateFont(FONT_ROOT_DIR "/byte_ascii.fon", BYTE_ASCII_ADDR) &&
@@ -342,7 +352,8 @@ void scanUpdates(void)
           updateFont(FONT_ROOT_DIR "/large_byte_ascii.fon", LARGE_FONT_ADDR))
         cur_flash_sign[font_sign] = FONT_CHECK_SIGN;
     }
-    if (f_dir_exists(BMP_ROOT_DIR)) {
+    if (f_dir_exists(BMP_ROOT_DIR))
+    {
       if (updateIcon())
         cur_flash_sign[icon_sign] = ICON_CHECK_SIGN;
     }

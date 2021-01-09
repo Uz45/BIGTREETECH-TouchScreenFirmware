@@ -30,6 +30,8 @@ extern "C" {
 #define SLOVENIAN     17
 #define CATALAN       18
 #define TRAD_CHINESE  19
+#define UKRAINIAN     20
+
 
 enum
 {
@@ -63,7 +65,7 @@ uint32_t getLabelFlashAddr(uint16_t index);
 bool loadLabelText(uint8_t * buf, uint16_t index);
 
 //initialize and preload label text
-#define labelChar(x, i)  char x[MAX_LANG_LABEL_LENGTH]; loadLabelText((u8*)&x, i);
+#define LABELCHAR(x, i)  char x[MAX_LANG_LABEL_LENGTH]; loadLabelText((u8*)&x, i);
 
 #ifdef __cplusplus
 }

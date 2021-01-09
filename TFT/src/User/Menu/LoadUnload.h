@@ -5,9 +5,8 @@
 extern "C" {
 #endif
 
-extern const char* extruderDisplay[];
-
 void menuLoadUnload(void);
+
 
 #ifdef __cplusplus
 }
