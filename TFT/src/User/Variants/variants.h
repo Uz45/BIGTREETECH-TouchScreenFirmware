@@ -17,6 +17,9 @@
 #define ST7789  3
 #define HX8558  4
 #define SSD1963 5
+#define MKSTFTV1 6
+#define MKSTFTV2 7
+#define MKSTFTV3 8
 
 #if defined(TFT24_V1_1)
   #include "pin_TFT24_V1_1.h"
