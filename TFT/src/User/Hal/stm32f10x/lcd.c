@@ -155,7 +155,7 @@ uint16_t LCD_RD_DATA(void)
 void LCD_GPIO_Config(void)
 {
 
- #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) || (defined MKS_28_V1_0)
+  #if defined(MKS_32_V1_4) || defined(MKS_32_V1_3) || defined(MKS_32_V1_2) || defined(MKS_32_V1_1) || (defined MKS_28_V1_0)
 
  GPIO_InitTypeDef GPIO_InitStructure;
   /* GPIO Ports Clock Enable */

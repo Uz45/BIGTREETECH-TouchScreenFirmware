@@ -122,14 +122,6 @@
 //=========================== Machine Settings ==============================
 //===========================================================================
 
-/**
- * RepRapFirmware Compatibility
- * Uncomment for RepRapFirmware.
- * To work with RepRapFirmware, Add M575 P1 S2 B115200 to the end of config.g file in RRF motherboard
- * sd card.
-*/
-//#define RepRapFirmware
-
 #define HOTEND_NUM      1  // set in 1~6
 #define EXTRUDER_NUM    1  // set in 1~6
 #define FAN_NUM         1  // set in 1~6
@@ -171,12 +163,17 @@
 //Axes names displayed in Parameter Settings menu
 #define AXIS_DISPLAY_ID  {"X",  "Y",  "Z",   "E",  "E2"} // (X, Y, Z, E, E2)
 
-// Default move speed mm/min
-#define DEFAULT_SPEED_MOVE   3000
-#define SPEED_MOVE_SLOW      1000
-#define SPEED_MOVE_FAST      5000
+// Default X & Y speed (mm/min)
+#define SPEED_XY_SLOW   1000
+#define SPEED_XY_NORMAL 3000
+#define SPEED_XY_FAST   5000
 
-// Extrude speed mm/min
+// Default Z speed (mm/min)
+#define SPEED_Z_SLOW   500
+#define SPEED_Z_NORMAL 1000
+#define SPEED_Z_FAST   2000
+
+// Extrude speed (mm/min)
 #define EXTRUDE_SLOW_SPEED     60
 #define EXTRUDE_NORMAL_SPEED  600
 #define EXTRUDE_FAST_SPEED   1200
@@ -220,9 +217,9 @@
 #define Z_FADE_DEFAULT_VALUE 10.0f
 
 // Probe Offset limits
-#define PROBE_OFFSET_MIN_VALUE     -20.0f
-#define PROBE_OFFSET_MAX_VALUE      20.0f
-#define PROBE_OFFSET_DEFAULT_VALUE   0.0f
+#define PROBE_Z_OFFSET_MIN_VALUE     -20.0f
+#define PROBE_Z_OFFSET_MAX_VALUE      20.0f
+#define PROBE_Z_OFFSET_DEFAULT_VALUE   0.0f
 
 // Home Offset limits
 #define HOME_Z_OFFSET_MIN_VALUE     -20.0f
@@ -258,13 +255,11 @@
 #define ENABLE_BL_VALUE 1 // Default: 1
 
 /** TouchMI settings (on ABL menu)
- * 
- * Enable this option for settings TouchMI sensor on ABL Menu.
- * 
- * ( Init, Zoffset, Save, test)
- * 
+ *
+ * Enable this option for settings TouchMI sensor on ABL Menu (Init, Z Offset, Save, Test).
+ *
  * Options: [enable:1, disable:0]
- * 
+ *
  */
 #define TOUCHMI_SENSOR_VALUE 0 // Default: 0
 
@@ -314,10 +309,10 @@
 #define ALTERNATIVE_MOVE_MENU
 
 /**
- * Friendly probe offset language
+ * Friendly Z offset language
  * Replace decrease/increase and "-" & "+" icons with down/up and friendly icons
  */
-#define FRIENDLY_PROBE_OFFSET_LANGUAGE
+#define FRIENDLY_Z_OFFSET_LANGUAGE
 
 /**
  * Quick EEPROM Menu
@@ -424,10 +419,21 @@
  */
 #define TERMINAL_KEYBOARD_COLOR_LAYOUT 0  // Default: 0
 
-// QWERTY keyboard layout
-// Enable QWERTY keyboard layout in Terminal menu (Only for TFT70 V3.0)
-#define TERMINAL_KEYBOARD_QWERTY_LAYOUT
+//
+// QWERTY/QWERTZ keyboard layout
+//
 
+/**
+ * keyboard layout for Terminal Keyboard
+ *
+ * Options:  [0: Default, 1: Qwerty, 2: Qwertz, 4: Azerty]
+ * Default: The keyboard has an alphabetically order
+ * Qwerty: The typically keyboard Layout for english (Only for TFT70 V3.0)
+ * Qwertz: The typically keyboard Layout for german (Only for TFT70 V3.0)
+ * Azerty: The typically keyboard Layout for french (Only for TFT70 V3.0)
+ *
+ */
+#define TERMINAL_KEYBOARD_LAYOUT 1  // Default: 0
 
 //===========================================================================
 //=========================== Other Settings ================================
