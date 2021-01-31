@@ -44,8 +44,9 @@ bool LCD_ReadPen(uint16_t intervals)
   static u32 TouchTime = 0;
   if(!XPT2046_Read_Pen())
   {
-    if(OS_GetTimeMs() - TouchTime > intervals)
+    if(OS_GetTimeMs() - TouchTime >= intervals)
     {
+      TouchTime = OS_GetTimeMs();
       return true;
     }
   }
@@ -199,7 +200,7 @@ static inline void setupModeHardware(uint8_t mode)
       setEncActiveSignal(1);
     #endif
 
-#if !defined(MKS_32_V1_4) && !defined(MKS_32_V1_3) && !defined(MKS_32_V1_2) && !defined(MKS_32_V1_1) && (!defined MKS_28_V1_0)
+    #if !defined(MKS_32_V1_4) && !defined(MKS_32_V1_3) && !defined(MKS_32_V1_2) && !defined(MKS_32_V1_1) && (!defined MKS_28_V1_0)
       //causes hang if we deinit spi1
       SD_DeInit();
     #endif
@@ -228,7 +229,7 @@ void switchMode(void)
           heatSetUpdateSeconds(TEMPERATURE_QUERY_FAST_SECONDS);
           LOGO_ReadDisplay();
           updateNextHeatCheckTime();  // send "M105" after a delay, because of mega2560 will be hanged when received data at startup
-          while (OS_GetTimeMs() - startUpTime < 3000)  // Display 3s logo
+          while (OS_GetTimeMs() - startUpTime < BTT_BOOTSCREEN_TIME)  // Display logo BTT_BOOTSCREEN_TIME ms
           {
             loopProcess();
           }

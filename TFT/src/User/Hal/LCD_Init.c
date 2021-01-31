@@ -47,7 +47,7 @@ const LABEL itemDimTime[ITEM_SECONDS_NUM] = {
   LABEL_60_SECONDS,
   LABEL_120_SECONDS,
   LABEL_300_SECONDS,
-  LABEL_CUSTOM_SECONDS
+  LABEL_CUSTOM
 };
 
 const uint32_t LCD_DIM_IDLE_TIME[ITEM_SECONDS_NUM] = {
@@ -686,6 +686,7 @@ uint32_t LCD_ReadPixel_24Bit(int16_t x, int16_t y)
 	    LCD_WR_REG(0x0060);			  // Driver Output Control (R60h) 
       LCD_WR_DATA(R60h);
 }
+
 #endif
 
 uint16_t LCD_ReadID(void)
