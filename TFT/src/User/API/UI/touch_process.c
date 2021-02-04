@@ -110,7 +110,7 @@ void TSC_Calibration(void)
     GUI_DispStringCenter(LCD_WIDTH/2, 25, (int32_t)LABEL_ADJUST_INFO);
     GUI_SetColor(RED);
     for(tp_num = 0;tp_num<3;tp_num++)
-   {
+    {
       #if LCD_DRIVER_IS (MKSTFTV3)
   if(infoSettings.rotate_ui)
   {
